@@ -1,0 +1,269 @@
+{
+  "brand": "NetCore Systems",
+  "domain": "meetings",
+  "generated_at": "2026-11-06T16:32:22+00:00",
+  "article_count": 10,
+  "articles": [
+    {
+      "kb_id": "KB-MTG-2001",
+      "title": "Configuring SAML SSO for NetCore Meet Sites",
+      "domain": "meetings",
+      "article_type": "config",
+      "product": "NetCore Meet",
+      "version": "5.0",
+      "status": "current",
+      "superseded_by": "",
+      "last_updated": "2026-06-20",
+      "error_codes": [
+        "MTG-SSO-6001",
+        "MTG-SSO-6004"
+      ],
+      "related": [
+        "KB-MTG-2008"
+      ],
+      "tags": [
+        "sso",
+        "saml",
+        "identity"
+      ],
+      "author": "NetCore Systems Technical Support",
+      "format": "pdf",
+      "file": "KB-MTG-2001_configuring-saml-sso-for-netcore-meet-sites.pdf"
+    },
+    {
+      "kb_id": "KB-MTG-2002",
+      "title": "NetCore Calling: Number Provisioning and Dial Plans",
+      "domain": "meetings",
+      "article_type": "config",
+      "product": "NetCore Calling",
+      "version": "5.0",
+      "status": "current",
+      "superseded_by": "",
+      "last_updated": "2026-07-14",
+      "error_codes": [
+        "MTG-CALL-7002",
+        "MTG-CALL-7010"
+      ],
+      "related": [
+        "KB-MTG-2005",
+        "KB-MTG-2008"
+      ],
+      "tags": [
+        "calling",
+        "numbers",
+        "dial-plan"
+      ],
+      "author": "NetCore Systems Technical Support",
+      "format": "pdf",
+      "file": "KB-MTG-2002_netcore-calling-number-provisioning-and-dial-plans.pdf"
+    },
+    {
+      "kb_id": "KB-MTG-2003",
+      "title": "Meeting Policy Reference: Recording, Lobby and Retention",
+      "domain": "meetings",
+      "article_type": "policy",
+      "product": "NetCore Meet",
+      "version": "5.0",
+      "status": "current",
+      "superseded_by": "",
+      "last_updated": "2026-09-10",
+      "error_codes": [],
+      "related": [
+        "KB-MTG-2004",
+        "KB-MTG-2007"
+      ],
+      "tags": [
+        "policy",
+        "recording",
+        "retention",
+        "lobby"
+      ],
+      "author": "NetCore Systems Technical Support",
+      "format": "pdf",
+      "file": "KB-MTG-2003_meeting-policy-reference-recording-lobby-and-retention.pdf"
+    },
+    {
+      "kb_id": "KB-MTG-2004",
+      "title": "Recording Retention Policy (Release 4.2)",
+      "domain": "meetings",
+      "article_type": "policy",
+      "product": "NetCore Meet",
+      "version": "4.2",
+      "status": "superseded",
+      "superseded_by": "KB-MTG-2003",
+      "last_updated": "2024-10-03",
+      "error_codes": [],
+      "related": [],
+      "tags": [
+        "policy",
+        "recording",
+        "legacy"
+      ],
+      "author": "NetCore Systems Technical Support",
+      "format": "html",
+      "file": "KB-MTG-2004_recording-retention-policy-release-4-2.html"
+    },
+    {
+      "kb_id": "KB-MTG-2005",
+      "title": "Call Forwarding, Hunt Groups and Voicemail Setup",
+      "domain": "meetings",
+      "article_type": "config",
+      "product": "NetCore Calling",
+      "version": "5.0",
+      "status": "current",
+      "superseded_by": "",
+      "last_updated": "2026-08-01",
+      "error_codes": [
+        "MTG-CALL-7002"
+      ],
+      "related": [
+        "KB-MTG-2002"
+      ],
+      "tags": [
+        "calling",
+        "hunt-group",
+        "voicemail"
+      ],
+      "author": "NetCore Systems Technical Support",
+      "format": "html",
+      "file": "KB-MTG-2005_call-forwarding-hunt-groups-and-voicemail-setup.html"
+    },
+    {
+      "kb_id": "KB-MTG-2006",
+      "title": "Troubleshooting Audio and Video Quality (MTG-MED-4102)",
+      "domain": "meetings",
+      "article_type": "runbook",
+      "product": "NetCore Meet",
+      "version": "5.0",
+      "status": "current",
+      "superseded_by": "",
+      "last_updated": "2026-09-18",
+      "error_codes": [
+        "MTG-MED-4102",
+        "MTG-MED-4105"
+      ],
+      "related": [
+        "KB-MTG-2007",
+        "KB-MTG-2010"
+      ],
+      "tags": [
+        "troubleshooting",
+        "media",
+        "quality"
+      ],
+      "author": "NetCore Systems Technical Support",
+      "format": "md",
+      "file": "KB-MTG-2006_troubleshooting-audio-and-video-quality-mtg-med-4102.md"
+    },
+    {
+      "kb_id": "KB-MTG-2007",
+      "title": "Troubleshooting Meeting Join Failures (MTG-JOIN-1003 / MTG-JOIN-1007)",
+      "domain": "meetings",
+      "article_type": "runbook",
+      "product": "NetCore Meet",
+      "version": "5.0",
+      "status": "current",
+      "superseded_by": "",
+      "last_updated": "2026-08-27",
+      "error_codes": [
+        "MTG-JOIN-1003",
+        "MTG-JOIN-1007",
+        "MTG-SSO-6001"
+      ],
+      "related": [
+        "KB-MTG-2003",
+        "KB-MTG-2006",
+        "KB-MTG-2010"
+      ],
+      "tags": [
+        "troubleshooting",
+        "join",
+        "firewall"
+      ],
+      "author": "NetCore Systems Technical Support",
+      "format": "md",
+      "file": "KB-MTG-2007_troubleshooting-meeting-join-failures-mtg-join-1003-mtg-join.md"
+    },
+    {
+      "kb_id": "KB-MTG-2008",
+      "title": "NetCore Meet and Calling Error Code Reference",
+      "domain": "meetings",
+      "article_type": "reference",
+      "product": "NetCore Meet",
+      "version": "5.0",
+      "status": "current",
+      "superseded_by": "",
+      "last_updated": "2026-09-30",
+      "error_codes": [
+        "MTG-JOIN-1003",
+        "MTG-JOIN-1007",
+        "MTG-MED-4102",
+        "MTG-MED-4105",
+        "MTG-SSO-6001",
+        "MTG-SSO-6004",
+        "MTG-CALL-7002",
+        "MTG-CALL-7010"
+      ],
+      "related": [
+        "KB-MTG-2006",
+        "KB-MTG-2007",
+        "KB-MTG-2001"
+      ],
+      "tags": [
+        "error-codes",
+        "reference"
+      ],
+      "author": "NetCore Systems Technical Support",
+      "format": "html",
+      "file": "KB-MTG-2008_netcore-meet-and-calling-error-code-reference.html"
+    },
+    {
+      "kb_id": "KB-MTG-2009",
+      "title": "Help: Scheduling and Joining Meetings from Your Calendar",
+      "domain": "meetings",
+      "article_type": "help",
+      "product": "NetCore Meet",
+      "version": "5.0",
+      "status": "current",
+      "superseded_by": "",
+      "last_updated": "2026-05-22",
+      "error_codes": [],
+      "related": [
+        "KB-MTG-2007",
+        "KB-MTG-2010"
+      ],
+      "tags": [
+        "help",
+        "calendar",
+        "end-user"
+      ],
+      "author": "NetCore Systems Technical Support",
+      "format": "md",
+      "file": "KB-MTG-2009_help-scheduling-and-joining-meetings-from-your-calendar.md"
+    },
+    {
+      "kb_id": "KB-MTG-2010",
+      "title": "FAQ: Licensing, Limits and Network Requirements",
+      "domain": "meetings",
+      "article_type": "faq",
+      "product": "NetCore Meet",
+      "version": "5.0",
+      "status": "current",
+      "superseded_by": "",
+      "last_updated": "2026-08-11",
+      "error_codes": [],
+      "related": [
+        "KB-MTG-2006",
+        "KB-MTG-2007"
+      ],
+      "tags": [
+        "faq",
+        "licensing",
+        "network"
+      ],
+      "author": "NetCore Systems Technical Support",
+      "format": "md",
+      "file": "KB-MTG-2010_faq-licensing-limits-and-network-requirements.md"
+    }
+  ]
+}

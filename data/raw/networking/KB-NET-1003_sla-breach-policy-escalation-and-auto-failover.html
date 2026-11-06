@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>KB-NET-1003: SLA Breach Policy: Escalation and Auto-Failover</title>
+  <meta name="kb_id" content="KB-NET-1003">
+  <meta name="title" content="SLA Breach Policy: Escalation and Auto-Failover">
+  <meta name="domain" content="networking">
+  <meta name="article_type" content="policy">
+  <meta name="product" content="NetCore SD-WAN">
+  <meta name="version" content="5.0">
+  <meta name="status" content="current">
+  <meta name="superseded_by" content="">
+  <meta name="last_updated" content="2026-09-04">
+  <meta name="error_codes" content="NCS-SLA-2001, NCS-SLA-2002">
+  <meta name="related" content="KB-NET-1002, KB-NET-1005, KB-NET-1004">
+  <meta name="tags" content="sla, breach, escalation, failover">
+  <meta name="author" content="NetCore Systems Technical Support">
+  <meta name="format" content="html">
+  <style>
+body{font-family:Segoe UI,Arial,sans-serif;max-width:920px;margin:2rem auto;padding:0 1rem;color:#1d2733;line-height:1.55}
+header{border-bottom:3px solid #0a5cad;margin-bottom:1rem} .brand{color:#0a5cad;font-weight:600}
+.meta{color:#5b6773;font-size:.9rem} .notice{background:#fff4e5;border-left:4px solid #e08a00;padding:.75rem 1rem}
+table{border-collapse:collapse;width:100%;margin:.5rem 0 1rem} th,td{border:1px solid #c9d2dc;padding:.4rem .6rem;text-align:left;vertical-align:top}
+th{background:#eef3f8} caption{text-align:left;font-style:italic;padding:.25rem 0}
+pre{background:#0f1720;color:#e6edf3;padding:.8rem;overflow-x:auto;border-radius:4px}
+nav.breadcrumb{font-size:.85rem;color:#5b6773} footer{margin-top:2rem;border-top:1px solid #c9d2dc;font-size:.8rem;color:#5b6773}
+</style>
+</head>
+<body>
+<nav class="breadcrumb">NetCore Systems Support &rsaquo; Knowledge Base &rsaquo; NetCore SD-WAN</nav>
+<header>
+<div class="brand">NetCore Systems Knowledge Base</div>
+<h1>SLA Breach Policy: Escalation and Auto-Failover</h1>
+<p class="meta">KB-NET-1003 | NetCore SD-WAN 5.0 | Last updated: 2026-09-04 | Status: current</p>
+</header>
+<article>
+<h2>Summary</h2>
+<p>This policy defines how NetCore SD-WAN 5.0 detects SLA breaches, declares and clears alarms, performs automatic transport failover, and escalates incident severity. It applies to SLA monitoring performed by NetCore Orchestrator and NCX edge devices using BFD-monitored SD-WAN tunnels.</p>
+<p><strong>Applies to:</strong> NetCore SD-WAN 5.0, NetCore Orchestrator, NCX-1000 branch edge, NCX-4000 regional hub, NCX-9000 data center edge, MPLS, Internet broadband, and LTE/5G transports</p>
+<section><h2>Purpose</h2>
+<p>The purpose of this policy is to standardize SLA breach handling for NetCore SD-WAN 5.0 across all managed sites. The policy covers breach detection timing, automatic failover behavior, severity escalation, ticket creation, notification channels, exceptions, and restoration handling.</p>
+<p>For SLA class threshold values by application class, see KB-NET-1002. For alarm-level troubleshooting of NCS-SLA-2001 SLA Violation Detected, see KB-NET-1005. For the superseded NetCore SD-WAN 4.2 policy, see KB-NET-1004.</p>
+</section>
+<section><h2>Scope</h2>
+<p>This policy applies to NetCore SD-WAN 5.0 deployments managed by NetCore Orchestrator, including NCX-1000, NCX-4000, and NCX-9000 edge devices. It applies to app-route SLA monitoring over MPLS, Internet broadband, and LTE/5G transports where tunnels are monitored with BFD probes.</p>
+<p>This policy governs the SLA alarm lifecycle for NCS-SLA-2001 SLA Violation Detected and NCS-SLA-2002 SLA Restored. The following alarm codes may be related during investigation but are not governed by this SLA breach policy: NCS-BFD-3004 BFD Session Flap, NCS-BFD-3005 BFD Session Down, NCS-ZTP-4001 ZTP Redirect Failed, NCS-ZTP-4003 Device Certificate Validation Failed, NCS-QOS-5002 Queue Drop Threshold Exceeded, and NCS-ORC-6001 Orchestrator Control Connection Lost.</p>
+<ul><li>In scope: SLA breach detection, automatic failover, severity assignment, severity escalation, ITSM ticketing, and notifications for NetCore SD-WAN 5.0.</li><li>Out of scope: provisioning failures, ZTP certificate failures, QoS queue-drop remediation, BFD session recovery procedures, and Orchestrator control-plane outage recovery.</li><li>Release note: NetCore SD-WAN 4.2 used a different breach policy with a 600-second poll interval, multiplier 5, manual failover only, e-mail notification only, and no automatic severity escalation. See KB-NET-1004.</li></ul>
+</section>
+<section><h2>Definitions</h2>
+<p>The following terms are used consistently in this policy.</p>
+<ul><li>SLA class: A policy class such as Voice, Video, Business-Critical, or Best-Effort with latency, jitter, and loss thresholds. Refer to KB-NET-1002 for the full threshold reference.</li><li>App-route poll interval: The interval at which NetCore SD-WAN evaluates path health for application routing. In release 5.0, the interval is 120 seconds.</li><li>Multiplier: The number of consecutive failed app-route polling intervals required before a breach is declared. In release 5.0, the multiplier is 3.</li><li>SLA breach: A condition where measured latency, jitter, or packet loss exceeds the configured SLA class threshold for 3 consecutive 120-second intervals, approximately 6 minutes.</li><li>Compliant transport: A transport path currently meeting the SLA class thresholds for the affected application traffic.</li><li>Best compliant transport: The compliant transport with the best measured path quality for the affected SLA class at the time of routing decision.</li><li>Restoration: The condition where the affected SLA class returns within threshold and Orchestrator clears the breach state by raising NCS-SLA-2002 SLA Restored.</li></ul>
+</section>
+<section><h2>Policy Statements</h2>
+<p>NetCore SD-WAN 5.0 declares an SLA breach only after 3 consecutive app-route polling intervals fail for the affected SLA class. Because the poll interval is 120 seconds, the standard breach declaration time is approximately 6 minutes.</p>
+<p>When a breach is declared, NetCore Orchestrator raises NCS-SLA-2001 SLA Violation Detected, creates an ITSM ticket automatically, assigns the initial severity according to the matrix below, and instructs affected edge devices to route the affected application class to the best compliant transport when one is available.</p>
+<p>When the SLA condition returns to compliance, NetCore Orchestrator raises NCS-SLA-2002 SLA Restored. Restoration does not automatically erase the incident history; the ITSM ticket remains linked to the alarm record and must be closed according to the operations workflow.</p>
+<ul><li>Automatic failover is mandatory for NetCore SD-WAN 5.0 managed sites unless an approved exception is recorded under the Exceptions section.</li><li>Failover selection must prefer the best compliant transport among MPLS, Internet broadband, and LTE/5G based on current SLA measurements for the affected class.</li><li>If no compliant transport is available, traffic remains on the least-degraded available path and the incident continues to escalate according to the duration and site-impact rules.</li><li>Notification channels for this policy are NetCore Orchestrator alarm banner, ITSM ticket creation/update, configured operations e-mail distribution, and configured Orchestrator webhook subscriptions.</li><li>NCS-SLA-2001 SLA Violation Detected must not be manually suppressed to avoid escalation unless an approved maintenance window or exception exists.</li><li>NCS-SLA-2002 SLA Restored must be correlated to the original NCS-SLA-2001 SLA Violation Detected event for reporting and service review.</li></ul>
+<table><caption>NetCore SD-WAN 5.0 SLA breach and escalation policy</caption><thead><tr><th>Condition</th><th>Detection or escalation timing</th><th>System action</th><th>Severity</th></tr></thead><tbody><tr><td>SLA threshold exceeded for 1 polling interval</td><td>120 seconds</td><td>Record failed interval; no breach alarm yet</td><td>No incident severity</td></tr><tr><td>SLA threshold exceeded for 2 consecutive polling intervals</td><td>240 seconds</td><td>Continue monitoring; no breach alarm yet</td><td>No incident severity</td></tr><tr><td>SLA threshold exceeded for 3 consecutive polling intervals</td><td>Approximately 6 minutes</td><td>Raise NCS-SLA-2001 SLA Violation Detected; auto-create ITSM ticket; fail over affected application class to best compliant transport</td><td>Sev3</td></tr><tr><td>Breach persists after declaration</td><td>&gt; 15 minutes</td><td>Update alarm and ITSM ticket; notify operations channels</td><td>Escalate to Sev2</td></tr><tr><td>Breach persists after declaration</td><td>&gt; 30 minutes</td><td>Update alarm and ITSM ticket; notify operations channels</td><td>Escalate to Sev1</td></tr><tr><td>Breach affects multiple sites</td><td>&gt;= 5 sites affected</td><td>Group or relate incidents in ITSM; notify operations channels</td><td>Sev1</td></tr><tr><td>SLA returns within threshold</td><td>Upon restoration detection</td><td>Raise NCS-SLA-2002 SLA Restored; update ITSM ticket and Orchestrator event history</td><td>Severity remains on ticket until operational closure</td></tr></tbody></table>
+</section>
+<section><h2>Enforcement</h2>
+<p>NetCore Orchestrator enforces this policy through app-route monitoring, BFD tunnel health inputs, alarm generation, route updates, and ITSM integration. Edge devices participate by reporting path measurements and applying the route change pushed by Orchestrator.</p>
+<p>Network operations engineers must validate active SLA breach state from Orchestrator first, then confirm local edge telemetry if needed. The commands below are approved for validation on NCX edge devices.</p>
+<ul><li>Use show sdwan app-route statistics to verify latency, jitter, loss, selected transport, and SLA class state.</li><li>Use show sdwan bfd sessions to confirm whether the transport under evaluation has BFD instability that may be contributing to the SLA breach.</li><li>Use show sdwan sla-class to confirm the configured SLA class associated with the affected application traffic.</li><li>Use show sdwan control connections to verify that the edge device can receive Orchestrator policy and routing updates.</li><li>Use show policy qos-queue counters if packet loss appears related to local queue drops rather than WAN path impairment.</li><li>For procedural troubleshooting of NCS-SLA-2001 SLA Violation Detected, follow KB-NET-1005.</li></ul>
+<pre><code class="language-text">ncx-edge# show sdwan app-route statistics
+Timestamp                 : 2026-11-06 14:22:18 UTC
+Site                      : BOS-023
+Device                    : NCX-1000
+SLA Class                 : Voice
+App-Route Poll Interval   : 120 seconds
+Breach Multiplier         : 3
+
+Transport        Latency(ms)  Jitter(ms)  Loss(%)  SLA State      Selected
+MPLS             178          34          1.4      Non-Compliant  No
+Internet         92           18          0.2      Compliant      Yes
+LTE/5G           121          22          0.5      Compliant      Backup
+
+Active Alarm             : NCS-SLA-2001 SLA Violation Detected
+Breach Start             : 2026-11-06 14:16:10 UTC
+Current Severity         : Sev3
+ITSM Ticket              : ITSM-20261106-004187
+Failover Action          : Voice moved from MPLS to Internet
+
+ncx-edge# show sdwan bfd sessions
+Peer             Transport  State  Last Change              Flap Count
+10.40.8.2        MPLS       Up     2026-11-06 13:58:44 UTC  0
+198.51.10.18     Internet   Up     2026-11-06 12:04:11 UTC  0
+172.29.5.9       LTE/5G     Up     2026-11-06 09:21:33 UTC  1
+
+ncx-edge# show sdwan sla-class
+Class               Latency(ms)  Jitter(ms)  Loss(%)
+Voice               &lt;=150        &lt;=30        &lt;=1
+Video               &lt;=200        &lt;=40        &lt;=2
+Business-Critical   &lt;=250        &lt;=50        &lt;=3
+Best-Effort         &lt;=400        n/a         &lt;=5</code></pre>
+</section>
+<section><h2>Exceptions</h2>
+<p>Exceptions to this policy must be approved before implementation and recorded in the site operations record. Exceptions must include the site ID, device model, affected SLA class, transport, business justification, start time, end time, approver, and rollback plan.</p>
+<p>Exceptions do not change the NetCore SD-WAN 5.0 SLA thresholds or breach timing. They only define how operations staff respond to known or approved conditions.</p>
+<ul><li>Approved maintenance window: NCS-SLA-2001 SLA Violation Detected may be acknowledged during a planned transport maintenance window, but the alarm must remain visible in Orchestrator history.</li><li>Temporary transport impairment: Automatic failover remains enabled unless the exception explicitly authorizes pinning traffic to a specified transport for a limited time.</li><li>LTE/5G cost-control exception: Operations may restrict LTE/5G usage for selected Best-Effort traffic, but Voice, Video, and Business-Critical automatic failover must remain enabled unless explicitly approved.</li><li>No-compliant-transport condition: If MPLS, Internet broadband, and LTE/5G are all non-compliant, Orchestrator keeps traffic on the least-degraded available path and the incident continues to escalate by duration and affected-site count.</li><li>Suppression exception: Alarm suppression for NCS-SLA-2001 SLA Violation Detected requires operations manager approval and must not suppress NCS-SLA-2002 SLA Restored correlation.</li></ul>
+</section>
+<section><h2>Change History</h2>
+<p>This section records the policy history for the current release and the immediately preceding release. NetCore SD-WAN 5.0 is the current policy baseline.</p>
+<table><caption>SLA breach policy change history</caption><thead><tr><th>Release</th><th>Effective policy</th><th>Operational impact</th><th>Reference</th></tr></thead><tbody><tr><td>5.0</td><td>App-route poll interval 120 seconds; multiplier 3; breach after approximately 6 minutes; automatic failover to best compliant transport; automatic severity escalation; ITSM ticket auto-created</td><td>Current standard for all managed NetCore SD-WAN 5.0 sites</td><td>KB-NET-1003</td></tr><tr><td>4.2</td><td>App-route poll interval 600 seconds; multiplier 5; breach after approximately 50 minutes; manual failover only; e-mail notification only; no automatic severity escalation</td><td>Superseded. Do not apply to NetCore SD-WAN 5.0 sites</td><td>KB-NET-1004</td></tr></tbody></table>
+</section>
+<section><h2>Related Articles</h2><ul><li>KB-NET-1002: SLA Class Thresholds Reference (Latency, Jitter, Loss)</li><li>KB-NET-1005: Troubleshooting Alarm NCS-SLA-2001 &quot;SLA Violation Detected&quot;</li><li>KB-NET-1004: SLA Breach Policy (Release 4.2)</li></ul></section>
+</article>
+<footer>&copy; 2026 NetCore Systems. Internal use only.</footer>
+</body>
+</html>

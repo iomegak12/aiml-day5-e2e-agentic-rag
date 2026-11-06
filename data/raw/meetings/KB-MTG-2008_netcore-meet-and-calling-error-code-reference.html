@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>KB-MTG-2008: NetCore Meet and Calling Error Code Reference</title>
+  <meta name="kb_id" content="KB-MTG-2008">
+  <meta name="title" content="NetCore Meet and Calling Error Code Reference">
+  <meta name="domain" content="meetings">
+  <meta name="article_type" content="reference">
+  <meta name="product" content="NetCore Meet">
+  <meta name="version" content="5.0">
+  <meta name="status" content="current">
+  <meta name="superseded_by" content="">
+  <meta name="last_updated" content="2026-09-30">
+  <meta name="error_codes" content="MTG-JOIN-1003, MTG-JOIN-1007, MTG-MED-4102, MTG-MED-4105, MTG-SSO-6001, MTG-SSO-6004, MTG-CALL-7002, MTG-CALL-7010">
+  <meta name="related" content="KB-MTG-2006, KB-MTG-2007, KB-MTG-2001">
+  <meta name="tags" content="error-codes, reference">
+  <meta name="author" content="NetCore Systems Technical Support">
+  <meta name="format" content="html">
+  <style>
+body{font-family:Segoe UI,Arial,sans-serif;max-width:920px;margin:2rem auto;padding:0 1rem;color:#1d2733;line-height:1.55}
+header{border-bottom:3px solid #0a5cad;margin-bottom:1rem} .brand{color:#0a5cad;font-weight:600}
+.meta{color:#5b6773;font-size:.9rem} .notice{background:#fff4e5;border-left:4px solid #e08a00;padding:.75rem 1rem}
+table{border-collapse:collapse;width:100%;margin:.5rem 0 1rem} th,td{border:1px solid #c9d2dc;padding:.4rem .6rem;text-align:left;vertical-align:top}
+th{background:#eef3f8} caption{text-align:left;font-style:italic;padding:.25rem 0}
+pre{background:#0f1720;color:#e6edf3;padding:.8rem;overflow-x:auto;border-radius:4px}
+nav.breadcrumb{font-size:.85rem;color:#5b6773} footer{margin-top:2rem;border-top:1px solid #c9d2dc;font-size:.8rem;color:#5b6773}
+</style>
+</head>
+<body>
+<nav class="breadcrumb">NetCore Systems Support &rsaquo; Knowledge Base &rsaquo; NetCore Meet</nav>
+<header>
+<div class="brand">NetCore Systems Knowledge Base</div>
+<h1>NetCore Meet and Calling Error Code Reference</h1>
+<p class="meta">KB-MTG-2008 | NetCore Meet 5.0 | Last updated: 2026-09-30 | Status: current</p>
+</header>
+<article>
+<h2>Summary</h2>
+<p>This reference lists all current MTG error and alarm codes for NetCore Meet 5.0 and related NetCore Calling integration scenarios. Use it to map each code to the affected component, likely cause, recommended user action, administrator action, and related troubleshooting article.</p>
+<p><strong>Applies to:</strong> NetCore Meet 5.0, NetCore Meet desktop app for Windows and macOS, NetCore Meet mobile app, NetCore Meet web client, NetCore Calling integration, NetCore Control Hub</p>
+<section><h2>Overview</h2>
+<p>MTG codes identify user-facing errors, meeting media alarms, SSO authentication failures, and Calling integration provisioning issues. In NetCore Meet 5.0, the same code format is used across the desktop app, mobile app, web client, meeting diagnostics, and NetCore Control Hub event views.</p>
+<p>When triaging an incident, record the exact code, timestamp, affected user, meeting ID or Calling number, client type, and network path. For join and media issues, verify that TCP 443 is available for signalling, UDP 9000 is available for preferred media transport, and TCP 5004 is available for media fallback. Recommended network targets are latency less than 300 ms, jitter less than 40 ms, and packet loss less than 3%.</p>
+<p>The table below covers every current MTG code in this release: MTG-JOIN-1003, MTG-JOIN-1007, MTG-MED-4102, MTG-MED-4105, MTG-SSO-6001, MTG-SSO-6004, MTG-CALL-7002, and MTG-CALL-7010.</p>
+</section>
+<section><h2>MTG error code reference</h2>
+<p>Use this table as the primary reference for user support, service desk runbooks, and escalation notes.</p>
+<table><caption>Current NetCore Meet 5.0 MTG error and alarm codes</caption><thead><tr><th>Code</th><th>Message</th><th>Component</th><th>Description</th><th>Likely cause</th><th>User action</th><th>Admin action</th><th>Related KB article</th></tr></thead><tbody><tr><td>MTG-JOIN-1003</td><td>Meeting Locked or Host Lobby Active</td><td>Meeting join / lobby</td><td>The participant reached the meeting service, but entry is blocked by the meeting state or lobby policy.</td><td>The host locked the meeting, the host has not admitted the participant from the lobby, or the participant is external and is waiting because external participants wait in the lobby by default in release 5.0.</td><td>Confirm that the meeting link and time are correct. Wait in the lobby or contact the host to request admission. If the meeting is locked, ask the host to unlock it or send a new meeting invitation if appropriate.</td><td>In NetCore Control Hub, review the meeting audit events and host lobby settings. Confirm whether the participant is internal or external, whether the meeting is locked, and whether lobby admission is operating as expected. For recurring incidents, review site-level lobby policy with the meeting owner.</td><td>KB-MTG-2007</td></tr><tr><td>MTG-JOIN-1007</td><td>Media Ports Blocked by Firewall</td><td>Meeting join / media connectivity</td><td>The client completed or attempted signalling, but media negotiation failed because required media ports are unreachable.</td><td>UDP 9000 is blocked, inspected, or rate-limited on the client path; TCP 5004 media fallback is also blocked or unavailable; firewall rules allow TCP 443 signalling but not meeting media.</td><td>Move to a network known to allow NetCore Meet media, such as a managed corporate network or approved remote-access path. Retry the meeting after changing networks. If urgent, try the web client or another managed endpoint on a permitted network.</td><td>Permit outbound UDP 9000 for preferred media and TCP 5004 for media fallback. Verify that TCP 443 is permitted for signalling. Check perimeter firewall, branch firewall, endpoint firewall, and proxy exceptions. Validate with packet capture or diagnostics at the affected site before closing the incident.</td><td>KB-MTG-2007</td></tr><tr><td>MTG-MED-4102</td><td>Media Path Degraded (high packet loss)</td><td>Media quality / transport</td><td>The meeting is connected, but the media path is degraded and packet loss exceeds the acceptable operating range.</td><td>Packet loss is 3% or higher, or intermittent congestion causes bursts of loss. Common contributors include saturated WAN links, unstable wireless, overloaded VPN paths, or traffic not prioritised on UDP 9000.</td><td>Turn off video if necessary, move closer to the wireless access point, switch to a wired connection, disconnect from congested networks, or rejoin from a better network. If the issue affects only one user, test from another endpoint.</td><td>Check meeting diagnostics for packet loss, latency, and jitter. The recommended targets are latency less than 300 ms, jitter less than 40 ms, and packet loss less than 3%. Confirm that each HD video stream has approximately 2.5 Mbps available. Review WAN utilisation, wireless health, QoS policy, and whether media is using UDP 9000 or TCP 5004 fallback.</td><td>KB-MTG-2006</td></tr><tr><td>MTG-MED-4105</td><td>No Audio Device Detected</td><td>Client device / audio</td><td>The client cannot detect an available microphone, speaker, headset, or system audio device required for meeting audio.</td><td>No audio device is connected; the operating system disabled the device; another application has exclusive control; browser or app permissions deny microphone access; device driver or headset firmware is not functioning.</td><td>Connect or re-seat the headset, select the correct speaker and microphone in the NetCore Meet audio settings, confirm operating system microphone permissions, close other apps using the audio device, and restart the client if needed.</td><td>If the issue is widespread on managed endpoints, verify endpoint device policy, operating system privacy settings, audio driver packages, and USB or Bluetooth restrictions. Compare behavior between the desktop app and web client to isolate endpoint policy versus client configuration.</td><td>KB-MTG-2006</td></tr><tr><td>MTG-SSO-6001</td><td>SAML Assertion Invalid or Expired</td><td>Authentication / SSO</td><td>The user reached the NetCore Meet site but the SAML assertion presented to NetCore Meet is invalid, expired, malformed, or outside the accepted time window.</td><td>Clock skew between the identity provider and NetCore Meet, an expired assertion, incorrect audience or recipient value, a malformed SAML response, or a replayed assertion from an old browser session.</td><td>Close the browser or app sign-in window, start a new sign-in session, and retry. If using a saved bookmark, open the NetCore Meet site from the standard company portal or Control Hub-provided URL.</td><td>Review the SAML configuration in NetCore Control Hub and on the identity provider. Confirm assertion lifetime, time synchronization, audience, recipient, NameID, and required attributes. Capture a fresh SAML response from a failed login and compare it with the configured Meet site values.</td><td>KB-MTG-2001</td></tr><tr><td>MTG-SSO-6004</td><td>IdP Certificate Mismatch</td><td>Authentication / SSO</td><td>NetCore Meet rejected the SAML response because the signing certificate does not match the identity provider certificate configured for the Meet site.</td><td>The identity provider signing certificate was rotated without updating NetCore Control Hub, the wrong certificate was uploaded, or multiple IdP certificates are configured and the active signing certificate does not match the Meet site configuration.</td><td>Retry once after clearing the browser sign-in session. If the error persists, report the exact error code and time to the service desk; users cannot correct this locally.</td><td>In NetCore Control Hub, upload or activate the current IdP signing certificate for the Meet site. Confirm the certificate fingerprint, validity period, and signing algorithm. Coordinate certificate rollover with the identity provider team and test with a non-production user before broad rollout.</td><td>KB-MTG-2001</td></tr><tr><td>MTG-CALL-7002</td><td>Number Not Provisioned</td><td>NetCore Calling integration / number provisioning</td><td>A Calling action from NetCore Meet failed because the referenced E.164 number is not provisioned or assigned in NetCore Calling.</td><td>The user, room, hunt group, or meeting callback number does not have a valid E.164 number; the number was removed; the wrong location was selected; or provisioning has not completed in NetCore Control Hub.</td><td>Confirm that the dialed or callback number is correct and in E.164 format. Try again after a short interval if the number was newly assigned. Contact the administrator if the number should already be active.</td><td>In NetCore Control Hub, verify E.164 number inventory, user or workspace assignment, Calling location, and dial plan. Confirm that the number is assigned to the intended user, room, hunt group, or service object and that provisioning has completed. Check whether the optional outbound prefix 9 is required by the location dial plan.</td><td>None</td></tr><tr><td>MTG-CALL-7010</td><td>Emergency Address Missing</td><td>NetCore Calling integration / emergency calling</td><td>A Calling feature is blocked because the user or location does not have the required emergency address information.</td><td>The Calling location is incomplete, the user is assigned to a location without an emergency address, or address validation was skipped during provisioning.</td><td>Do not rely on the affected Calling service until the administrator confirms the emergency address is configured. Report the error with the user account, location, and time observed.</td><td>In NetCore Control Hub, configure and validate the emergency address for the affected Calling location or user assignment. Confirm the user is assigned to the correct location-based dial plan and retest the Calling action after saving the address.</td><td>None</td></tr></tbody></table>
+</section>
+<section><h2>Component grouping</h2>
+<p>For queueing and escalation, use the component prefix to route the case to the correct support team. The prefix does not replace troubleshooting; it indicates the first area to inspect.</p>
+<table><caption>MTG code prefixes and primary ownership</caption><thead><tr><th>Prefix</th><th>Codes</th><th>Primary component</th><th>Initial routing guidance</th></tr></thead><tbody><tr><td>MTG-JOIN</td><td>MTG-JOIN-1003, MTG-JOIN-1007</td><td>Meeting join path</td><td>Route to meeting services or network operations depending on whether the failure is lobby policy or port reachability.</td></tr><tr><td>MTG-MED</td><td>MTG-MED-4102, MTG-MED-4105</td><td>Media quality and endpoint devices</td><td>Route to collaboration operations for meeting diagnostics, then to network or endpoint engineering based on packet loss or device detection findings.</td></tr><tr><td>MTG-SSO</td><td>MTG-SSO-6001, MTG-SSO-6004</td><td>Authentication and SAML SSO</td><td>Route to identity administration and the NetCore Control Hub site administrator. See KB-MTG-2001.</td></tr><tr><td>MTG-CALL</td><td>MTG-CALL-7002, MTG-CALL-7010</td><td>NetCore Calling provisioning</td><td>Route to Calling administrators responsible for E.164 number provisioning, location-based dial plans, and emergency address data.</td></tr></tbody></table>
+</section>
+<section><h2>Sample event records</h2>
+<p>The following examples show typical event fields to capture when opening or escalating a case. Values are examples only; do not reuse them as policy thresholds.</p>
+<pre><code class="language-json">{
+  &quot;timestamp&quot;: &quot;2026-02-18T14:22:07Z&quot;,
+  &quot;product&quot;: &quot;NetCore Meet&quot;,
+  &quot;release&quot;: &quot;5.0&quot;,
+  &quot;client&quot;: &quot;desktop-windows&quot;,
+  &quot;user&quot;: &quot;alex.chen@example.internal&quot;,
+  &quot;meetingId&quot;: &quot;784-219-603&quot;,
+  &quot;code&quot;: &quot;MTG-MED-4102&quot;,
+  &quot;message&quot;: &quot;Media Path Degraded (high packet loss)&quot;,
+  &quot;transport&quot;: &quot;UDP 9000&quot;,
+  &quot;packetLossPct&quot;: 4.8,
+  &quot;latencyMs&quot;: 112,
+  &quot;jitterMs&quot;: 27
+}
+
+{
+  &quot;timestamp&quot;: &quot;2026-02-18T15:04:31Z&quot;,
+  &quot;product&quot;: &quot;NetCore Meet&quot;,
+  &quot;release&quot;: &quot;5.0&quot;,
+  &quot;client&quot;: &quot;web&quot;,
+  &quot;user&quot;: &quot;maria.patel@example.internal&quot;,
+  &quot;site&quot;: &quot;meet.example.internal&quot;,
+  &quot;code&quot;: &quot;MTG-SSO-6004&quot;,
+  &quot;message&quot;: &quot;IdP Certificate Mismatch&quot;,
+  &quot;ssoProfile&quot;: &quot;corp-saml-primary&quot;
+}</code></pre>
+</section>
+<section><h2>Notes on interpretation</h2>
+<p>Do not treat all MTG codes as service outages. MTG-JOIN-1003 can be expected behavior when a meeting is locked or when an external participant is waiting in the lobby. By contrast, repeated MTG-JOIN-1007 events from the same subnet usually indicate a firewall or proxy path issue.</p>
+<p>For MTG-MED-4102, compare diagnostics against the NetCore Meet 5.0 recommendations: latency less than 300 ms, jitter less than 40 ms, and packet loss less than 3%. A meeting can remain connected while this alarm is active, but user experience may include frozen video, robotic audio, or delayed screen sharing.</p>
+<p>For MTG-MED-4105, separate device detection from media transport. If no audio device is detected, opening UDP 9000 or TCP 5004 will not resolve the error; investigate operating system device visibility, client permissions, and headset state first.</p>
+<p>For MTG-SSO-6001 and MTG-SSO-6004, the user action is intentionally limited because the source of truth is the SAML configuration. Administrators should validate NetCore Control Hub SSO settings against the identity provider configuration as described in KB-MTG-2001.</p>
+<p>For MTG-CALL-7002 and MTG-CALL-7010, check Calling configuration in the same tenant context as the Meet user. Confirm E.164 number provisioning, location assignment, location-based dial plans, optional outbound prefix 9 policy, and emergency address completeness before retesting.</p>
+<ul><li>Use KB-MTG-2007 for join failures involving MTG-JOIN-1003 or MTG-JOIN-1007.</li><li>Use KB-MTG-2006 for audio and video quality incidents involving MTG-MED-4102 or endpoint audio symptoms related to MTG-MED-4105.</li><li>Use KB-MTG-2001 for SAML configuration issues involving MTG-SSO-6001 or MTG-SSO-6004.</li><li>Record the exact error code verbatim in case notes: MTG-JOIN-1003, MTG-JOIN-1007, MTG-MED-4102, MTG-MED-4105, MTG-SSO-6001, MTG-SSO-6004, MTG-CALL-7002, MTG-CALL-7010.</li></ul>
+</section>
+<section><h2>Related Articles</h2><ul><li>KB-MTG-2006: Troubleshooting Audio and Video Quality (MTG-MED-4102)</li><li>KB-MTG-2007: Troubleshooting Meeting Join Failures (MTG-JOIN-1003 / MTG-JOIN-1007)</li><li>KB-MTG-2001: Configuring SAML SSO for NetCore Meet Sites</li></ul></section>
+</article>
+<footer>&copy; 2026 NetCore Systems. Internal use only.</footer>
+</body>
+</html>

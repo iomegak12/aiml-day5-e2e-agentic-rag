@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>KB-MTG-2005: Call Forwarding, Hunt Groups and Voicemail Setup</title>
+  <meta name="kb_id" content="KB-MTG-2005">
+  <meta name="title" content="Call Forwarding, Hunt Groups and Voicemail Setup">
+  <meta name="domain" content="meetings">
+  <meta name="article_type" content="config">
+  <meta name="product" content="NetCore Calling">
+  <meta name="version" content="5.0">
+  <meta name="status" content="current">
+  <meta name="superseded_by" content="">
+  <meta name="last_updated" content="2026-08-01">
+  <meta name="error_codes" content="MTG-CALL-7002">
+  <meta name="related" content="KB-MTG-2002">
+  <meta name="tags" content="calling, hunt-group, voicemail">
+  <meta name="author" content="NetCore Systems Technical Support">
+  <meta name="format" content="html">
+  <style>
+body{font-family:Segoe UI,Arial,sans-serif;max-width:920px;margin:2rem auto;padding:0 1rem;color:#1d2733;line-height:1.55}
+header{border-bottom:3px solid #0a5cad;margin-bottom:1rem} .brand{color:#0a5cad;font-weight:600}
+.meta{color:#5b6773;font-size:.9rem} .notice{background:#fff4e5;border-left:4px solid #e08a00;padding:.75rem 1rem}
+table{border-collapse:collapse;width:100%;margin:.5rem 0 1rem} th,td{border:1px solid #c9d2dc;padding:.4rem .6rem;text-align:left;vertical-align:top}
+th{background:#eef3f8} caption{text-align:left;font-style:italic;padding:.25rem 0}
+pre{background:#0f1720;color:#e6edf3;padding:.8rem;overflow-x:auto;border-radius:4px}
+nav.breadcrumb{font-size:.85rem;color:#5b6773} footer{margin-top:2rem;border-top:1px solid #c9d2dc;font-size:.8rem;color:#5b6773}
+</style>
+</head>
+<body>
+<nav class="breadcrumb">NetCore Systems Support &rsaquo; Knowledge Base &rsaquo; NetCore Calling</nav>
+<header>
+<div class="brand">NetCore Systems Knowledge Base</div>
+<h1>Call Forwarding, Hunt Groups and Voicemail Setup</h1>
+<p class="meta">KB-MTG-2005 | NetCore Calling 5.0 | Last updated: 2026-08-01 | Status: current</p>
+</header>
+<article>
+<h2>Summary</h2>
+<p>This article describes how to configure NetCore Calling 5.0 call forwarding, hunt groups, and voicemail in NetCore Control Hub, with equivalent CLI examples for repeatable administration. It also covers user self-service options and verification steps, including how to identify MTG-CALL-7002 Number Not Provisioned conditions.</p>
+<p><strong>Applies to:</strong> NetCore Calling 5.0, NetCore Control Hub, NetCore Calling users, hunt groups, voicemail, Meet Business and Meet Enterprise organizations using NetCore Calling</p>
+<section><h2>Overview</h2>
+<p>NetCore Calling 5.0 supports user-level call forwarding, location-based hunt groups, and voicemail with greeting, PIN, and e-mail delivery settings. Administrators configure these services in NetCore Control Hub, while end users can manage selected personal settings from the NetCore Calling user portal or the NetCore Meet desktop and mobile apps.</p>
+<p>Call forwarding supports three modes: always, busy, and no-answer. The no-answer forwarding timer is fixed at 20 seconds in release 5.0. Hunt groups support circular, top-down, and simultaneous routing. Voicemail can be enabled per user with a recorded or uploaded greeting, numeric PIN, and optional e-mail delivery of voicemail notifications.</p>
+<p>All users and hunt groups that receive inbound calls must have provisioned E.164 numbers. If a number is assigned in forwarding, hunt group, or voicemail routing before it is provisioned, NetCore Calling may raise MTG-CALL-7002 Number Not Provisioned. For number inventory and location dial plan setup, see KB-MTG-2002.</p>
+<table><caption>Supported NetCore Calling 5.0 routing features</caption><thead><tr><th>Feature</th><th>Supported options</th><th>Administrator scope</th><th>User self-service</th></tr></thead><tbody><tr><td>Call forwarding</td><td>Always, busy, no-answer after 20 s</td><td>Configure for any assigned user</td><td>Configure own forwarding destinations if allowed by policy</td></tr><tr><td>Hunt groups</td><td>Circular, top-down, simultaneous</td><td>Create, delete, assign numbers, set members and routing order</td><td>Not available unless delegated by an administrator</td></tr><tr><td>Voicemail</td><td>Greeting, PIN, e-mail notification or delivery</td><td>Enable, reset PIN, manage policy</td><td>Record greeting, change PIN, manage own e-mail delivery if allowed</td></tr></tbody></table>
+</section>
+<section><h2>Prerequisites</h2>
+<p>Complete the following prerequisites before configuring call forwarding, hunt groups, or voicemail. These checks prevent failed routing and MTG-CALL-7002 Number Not Provisioned alarms.</p>
+<ul><li>Confirm the tenant is running NetCore Calling 5.0.</li><li>Confirm each user has an active NetCore Calling licence and an assigned E.164 number, for example +15551201001.</li><li>Confirm each shared service number, such as a hunt group pilot number, is provisioned in the correct location.</li><li>Confirm the location dial plan is already configured. Outbound prefix 9 is optional and does not change the E.164 format required for forwarding destinations. See KB-MTG-2002.</li><li>Confirm administrators have the Calling Administrator or Organization Administrator role in NetCore Control Hub.</li><li>Confirm voicemail e-mail delivery is permitted by the organization messaging policy if voicemail messages or notifications will be sent by e-mail.</li></ul>
+<pre><code class="language-bash">ncctl login --tenant acme-prod --role calling-admin
+ncctl calling tenant show --fields release,callingStatus
+ncctl calling numbers show --location NYC --status provisioned
+ncctl calling users show --location NYC --licensed true</code></pre>
+</section>
+<section><h2>Step-by-step Procedure</h2>
+<p>Use the following procedure to configure forwarding, hunt groups, voicemail, and user self-service policy. The NetCore Control Hub path is shown first, followed by an equivalent CLI example for administrators who maintain changes as code.</p>
+<p>In NetCore Control Hub, open Calling &gt; Users to configure user forwarding and voicemail. Open Calling &gt; Hunt Groups to create and manage hunt groups. Open Calling &gt; Policies &gt; User Self-Service to control which settings users can modify themselves.</p>
+<ul><li>1. Validate number provisioning. In Control Hub, go to Calling &gt; Numbers and verify that all user, forwarding destination, and hunt group pilot numbers are listed as Provisioned. If a number is missing, provision it first as described in KB-MTG-2002.</li><li>2. Configure call forwarding for a user. In Control Hub, go to Calling &gt; Users &gt; select the user &gt; Call handling &gt; Forwarding. Enable Always, Busy, or No-answer forwarding, then enter the destination in E.164 format. For no-answer forwarding, NetCore Calling uses the fixed 20-second timer.</li><li>3. Create a hunt group. In Control Hub, go to Calling &gt; Hunt Groups &gt; Create Hunt Group. Select the location, assign a provisioned E.164 pilot number, choose circular, top-down, or simultaneous routing, and add members in the required order.</li><li>4. Configure voicemail. In Control Hub, go to Calling &gt; Users &gt; select the user &gt; Voicemail. Enable voicemail, upload or record the greeting, set or reset the numeric PIN, and enable e-mail notification or delivery if permitted by policy.</li><li>5. Configure user self-service. In Control Hub, go to Calling &gt; Policies &gt; User Self-Service. Allow or deny users the ability to manage their own call forwarding, voicemail greeting, voicemail PIN, and voicemail e-mail delivery settings.</li><li>6. Save changes and allow up to two minutes for the calling configuration to propagate across the tenant.</li></ul>
+<pre><code class="language-json">{
+  &quot;tenant&quot;: &quot;acme-prod&quot;,
+  &quot;release&quot;: &quot;5.0&quot;,
+  &quot;location&quot;: &quot;NYC&quot;,
+  &quot;users&quot;: [
+    {
+      &quot;userId&quot;: &quot;alex.rivera@example.internal&quot;,
+      &quot;number&quot;: &quot;+15551201001&quot;,
+      &quot;forwarding&quot;: {
+        &quot;always&quot;: {
+          &quot;enabled&quot;: false,
+          &quot;destination&quot;: null
+        },
+        &quot;busy&quot;: {
+          &quot;enabled&quot;: true,
+          &quot;destination&quot;: &quot;+15551201050&quot;
+        },
+        &quot;noAnswer&quot;: {
+          &quot;enabled&quot;: true,
+          &quot;destination&quot;: &quot;+15551201051&quot;,
+          &quot;afterSeconds&quot;: 20
+        }
+      },
+      &quot;voicemail&quot;: {
+        &quot;enabled&quot;: true,
+        &quot;greeting&quot;: &quot;standard-business-hours.wav&quot;,
+        &quot;pinResetRequired&quot;: true,
+        &quot;emailDelivery&quot;: {
+          &quot;enabled&quot;: true,
+          &quot;address&quot;: &quot;alex.rivera@example.internal&quot;,
+          &quot;includeAudioAttachment&quot;: true
+        }
+      }
+    }
+  ],
+  &quot;huntGroups&quot;: [
+    {
+      &quot;huntGroupId&quot;: &quot;hg-nyc-support&quot;,
+      &quot;displayName&quot;: &quot;NYC Support Hunt Group&quot;,
+      &quot;pilotNumber&quot;: &quot;+15551202000&quot;,
+      &quot;routingMode&quot;: &quot;circular&quot;,
+      &quot;members&quot;: [
+        &quot;alex.rivera@example.internal&quot;,
+        &quot;morgan.lee@example.internal&quot;,
+        &quot;jordan.chen@example.internal&quot;
+      ]
+    },
+    {
+      &quot;huntGroupId&quot;: &quot;hg-nyc-ops&quot;,
+      &quot;displayName&quot;: &quot;NYC Operations Hunt Group&quot;,
+      &quot;pilotNumber&quot;: &quot;+15551202010&quot;,
+      &quot;routingMode&quot;: &quot;top-down&quot;,
+      &quot;members&quot;: [
+        &quot;pri.owner@example.internal&quot;,
+        &quot;sec.owner@example.internal&quot;
+      ]
+    },
+    {
+      &quot;huntGroupId&quot;: &quot;hg-nyc-reception&quot;,
+      &quot;displayName&quot;: &quot;NYC Reception Ring Group&quot;,
+      &quot;pilotNumber&quot;: &quot;+15551202020&quot;,
+      &quot;routingMode&quot;: &quot;simultaneous&quot;,
+      &quot;members&quot;: [
+        &quot;frontdesk1@example.internal&quot;,
+        &quot;frontdesk2@example.internal&quot;
+      ]
+    }
+  ],
+  &quot;userSelfServicePolicy&quot;: {
+    &quot;allowForwardingChanges&quot;: true,
+    &quot;allowVoicemailGreetingChanges&quot;: true,
+    &quot;allowVoicemailPinChanges&quot;: true,
+    &quot;allowVoicemailEmailDeliveryChanges&quot;: false
+  }
+}</code></pre>
+</section>
+<section><h2>Verification</h2>
+<p>Verify the configuration from both the administrative plane and the call-routing plane. The examples below show successful configuration and a common failure caused by referencing an unprovisioned number.</p>
+<p>If the CLI or Control Hub displays MTG-CALL-7002 Number Not Provisioned, check the referenced E.164 number in Calling &gt; Numbers and confirm it is provisioned in the correct location. Correct the number assignment or provision the number as described in KB-MTG-2002.</p>
+<ul><li>Verify the user forwarding profile shows the expected forwarding modes and destinations.</li><li>Verify the hunt group pilot number, routing mode, and member order.</li><li>Place test calls to the user number and each hunt group pilot number.</li><li>For voicemail, allow a call to go unanswered, confirm the greeting plays, leave a message, and verify the message appears in the user mailbox or e-mail delivery target.</li><li>Check the calling event log for rejected routing updates or MTG-CALL-7002 Number Not Provisioned alarms.</li></ul>
+<pre><code class="language-text">$ ncctl calling user show alex.rivera@example.internal --include forwarding,voicemail
+User: alex.rivera@example.internal
+Number: +15551201001
+Location: NYC
+Forwarding:
+  Always: disabled
+  Busy: enabled, destination +15551201050
+  No-answer: enabled, destination +15551201051, after 20 s
+Voicemail:
+  Enabled: yes
+  Greeting: standard-business-hours.wav
+  PIN status: reset required
+  E-mail delivery: enabled, alex.rivera@example.internal, audio attachment yes
+Config status: active
+Last updated: 2026-11-06T14:22:18Z
+
+$ ncctl calling hunt-group show hg-nyc-support
+Hunt group: hg-nyc-support
+Display name: NYC Support Hunt Group
+Pilot number: +15551202000
+Location: NYC
+Routing mode: circular
+Members:
+  1. alex.rivera@example.internal     reachable
+  2. morgan.lee@example.internal      reachable
+  3. jordan.chen@example.internal     reachable
+Config status: active
+
+$ ncctl calling test-call --from +15551209999 --to +15551202000 --trace
+Trace ID: calltrace-20261106-142322-8841
+Ingress number: +15551202000
+Matched object: hunt-group hg-nyc-support
+Routing mode: circular
+Selected member: alex.rivera@example.internal
+Result: connected
+Post-dial latency: 184 ms
+
+$ ncctl calling events list --since 2026-11-06T14:00:00Z --severity warning
+Timestamp                 Severity  Code           Object                         Message
+2026-11-06T14:11:07Z      warning   MTG-CALL-7002  user:casey.ng@example.internal  Number Not Provisioned: forwarding destination +15551209901 is not in provisioned inventory for location NYC</code></pre>
+</section>
+<section><h2>Rollback</h2>
+<p>Rollback should restore the previous routing behavior without deleting number inventory. Disable forwarding rules, remove or deactivate hunt groups, and reset voicemail settings only for the affected users.</p>
+<p>If a rollback is required because of MTG-CALL-7002 Number Not Provisioned, remove the unprovisioned destination from forwarding or hunt group configuration first, then reapply the last known-good configuration.</p>
+<ul><li>Disable user forwarding rules or restore the previous destination.</li><li>Deactivate the hunt group before deleting it if active calls may still be present.</li><li>Remove members from the hunt group only after confirming no inbound calls are being routed to the pilot number.</li><li>Disable voicemail e-mail delivery or restore the previous e-mail destination.</li><li>Ask users to confirm their self-service settings after rollback if user-level changes were allowed.</li></ul>
+<pre><code class="language-bash"># Disable forwarding for a user
+ncctl calling user forwarding update alex.rivera@example.internal \
+  --always disabled \
+  --busy disabled \
+  --no-answer disabled
+
+# Deactivate a hunt group but keep the pilot number reserved
+ncctl calling hunt-group update hg-nyc-support --status inactive
+
+# Optional: delete the hunt group after validation
+ncctl calling hunt-group delete hg-nyc-support --confirm
+
+# Disable voicemail e-mail delivery while keeping voicemail enabled
+ncctl calling voicemail update alex.rivera@example.internal \
+  --enabled true \
+  --email-delivery disabled
+
+# Restore user self-service policy to a restricted state
+ncctl calling policy self-service update \
+  --allow-forwarding-changes false \
+  --allow-voicemail-greeting-changes true \
+  --allow-voicemail-pin-changes true \
+  --allow-voicemail-email-delivery-changes false</code></pre>
+</section>
+<section><h2>Known Limitations</h2>
+<p>NetCore Calling 5.0 has the following limitations for call forwarding, hunt groups, and voicemail configuration.</p>
+<ul><li>No-answer forwarding uses a fixed 20-second timer. The timer is not configurable in release 5.0.</li><li>Forwarding destinations, hunt group pilot numbers, and user numbers must be provisioned E.164 numbers. Unprovisioned numbers can trigger MTG-CALL-7002 Number Not Provisioned.</li><li>Supported hunt group routing modes are circular, top-down, and simultaneous only.</li><li>User self-service can allow personal forwarding and voicemail changes, but standard users cannot create or delete hunt groups.</li><li>The optional outbound prefix 9 is used for dialing behavior only; it does not replace E.164 number provisioning requirements.</li><li>Voicemail e-mail delivery depends on the organization messaging policy. If e-mail delivery is disabled by policy, users may still access voicemail from the NetCore Calling interface.</li></ul>
+</section>
+<section><h2>Related Articles</h2><ul><li>KB-MTG-2002: NetCore Calling: Number Provisioning and Dial Plans</li></ul></section>
+</article>
+<footer>&copy; 2026 NetCore Systems. Internal use only.</footer>
+</body>
+</html>

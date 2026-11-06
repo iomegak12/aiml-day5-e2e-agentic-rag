@@ -1,0 +1,13 @@
+[project]
+name = "day5"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "langchain-core>=1.7.6",
+    "langchain-openai>=1.7.4",
+    "pydantic>=2.14.3",
+    "python-dotenv>=1.2.4",
+    "reportlab>=5.1.0",
+]

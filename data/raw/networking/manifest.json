@@ -1,0 +1,280 @@
+{
+  "brand": "NetCore Systems",
+  "domain": "networking",
+  "generated_at": "2026-11-06T16:32:22+00:00",
+  "article_count": 10,
+  "articles": [
+    {
+      "kb_id": "KB-NET-1001",
+      "title": "Configuring App-Aware Routing SLA Classes",
+      "domain": "networking",
+      "article_type": "config",
+      "product": "NetCore SD-WAN",
+      "version": "5.0",
+      "status": "current",
+      "superseded_by": "",
+      "last_updated": "2026-08-12",
+      "error_codes": [
+        "NCS-SLA-2001"
+      ],
+      "related": [
+        "KB-NET-1002",
+        "KB-NET-1003"
+      ],
+      "tags": [
+        "sla",
+        "app-aware-routing",
+        "policy"
+      ],
+      "author": "NetCore Systems Technical Support",
+      "format": "pdf",
+      "file": "KB-NET-1001_configuring-app-aware-routing-sla-classes.pdf"
+    },
+    {
+      "kb_id": "KB-NET-1002",
+      "title": "SLA Class Thresholds Reference (Latency, Jitter, Loss)",
+      "domain": "networking",
+      "article_type": "reference",
+      "product": "NetCore SD-WAN",
+      "version": "5.0",
+      "status": "current",
+      "superseded_by": "",
+      "last_updated": "2026-07-30",
+      "error_codes": [],
+      "related": [
+        "KB-NET-1001",
+        "KB-NET-1003"
+      ],
+      "tags": [
+        "sla",
+        "thresholds",
+        "reference"
+      ],
+      "author": "NetCore Systems Technical Support",
+      "format": "pdf",
+      "file": "KB-NET-1002_sla-class-thresholds-reference-latency-jitter-loss.pdf"
+    },
+    {
+      "kb_id": "KB-NET-1003",
+      "title": "SLA Breach Policy: Escalation and Auto-Failover",
+      "domain": "networking",
+      "article_type": "policy",
+      "product": "NetCore SD-WAN",
+      "version": "5.0",
+      "status": "current",
+      "superseded_by": "",
+      "last_updated": "2026-09-04",
+      "error_codes": [
+        "NCS-SLA-2001",
+        "NCS-SLA-2002"
+      ],
+      "related": [
+        "KB-NET-1002",
+        "KB-NET-1005",
+        "KB-NET-1004"
+      ],
+      "tags": [
+        "sla",
+        "breach",
+        "escalation",
+        "failover"
+      ],
+      "author": "NetCore Systems Technical Support",
+      "format": "html",
+      "file": "KB-NET-1003_sla-breach-policy-escalation-and-auto-failover.html"
+    },
+    {
+      "kb_id": "KB-NET-1004",
+      "title": "SLA Breach Policy (Release 4.2)",
+      "domain": "networking",
+      "article_type": "policy",
+      "product": "NetCore SD-WAN",
+      "version": "4.2",
+      "status": "superseded",
+      "superseded_by": "KB-NET-1003",
+      "last_updated": "2024-11-18",
+      "error_codes": [
+        "NCS-SLA-2001"
+      ],
+      "related": [
+        "KB-NET-1002"
+      ],
+      "tags": [
+        "sla",
+        "breach",
+        "legacy"
+      ],
+      "author": "NetCore Systems Technical Support",
+      "format": "html",
+      "file": "KB-NET-1004_sla-breach-policy-release-4-2.html"
+    },
+    {
+      "kb_id": "KB-NET-1005",
+      "title": "Troubleshooting Alarm NCS-SLA-2001 \"SLA Violation Detected\"",
+      "domain": "networking",
+      "article_type": "runbook",
+      "product": "NetCore SD-WAN",
+      "version": "5.0",
+      "status": "current",
+      "superseded_by": "",
+      "last_updated": "2026-09-21",
+      "error_codes": [
+        "NCS-SLA-2001",
+        "NCS-SLA-2002",
+        "NCS-QOS-5002"
+      ],
+      "related": [
+        "KB-NET-1003",
+        "KB-NET-1006",
+        "KB-NET-1010"
+      ],
+      "tags": [
+        "troubleshooting",
+        "sla",
+        "noc"
+      ],
+      "author": "NetCore Systems Technical Support",
+      "format": "md",
+      "file": "KB-NET-1005_troubleshooting-alarm-ncs-sla-2001-sla-violation-detected.md"
+    },
+    {
+      "kb_id": "KB-NET-1006",
+      "title": "Troubleshooting BFD Tunnel Flaps (NCS-BFD-3004)",
+      "domain": "networking",
+      "article_type": "runbook",
+      "product": "NetCore SD-WAN",
+      "version": "5.0",
+      "status": "current",
+      "superseded_by": "",
+      "last_updated": "2026-06-15",
+      "error_codes": [
+        "NCS-BFD-3004",
+        "NCS-BFD-3005"
+      ],
+      "related": [
+        "KB-NET-1005",
+        "KB-NET-1008"
+      ],
+      "tags": [
+        "troubleshooting",
+        "bfd",
+        "tunnels"
+      ],
+      "author": "NetCore Systems Technical Support",
+      "format": "md",
+      "file": "KB-NET-1006_troubleshooting-bfd-tunnel-flaps-ncs-bfd-3004.md"
+    },
+    {
+      "kb_id": "KB-NET-1007",
+      "title": "Zero-Touch Provisioning of a Branch Edge (NCX-1000)",
+      "domain": "networking",
+      "article_type": "config",
+      "product": "NetCore SD-WAN",
+      "version": "5.0",
+      "status": "current",
+      "superseded_by": "",
+      "last_updated": "2026-05-02",
+      "error_codes": [
+        "NCS-ZTP-4001",
+        "NCS-ZTP-4003",
+        "NCS-ORC-6001"
+      ],
+      "related": [
+        "KB-NET-1008"
+      ],
+      "tags": [
+        "ztp",
+        "onboarding",
+        "branch"
+      ],
+      "author": "NetCore Systems Technical Support",
+      "format": "pdf",
+      "file": "KB-NET-1007_zero-touch-provisioning-of-a-branch-edge-ncx-1000.pdf"
+    },
+    {
+      "kb_id": "KB-NET-1008",
+      "title": "NCS Alarm and Error Code Reference",
+      "domain": "networking",
+      "article_type": "reference",
+      "product": "NetCore SD-WAN",
+      "version": "5.0",
+      "status": "current",
+      "superseded_by": "",
+      "last_updated": "2026-09-30",
+      "error_codes": [
+        "NCS-SLA-2001",
+        "NCS-SLA-2002",
+        "NCS-BFD-3004",
+        "NCS-BFD-3005",
+        "NCS-ZTP-4001",
+        "NCS-ZTP-4003",
+        "NCS-QOS-5002",
+        "NCS-ORC-6001"
+      ],
+      "related": [
+        "KB-NET-1005",
+        "KB-NET-1006",
+        "KB-NET-1007"
+      ],
+      "tags": [
+        "alarms",
+        "error-codes",
+        "reference"
+      ],
+      "author": "NetCore Systems Technical Support",
+      "format": "html",
+      "file": "KB-NET-1008_ncs-alarm-and-error-code-reference.html"
+    },
+    {
+      "kb_id": "KB-NET-1009",
+      "title": "SD-WAN FAQ: Transports, Failover and SLA Reports",
+      "domain": "networking",
+      "article_type": "faq",
+      "product": "NetCore SD-WAN",
+      "version": "5.0",
+      "status": "current",
+      "superseded_by": "",
+      "last_updated": "2026-08-25",
+      "error_codes": [],
+      "related": [
+        "KB-NET-1002",
+        "KB-NET-1003"
+      ],
+      "tags": [
+        "faq",
+        "sla",
+        "reporting"
+      ],
+      "author": "NetCore Systems Technical Support",
+      "format": "md",
+      "file": "KB-NET-1009_sd-wan-faq-transports-failover-and-sla-reports.md"
+    },
+    {
+      "kb_id": "KB-NET-1010",
+      "title": "QoS and Traffic Steering for Voice and Video",
+      "domain": "networking",
+      "article_type": "config",
+      "product": "NetCore SD-WAN",
+      "version": "5.0",
+      "status": "current",
+      "superseded_by": "",
+      "last_updated": "2026-07-08",
+      "error_codes": [
+        "NCS-QOS-5002"
+      ],
+      "related": [
+        "KB-NET-1001",
+        "KB-NET-1005"
+      ],
+      "tags": [
+        "qos",
+        "voice",
+        "video",
+        "dscp"
+      ],
+      "author": "NetCore Systems Technical Support",
+      "format": "md",
+      "file": "KB-NET-1010_qos-and-traffic-steering-for-voice-and-video.md"
+    }
+  ]
+}
