@@ -13,3 +13,17 @@
 | PDF page text starts with "NetCore Systems \| KB-… \| Page n" | The page footer is extracted as text | Expected. Strip it during chunk cleaning if you want |
 | Frontmatter / `<meta>` missing from `Document.metadata` | `TextLoader` / `BSHTMLLoader` don't parse them | Join on `manifest.json` by file name, or parse them yourself |
 | Articles differ between runs | LLM output is non-deterministic | Expected. The seeds and domain facts keep key values consistent |
+| `Chroma server not reachable at localhost:8000` | The server isn't running, or the port differs | `make chroma-up`, and check `CHROMA_HOST` / `CHROMA_PORT` in `.env` |
+| `port is already allocated` on `make chroma-up` | Another service is using the port | Change `CHROMA_PORT` in `.env` (compose reads it), then `make chroma-up` |
+| `KeyError: 'OPENAI_EMBEDDING_MODEL'` | Variable missing from `.env` | Add `OPENAI_EMBEDDING_MODEL=text-embedding-3-small` |
+| `KB folder not found` | `KB_DATA_DIR` is wrong, or there are no articles yet | Fix the path, or run `make generate` |
+| Client/server version errors from Chroma | The `chromadb` client and the image tag differ | Keep the `docker-compose.yml` image tag equal to the `chromadb` version in `uv.lock` |
+| First `make populate` is slow or downloads data | `unstructured` initialises (and may fetch NLTK data) on first use | Wait for it once. Later runs are faster |
+| A table split into two table chunks | The PDF table continues onto the next page | Expected. Each part carries its own page reference |
+| `[warn] description failed …` | LLM error for one table/code item | A template description is used instead. Re-run `make populate` (it upserts) |
+| Start from an empty vector DB | — | `make chroma-reset && make chroma-up && make populate` |
+| `Cannot open the Chroma databases` in `make test-query` | The server is down, or the DBs aren't populated yet | `make chroma-up && make populate` |
+| `$contains` returns 0 for a known code | `$contains` is case-sensitive | Use the exact case (`MTG-JOIN-1007`), or BM25 |
+| `$contains` matches many chunks | Codes are cross-referenced across articles | Expected. It filters but doesn't rank; compare with BM25 |
+| "Server API version 1.0.0" while the image is 1.5.9 | `/api/v2/version` reports the API version | Expected |
+| `make query` prints a usage error | `Q` wasn't given | `make query Q="your question" D=meetings` |

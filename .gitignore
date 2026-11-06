@@ -11,3 +11,6 @@ wheels/
 
 # Secrets
 .env
+
+# Chroma server data (docker bind mount)
+chroma-data/

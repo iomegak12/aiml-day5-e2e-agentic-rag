@@ -7,7 +7,6 @@ Checks, for every article listed in data/raw/<domain>/manifest.json:
   - no real vendor / product names leaked into the content
 
 Run via:  make verify
-(needs langchain-community, pypdf, beautifulsoup4, lxml - supplied on the fly by `uv run --with`)
 """
 
 from __future__ import annotations

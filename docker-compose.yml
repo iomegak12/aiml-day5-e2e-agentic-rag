@@ -1,0 +1,22 @@
+# Chroma vector database server for the Pre-RAG pipeline.
+# Start: make chroma-up   Stop: make chroma-down
+# Host/port come from .env (CHROMA_PORT); data persists in ./chroma-data (git-ignored).
+
+services:
+  chroma:
+    image: chromadb/chroma:1.5.9 # keep in step with the chromadb client version in uv.lock
+    container_name: netcore-chroma
+    ports:
+      - "${CHROMA_PORT:-8000}:8000"
+    volumes:
+      - ./chroma-data:/data
+    environment:
+      ANONYMIZED_TELEMETRY: "FALSE"
+    healthcheck:
+      # image has no curl/wget - probe the heartbeat endpoint with bash /dev/tcp
+      test: ["CMD", "bash", "-c", "exec 3<>/dev/tcp/127.0.0.1/8000 && printf 'GET /api/v2/heartbeat HTTP/1.0\\r\\n\\r\\n' >&3 && grep -q '200 OK' <&3"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 5s
+    restart: unless-stopped

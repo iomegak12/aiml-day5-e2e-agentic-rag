@@ -1,0 +1,15 @@
+# Keep secrets, data and local environments out of any Docker build context
+.env
+.env.*
+!.env.example
+.git
+.gitignore
+.venv
+__pycache__/
+*.py[oc]
+chroma-data/
+data/
+docs/
+*.egg-info
+build/
+dist/

@@ -4,10 +4,15 @@
 UV          ?= uv
 GEN         := scripts/generate_kb.py
 VERIFY      := scripts/verify_kb.py
-VERIFY_DEPS := --with langchain-community --with pypdf --with beautifulsoup4 --with lxml
+POPULATE    := scripts/populate_vector_dbs.py
+TESTQUERY   := scripts/test_query_vector_dbs.py
+D           ?= all
+COMPOSE     ?= docker compose
 
 .DEFAULT_GOAL := help
-.PHONY: help install generate generate-networking generate-meetings regenerate verify clean clean-data
+.PHONY: help install generate generate-networking generate-meetings regenerate verify clean clean-data \
+        chroma-up chroma-down chroma-logs chroma-reset populate populate-networking populate-meetings db-stats \
+        test-query query
 
 help:  ## List available targets
 	@echo Targets:
@@ -19,6 +24,17 @@ help:  ## List available targets
 	@echo   verify               Load every article with LangChain loaders and run sanity checks
 	@echo   clean                Remove Python caches
 	@echo   clean-data           Delete generated articles under data/raw
+	@echo Vector DB:
+	@echo   chroma-up            Start the Chroma server - docker compose
+	@echo   chroma-down          Stop the Chroma server - data is kept
+	@echo   chroma-logs          Follow the Chroma server logs
+	@echo   chroma-reset         Stop the server and DELETE ./chroma-data
+	@echo   populate             Read, chunk, describe, embed and store both domains
+	@echo   populate-networking  Populate the networking database only
+	@echo   populate-meetings    Populate the meetings database only
+	@echo   db-stats             Show chunk counts and sample metadata per database
+	@echo   test-query           DB info + similarity, keyword, filter, hybrid, cross-domain demos
+	@echo   query Q=... D=...    Ad-hoc query, D = networking, meetings or all - default all
 
 install:
 	$(UV) sync
@@ -36,10 +52,46 @@ regenerate:
 	$(UV) run $(GEN) --domain all --force
 
 verify:
-	$(UV) run $(VERIFY_DEPS) python $(VERIFY)
+	$(UV) run python $(VERIFY)
 
 clean:
 	$(UV) run python -c "import pathlib, shutil; [shutil.rmtree(p) for p in pathlib.Path('.').rglob('__pycache__') if '.venv' not in p.parts]"
 
 clean-data:
 	$(UV) run python -c "import shutil; shutil.rmtree('data/raw', ignore_errors=True)"
+
+# ---------------------------- Vector DB ----------------------------
+
+chroma-up:
+	$(COMPOSE) up -d --wait
+
+chroma-down:
+	$(COMPOSE) down
+
+chroma-logs:
+	$(COMPOSE) logs -f chroma
+
+chroma-reset:
+	$(COMPOSE) down
+	$(UV) run python -c "import shutil; shutil.rmtree('chroma-data', ignore_errors=True)"
+
+populate:
+	$(UV) run $(POPULATE) --domain all
+
+populate-networking:
+	$(UV) run $(POPULATE) --domain networking
+
+populate-meetings:
+	$(UV) run $(POPULATE) --domain meetings
+
+db-stats:
+	$(UV) run $(POPULATE) --stats
+
+test-query:
+	$(UV) run $(TESTQUERY)
+
+query:
+ifndef Q
+	$(error Usage: make query Q="your question" [D=networking|meetings|all])
+endif
+	$(UV) run $(TESTQUERY) --query "$(Q)" --domain $(D)

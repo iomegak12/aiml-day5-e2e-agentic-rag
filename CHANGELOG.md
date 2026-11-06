@@ -3,6 +3,25 @@
 All notable changes to this project are documented here.
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) · Versioning: [SemVer](https://semver.org/).
 
+## [0.3.0] - 2026-11-06
+
+### Added
+- `scripts/test_query_vector_dbs.py`: Chroma connection/database info plus demos of similarity search (distance and relevance), keyword search (`$contains` vs BM25), metadata filtering, hybrid search (EnsembleRetriever, RRF) and a cross-domain query. Output uses rich tables, and `--query` / `--domain` run ad-hoc queries.
+- Make targets: `test-query`, `query Q="..." D=...`.
+- Dependencies: `rich`, `rank-bm25`.
+
+## [0.2.0] - 2026-11-06
+
+### Added
+- `scripts/populate_vector_dbs.py`: the Pre-RAG pipeline. It reads PDF, HTML and MD with LangChain community loaders, merges file and manifest metadata, chunks size-based text (3000/200), writes LLM descriptions of tables and code as separate chunks, embeds with OpenAI, and upserts into one Chroma database per domain.
+- `docker-compose.yml` (Chroma 1.5.9 server, `./chroma-data` bind mount, healthcheck) and `.dockerignore`.
+- Make targets: `chroma-up`, `chroma-down`, `chroma-logs`, `chroma-reset`, `populate`, `populate-networking`, `populate-meetings`, `db-stats`.
+- `.env` / `.env.example` settings: `OPENAI_EMBEDDING_MODEL`, `KB_DATA_DIR`, `CHROMA_*`, `CHUNK_SIZE`, `CHUNK_OVERLAP`, `DESCRIBE_CONCURRENCY`.
+
+### Changed
+- `make verify` uses project dependencies (no `uv run --with`).
+- `.gitignore` now excludes `chroma-data/`.
+
 ## [0.1.0] - 2026-11-06
 
 ### Added
