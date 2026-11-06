@@ -3,6 +3,13 @@
 All notable changes to this project are documented here.
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) · Versioning: [SemVer](https://semver.org/).
 
+## [0.4.0] - 2026-11-06
+
+### Added
+- `scripts/rag_search.py`: reusable `similarity_search`, `keyword_search` (BM25), `hybrid_search` (EnsembleRetriever / RRF), `search`, `KBRetriever` / `get_retriever`, `format_docs` and `show_results` (defaults: k=4, weights 0.5/0.5).
+- `notebooks/naive-rag.ipynb`: Naive (2-step) RAG walkthrough covering retrieval modes, context building, system instructions with citations and superseded-source handling, a step-by-step flow, a streaming LCEL chain with sources, and four demos.
+- Dev dependency: `ipykernel`.
+
 ## [0.3.0] - 2026-11-06
 
 ### Added

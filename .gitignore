@@ -14,3 +14,6 @@ wheels/
 
 # Chroma server data (docker bind mount)
 chroma-data/
+
+# Jupyter
+.ipynb_checkpoints/

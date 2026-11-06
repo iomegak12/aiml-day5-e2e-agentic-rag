@@ -55,6 +55,20 @@ make db-stats             #    check what was stored
 | 5. Hybrid | `EnsembleRetriever` (BM25 + vector, RRF), with each source's rank and the fused score |
 | 6. Cross-domain | The same question against both databases |
 
+## Naive RAG Notebook ([notebooks/naive-rag.ipynb](notebooks/naive-rag.ipynb))
+
+Prerequisites: `make chroma-up` (and `make populate` once). Open the notebook in VS Code and select the `.venv` kernel.
+
+| Section | Shows |
+|---|---|
+| 1–2 | Similarity, keyword (BM25) and hybrid retrieval, then building the citable context |
+| 3 | System instructions: answer only from context, cite `[KB-ID, location]`, flag superseded sources |
+| 4–5 | Naive (2-step) RAG step by step, then as a streaming LCEL chain that returns its sources |
+| 6 | Demos: LLM alone vs RAG, retrieval-mode comparison, `status=current` filter, out-of-scope question |
+| 7 | Limitations of Naive RAG, as a lead-in to Advanced RAG |
+
+The reusable retrieval functions live in [scripts/rag_search.py](scripts/rag_search.py): `similarity_search`, `keyword_search`, `hybrid_search`, `search`, `get_retriever` (a LangChain `BaseRetriever`), `format_docs` and `show_results`. Smoke test: `uv run scripts/rag_search.py`.
+
 ## Pre-RAG Pipeline ([scripts/populate_vector_dbs.py](scripts/populate_vector_dbs.py))
 
 | Stage | Implementation |
@@ -93,6 +107,8 @@ scripts/generate_kb.py          KB generator
 scripts/verify_kb.py            loader smoke test
 scripts/populate_vector_dbs.py  Pre-RAG pipeline -> Chroma
 scripts/test_query_vector_dbs.py  query demos (similarity, keyword, filters, hybrid)
+scripts/rag_search.py           reusable retrieval functions + LangChain retriever
+notebooks/naive-rag.ipynb       Naive RAG walkthrough
 docker-compose.yml              Chroma server
 Makefile                        command entry points
 ```

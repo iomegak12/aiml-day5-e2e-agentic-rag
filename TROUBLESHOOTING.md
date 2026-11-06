@@ -27,3 +27,7 @@
 | `$contains` matches many chunks | Codes are cross-referenced across articles | Expected. It filters but doesn't rank; compare with BM25 |
 | "Server API version 1.0.0" while the image is 1.5.9 | `/api/v2/version` reports the API version | Expected |
 | `make query` prints a usage error | `Q` wasn't given | `make query Q="your question" D=meetings` |
+| Notebook: `ModuleNotFoundError: rag_search` / `langchain_*` | Wrong kernel, or the notebook was started outside the project | Select the project's `.venv` kernel (run `uv sync` first). Open the notebook from `notebooks/` or the project root |
+| Notebook: connection refused | The Chroma server isn't running | `make chroma-up`, then re-run the setup cell |
+| Answers vary between runs | LLM output is non-deterministic | Expected. Citations and grounded values should stay the same |
+| The LLM-only demo happens to answer correctly | Generic values can be guessed by luck | Ask about product-specific facts (codes, timers), as demo 6a does |
