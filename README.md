@@ -43,6 +43,9 @@ make db-stats             #    check what was stored
 | `make db-stats` | Chunk counts by type/format/status, plus sample metadata |
 | `make test-query` | DB info, then similarity, keyword, metadata-filter, hybrid and cross-domain demos |
 | `make query Q="..." [D=meetings]` | Ad-hoc query: similarity, BM25 and hybrid results |
+| `make redis-up` / `redis-down` | Start / stop the Redis Stack semantic cache |
+| `make assign-access-levels` | Patch RBAC `access_level` into the Chroma metadata (no re-embedding) |
+| `make agent-ask Q="..." U=bob [M=react]` | Ask the agentic RAG agent as a demo user, with a live trace (default `M=plan`) |
 
 ## Query Demos ([scripts/test_query_vector_dbs.py](scripts/test_query_vector_dbs.py))
 
@@ -66,6 +69,38 @@ Prerequisites: `make chroma-up` (and `make populate` once). Open the notebook in
 | 4–5 | Naive (2-step) RAG step by step, then as a streaming LCEL chain that returns its sources |
 | 6 | Demos: LLM alone vs RAG, retrieval-mode comparison, `status=current` filter, out-of-scope question |
 | 7 | Limitations of Naive RAG, as a lead-in to Advanced RAG |
+
+## Enterprise Agentic RAG Agent ([scripts/agentic_rag/](scripts/agentic_rag/))
+
+Built on LangChain `create_agent`. **Tools** do the routing and retrieval; **middleware** enforces the workflow rules deterministically.
+
+```bash
+make chroma-up redis-up assign-access-levels      # once
+make agent-ask Q="How do I troubleshoot BFD tunnel flaps?" U=bob    # alice=guest, bob=employee, carol=admin
+```
+
+| Flowchart step | Implementation |
+|---|---|
+| Input guardrails | LangChain PII detectors and an LLM classifier (injection, toxicity, topic), with a safe refusal |
+| Semantic cache | Redis Stack + RedisVL. Hits are checked against RBAC (`max_access_level`) and the output guardrails; only judge-passed answers are written |
+| Router (Adaptive RAG) | The agent's tool choice: `search_knowledge_base` (RBAC filter), `search_web` (Serper), `federated_search` |
+| Rerank and relevance check | LLM reranker (`RERANKER_OPENAI_MODEL`), `RELEVANCE_THRESHOLD` |
+| Corrective RAG | `rewrite_query` tool. Middleware forces up to `MAX_REWRITES` rewrites, then one web fallback, then "no reliable information" |
+| Context optimizer and prompt builder | tiktoken budget, LLM summary of the overflow, lost-in-the-middle reordering; citations and superseded-source rules |
+| Judge | RAGAS faithfulness, groundedness and context precision (`JUDGE_OPENAI_MODEL`). Failures escalate: regenerate, then re-retrieve, then a disclaimer |
+| Output guardrails | PII, citations, LLM toxicity/policy check, plus built-in `PIIMiddleware` redaction. A failing answer is regenerated once, then refused |
+| Cross-cutting | `ModelRetryMiddleware` / `ToolRetryMiddleware` (exponential backoff), `ModelCallLimitMiddleware`, `TimeoutMiddleware` (`AGENT_TIMEOUT_SECONDS`) |
+
+**Two modes** (`ask(..., mode=...)`, `make agent-ask M=...`):
+
+| Mode | How it retrieves |
+|---|---|
+| `plan` (default) | **Plan-and-Execute**: the planner (`OPENAI_MODEL`) writes up to `MAX_PLAN_STEPS` retrieval steps, and the plan is **shown** before it runs. A deterministic executor then runs each step (KB / web / federated → rerank). A step that finds nothing triggers a **re-plan** (counts as a rewrite, max 3), then a web fallback, then "no info". The model only writes the final answer. A 2nd judge failure triggers a re-plan with the judge's feedback |
+| `react` | The agent routes with tools (`search_*`, `rewrite_query`) under `CorrectiveRAGMiddleware` |
+
+RBAC: `access_level` is derived from `article_type` (faq/help = public; config/runbook/reference = internal; policy = restricted). guest sees public; employee sees public + internal; admin sees everything.
+
+Test scenarios: [notebooks/agentic-rag.ipynb](notebooks/agentic-rag.ipynb) (scenarios only; all code lives in the package).
 
 The reusable retrieval functions live in [scripts/rag_search.py](scripts/rag_search.py): `similarity_search`, `keyword_search`, `hybrid_search`, `search`, `get_retriever` (a LangChain `BaseRetriever`), `format_docs` and `show_results`. Smoke test: `uv run scripts/rag_search.py`.
 
@@ -109,6 +144,10 @@ scripts/populate_vector_dbs.py  Pre-RAG pipeline -> Chroma
 scripts/test_query_vector_dbs.py  query demos (similarity, keyword, filters, hybrid)
 scripts/rag_search.py           reusable retrieval functions + LangChain retriever
 notebooks/naive-rag.ipynb       Naive RAG walkthrough
+scripts/agentic_rag/            Enterprise Agentic RAG agent (package)
+scripts/assign_access_levels.py RBAC access_level metadata patch
+notebooks/agentic-rag.ipynb     Agentic RAG test scenarios
+redis-data/                     Redis cache data (git-ignored)
 docker-compose.yml              Chroma server
 Makefile                        command entry points
 ```

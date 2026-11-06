@@ -3,6 +3,49 @@
 All notable changes to this project are documented here.
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) · Versioning: [SemVer](https://semver.org/).
 
+## [0.6.0] - 2026-11-07
+
+### Added
+- Planning mode (Plan-and-Execute), now the default:
+  - `planner.py`: structured plans with up to `MAX_PLAN_STEPS` steps, and re-planning.
+  - `executor.py`: deterministic step execution.
+  - `PlanExecuteMiddleware`: plan, show, execute, re-plan on failure (each re-plan counts as a rewrite), web fallback, no-info; the model only writes the final answer.
+  - A 2nd judge failure triggers a re-plan with the judge's feedback.
+- `ask(..., mode="plan"|"react", show_plan=True)`; CLI `--mode`; `make agent-ask M=...`.
+- `show_plan` (printed before execution), `show_plan_report` (executed plan in `show_result`), live step status in the trace.
+- `notebooks/agentic-rag.ipynb` §7 planning scenarios (sections 1–6 pinned to `mode="react"`).
+- `.env`: `MAX_PLAN_STEPS=4`.
+
+### Changed
+- `retrieval.py`: `retrieve_relevant()` is the shared retrieve → merge → rerank → threshold pipeline for the tools and the plan executor.
+
+### Fixed
+- `judge.py`: the async OpenAI client is closed inside its event loop (no more "Event loop is closed" noise); `.env` is loaded before the judge runs.
+
+## [0.5.0] - 2026-11-07
+
+### Added
+- `scripts/agentic_rag/`: an Enterprise Agentic RAG agent on LangChain `create_agent`, covering:
+  - input/output guardrails
+  - a Redis semantic cache with RBAC hit checks
+  - LLM routing between vector, web (Serper) and federated search
+  - an LLM reranker
+  - a corrective rewrite loop
+  - a context optimizer
+  - a RAGAS judge with escalation
+  - retry, call limits and a timeout budget
+
+  Includes a CLI and rich display helpers.
+- `scripts/assign_access_levels.py`: RBAC `access_level` metadata patched in place. `populate_vector_dbs.py` now sets it too.
+- `notebooks/agentic-rag.ipynb`: test scenarios only.
+- Redis Stack (`redis/redis-stack-server:7.4.0-v8`) service in `docker-compose.yml`.
+- Make targets: `redis-up`, `redis-down`, `assign-access-levels`, `agent-ask`.
+- `.env` settings: Redis, cache, thresholds, limits, context budget (plus your `SERPER_API_KEY`, `RERANKER_OPENAI_MODEL`, `JUDGE_OPENAI_MODEL`).
+
+### Changed
+- `chroma-up` / `chroma-down` / `chroma-reset` now act on the Chroma service only.
+- Dependencies: added `langchain` 1.4, `ragas` 0.4.3, `redisvl`, `tiktoken`. Pinned `langchain-community==0.3.31` (RAGAS compatibility) and relaxed `rich` to `>=13.7,<15`.
+
 ## [0.4.0] - 2026-11-06
 
 ### Added

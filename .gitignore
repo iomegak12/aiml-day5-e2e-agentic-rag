@@ -17,3 +17,6 @@ chroma-data/
 
 # Jupyter
 .ipynb_checkpoints/
+
+# Redis semantic cache data (docker bind mount)
+redis-data/

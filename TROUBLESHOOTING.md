@@ -31,3 +31,16 @@
 | Notebook: connection refused | The Chroma server isn't running | `make chroma-up`, then re-run the setup cell |
 | Answers vary between runs | LLM output is non-deterministic | Expected. Citations and grounded values should stay the same |
 | The LLM-only demo happens to answer correctly | Generic values can be guessed by luck | Ask about product-specific facts (codes, timers), as demo 6a does |
+| `ModuleNotFoundError: langchain_community.chat_models.vertexai` (RAGAS) | RAGAS still imports a module removed in langchain-community 0.4 | The project pins `langchain-community==0.3.31`. Don't upgrade it until RAGAS drops that import |
+| RAGAS: `'max_tokens' is not supported ... use 'max_completion_tokens'` | RAGAS doesn't recognise model names like `gpt-6.1-sol` as reasoning models | Handled in `agentic_rag/judge.py` (parameters set explicitly) |
+| RAGAS: `IncompleteOutputException ... max_tokens length limit` | The reasoning tokens used up the output limit | `judge.py` uses `max_completion_tokens=16000` with `reasoning_effort="low"` |
+| Agent: Redis `ConnectionError` | Redis isn't running | `make redis-up` |
+| Guest gets "no information" for internal topics | RBAC: guests only see `public` chunks | Expected. Ask as `U=bob` or `U=carol` |
+| `access_level` missing (no results with an RBAC filter) | Metadata wasn't patched | `make assign-access-levels` (new `make populate` runs include it) |
+| Status `timeout` | The request exceeded `AGENT_TIMEOUT_SECONDS` | Raise the budget in `.env`. The judge takes ~20–40 s per round |
+| `GraphRecursionError` | Too many graph steps | The agent uses `recursion_limit=300`; real loops are capped by `ModelCallLimitMiddleware` and `MAX_REWRITES` |
+| Answers differ between runs | LLM routing, rewriting and judging are non-deterministic | Expected. The path (trace) is what to compare |
+| `Task exception was never retrieved ... Event loop is closed` | The judge's async OpenAI client was closed after its event loop | Fixed in `judge.py` (the client is closed inside the loop). Restart the notebook kernel to load the fix |
+| Plan mode takes longer than `AGENT_TIMEOUT_SECONDS` | The budget is only checked between steps; a running LLM call (synthesis, judge) isn't interrupted | Expected for multi-step plans. Raise `AGENT_TIMEOUT_SECONDS` or use `override_settings(timeout_seconds=...)` |
+| Plan has more steps than expected | The planner decomposes multi-part questions | Cap it with `MAX_PLAN_STEPS` in `.env` |
+| Plan step `no_results` but the answer is still given | Other steps found evidence ("partial evidence") | Expected: the answer says which goal found nothing |

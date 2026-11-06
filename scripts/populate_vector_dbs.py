@@ -52,6 +52,10 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 DOMAINS = ("networking", "meetings")
 PRODUCT_FAMILY = {"networking": "Networking", "meetings": "Collaboration"}
 LIST_FIELDS = ("error_codes", "related", "tags")
+# RBAC: access level of each chunk, derived from the article type (used by the agentic RAG agent)
+ACCESS_LEVELS = ("public", "internal", "restricted")  # ordered: least -> most sensitive
+ACCESS_LEVEL_BY_TYPE = {"faq": "public", "help": "public", "config": "internal", "runbook": "internal",
+                        "reference": "internal", "policy": "restricted"}
 MAX_ITEM_CHARS = 6000  # cap raw table/code text stored in a description chunk
 
 # =============================================================================
@@ -150,7 +154,8 @@ def build_metadata(domain: str, path: Path, file_meta: dict, manifest: dict[str,
     merged.pop("file", None)
     merged.pop("format", None)
     merged.update(domain=domain, product_family=PRODUCT_FAMILY[domain], source_file=path.name,
-                  file_format=path.suffix.lstrip("."))
+                  file_format=path.suffix.lstrip("."),
+                  access_level=ACCESS_LEVEL_BY_TYPE.get(merged.get("article_type", ""), "restricted"))
     # Chroma metadata values must be scalars -> join lists
     return {k: ", ".join(v) if isinstance(v, list) else v for k, v in merged.items()}
 

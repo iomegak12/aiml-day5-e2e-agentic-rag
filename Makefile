@@ -6,13 +6,17 @@ GEN         := scripts/generate_kb.py
 VERIFY      := scripts/verify_kb.py
 POPULATE    := scripts/populate_vector_dbs.py
 TESTQUERY   := scripts/test_query_vector_dbs.py
+ACCESS      := scripts/assign_access_levels.py
 D           ?= all
+U           ?= bob
+M           ?= plan
 COMPOSE     ?= docker compose
+export PYTHONPATH := scripts   # makes `python -m agentic_rag` (scripts/agentic_rag) importable
 
 .DEFAULT_GOAL := help
 .PHONY: help install generate generate-networking generate-meetings regenerate verify clean clean-data \
         chroma-up chroma-down chroma-logs chroma-reset populate populate-networking populate-meetings db-stats \
-        test-query query
+        test-query query redis-up redis-down assign-access-levels agent-ask
 
 help:  ## List available targets
 	@echo Targets:
@@ -35,6 +39,12 @@ help:  ## List available targets
 	@echo   db-stats             Show chunk counts and sample metadata per database
 	@echo   test-query           DB info + similarity, keyword, filter, hybrid, cross-domain demos
 	@echo   query Q=... D=...    Ad-hoc query, D = networking, meetings or all - default all
+	@echo Agentic RAG:
+	@echo   redis-up             Start the Redis Stack semantic cache - docker compose
+	@echo   redis-down           Stop Redis - data is kept
+	@echo   assign-access-levels Patch RBAC access_level metadata into Chroma - no re-embedding
+	@echo   agent-ask Q=... U=.. Ask the agent as a demo user: alice=guest, bob=employee, carol=admin
+	@echo                        M=plan - Plan-and-Execute, default - or M=react - agent routes with tools
 
 install:
 	$(UV) sync
@@ -63,16 +73,16 @@ clean-data:
 # ---------------------------- Vector DB ----------------------------
 
 chroma-up:
-	$(COMPOSE) up -d --wait
+	$(COMPOSE) up -d --wait chroma
 
 chroma-down:
-	$(COMPOSE) down
+	$(COMPOSE) stop chroma
 
 chroma-logs:
 	$(COMPOSE) logs -f chroma
 
 chroma-reset:
-	$(COMPOSE) down
+	$(COMPOSE) rm -s -f chroma
 	$(UV) run python -c "import shutil; shutil.rmtree('chroma-data', ignore_errors=True)"
 
 populate:
@@ -95,3 +105,20 @@ ifndef Q
 	$(error Usage: make query Q="your question" [D=networking|meetings|all])
 endif
 	$(UV) run $(TESTQUERY) --query "$(Q)" --domain $(D)
+
+# ---------------------------- Agentic RAG ----------------------------
+
+redis-up:
+	$(COMPOSE) up -d --wait redis
+
+redis-down:
+	$(COMPOSE) stop redis
+
+assign-access-levels:
+	$(UV) run $(ACCESS)
+
+agent-ask:
+ifndef Q
+	$(error Usage: make agent-ask Q="your question" [U=alice|bob|carol])
+endif
+	$(UV) run python -m agentic_rag --question "$(Q)" --user $(U) --mode $(M)
