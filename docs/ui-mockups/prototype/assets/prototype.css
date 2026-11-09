@@ -1,0 +1,48 @@
+/* Prototype-only additions on top of the Stitch screens: review bar, toasts, replay/flash states. */
+
+.nc-logo { display: inline-flex; width: 32px; height: 32px; flex: none; }
+.nc-logo svg { width: 100%; height: 100%; }
+.nc-avatar { display: inline-flex; align-items: center; justify-content: center; border-radius: 9999px;
+  background: #111; color: #fff; font: 600 12px/1 Inter, system-ui, sans-serif; flex: none; }
+
+/* review bar (top of the header on desktop, bottom-right on narrow screens; every screen) */
+.nc-review { position: fixed; top: 9px; left: calc(50% + 120px); transform: translateX(-50%); z-index: 9999; display: flex; align-items: center; gap: 6px;
+  padding: 6px 8px; border-radius: 9999px; background: rgba(17, 17, 17, .92); color: #fff;
+  font: 500 12px/1 Inter, system-ui, sans-serif; box-shadow: 0 8px 24px rgba(0, 0, 0, .18); backdrop-filter: blur(8px); }
+.nc-review a, .nc-review button, .nc-review select { color: #fff; background: transparent; border: 0; font: inherit;
+  padding: 6px 9px; border-radius: 9999px; text-decoration: none; cursor: pointer; }
+.nc-review a:hover, .nc-review button:hover { background: rgba(255, 255, 255, .14); }
+.nc-review .nc-title { padding: 0 6px; opacity: .85; white-space: nowrap; }
+.nc-review select { background: rgba(255, 255, 255, .12); }
+.nc-review select option { color: #111; }
+.nc-review .nc-sep { width: 1px; height: 16px; background: rgba(255, 255, 255, .2); }
+.nc-review.nc-collapsed > :not(.nc-toggle) { display: none; }
+@media (max-width: 1180px) { .nc-review .nc-title { display: none; } }
+@media (max-width: 860px) { .nc-review { top: auto; bottom: 12px; left: auto; right: 12px; transform: none; } }
+
+/* toasts */
+.nc-toast { position: fixed; left: 50%; top: 64px; transform: translateX(-50%) translateY(-8px); z-index: 10000;
+  max-width: min(560px, calc(100vw - 32px)); padding: 10px 14px; border-radius: 12px; background: #111; color: #fff;
+  font: 400 13px/1.45 Inter, system-ui, sans-serif; opacity: 0; transition: opacity .2s, transform .2s;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .2); }
+.nc-toast.nc-show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.nc-toast code { font-family: "JetBrains Mono", monospace; font-size: 12px; color: #FDE68A; }
+
+/* states driven by prototype.js */
+.nc-hidden { display: none !important; }
+.nc-pending { opacity: 0; transform: translateY(6px); max-height: 0; overflow: hidden; margin: 0 !important;
+  padding-top: 0 !important; padding-bottom: 0 !important; }
+.nc-revealed { opacity: 1; transform: none; transition: opacity .35s, transform .35s; }
+.nc-flash { animation: nc-flash 1.4s ease-out; }
+@keyframes nc-flash { 0% { box-shadow: 0 0 0 3px #FDE68A; } 100% { box-shadow: 0 0 0 0 transparent; } }
+.nc-spin { animation: spin 0.8s linear infinite; }
+[data-href], [data-toast] { cursor: pointer; }
+
+/* admin-only overlay (system status for non-admins) */
+.nc-overlay { position: fixed; inset: 56px 0 0 240px; z-index: 35; display: flex; align-items: center;
+  justify-content: center; background: rgba(249, 249, 249, .82); backdrop-filter: blur(6px); }
+.nc-overlay > div { max-width: 420px; padding: 28px; border-radius: 16px; background: #fff; border: 1px solid #ECECEC;
+  box-shadow: 0 12px 32px rgba(17, 17, 17, .08); text-align: center; font: 400 14px/1.5 Inter, system-ui, sans-serif; }
+.nc-overlay h2 { margin: 0 0 6px; font-size: 18px; font-weight: 600; }
+.nc-overlay button { margin-top: 14px; padding: 8px 16px; border: 0; border-radius: 9999px; background: #111; color: #fff;
+  font: 500 13px Inter, system-ui, sans-serif; cursor: pointer; }

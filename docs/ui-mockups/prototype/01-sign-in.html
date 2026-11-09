@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><title>NetCore Assist · Sign in</title><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_blank" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-primary-fixed": "#1c1b1b", "surface-tint": "#5f5e5e", "surface-container": "#eeeeee", "tertiary-container": "#1d1b1a", "surface-container-highest": "#e2e2e2", "surface-variant": "#e2e2e2", "secondary-fixed-dim": "#c0c7d6", "inverse-surface": "#2f3131", "on-surface": "#1a1c1c", "on-background": "#1a1c1c", "secondary-fixed": "#dce2f3", "primary": "#000000", "on-secondary-fixed-variant": "#404754", "on-error-container": "#93000a", "primary-fixed": "#e5e2e1", "surface-container-lowest": "#ffffff", "on-surface-variant": "#444748", "surface-container-high": "#e8e8e8", "outline-variant": "#c4c7c7", "on-secondary": "#ffffff", "secondary": "#585f6c", "on-error": "#ffffff", "surface-dim": "#dadada", "tertiary": "#000000", "on-secondary-fixed": "#151c27", "background": "#f9f9f9", "on-tertiary": "#ffffff", "outline": "#747878", "on-primary-fixed-variant": "#474646", "secondary-container": "#dce2f3", "on-primary-container": "#858383", "on-tertiary-container": "#868381", "inverse-primary": "#c8c6c5", "on-tertiary-fixed": "#1d1b1a", "on-primary": "#ffffff", "surface": "#f9f9f9", "primary-fixed-dim": "#c8c6c5", "on-tertiary-fixed-variant": "#484645", "tertiary-fixed": "#e6e1df", "on-secondary-container": "#5e6572", "surface-bright": "#f9f9f9", "error": "#ba1a1a", "error-container": "#ffdad6", "surface-container-low": "#f3f3f4", "primary-container": "#1c1b1b", "inverse-on-surface": "#f0f1f1", "tertiary-fixed-dim": "#cac6c3" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "gutter": "1.5rem", "space-xl": "2rem", "space-xs": "0.25rem", "space-sm": "0.5rem", "space-md": "1rem", "margin": "0rem", "space-lg": "1.5rem" }, "fontFamily": { "code-sm": [ "JetBrains Mono" ], "headline-xl": [ "Inter" ], "body-md": [ "Inter" ], "label-md": [ "Inter" ], "code-md": [ "JetBrains Mono" ], "body-sm": [ "Inter" ], "headline-sm": [ "Inter" ], "body-lg": [ "Inter" ], "label-sm": [ "Inter" ], "headline-lg": [ "Inter" ] }, "fontSize": { "code-sm": [ "0.75rem", { "lineHeight": "1.25rem", "fontWeight": "400" } ], "headline-xl": [ "2rem", { "lineHeight": "2.5rem", "letterSpacing": "-0.025em", "fontWeight": "600" } ], "body-md": [ "0.875rem", { "lineHeight": "1.45rem", "fontWeight": "400" } ], "label-md": [ "0.8125rem", { "lineHeight": "1rem", "letterSpacing": "0.01em", "fontWeight": "500" } ], "code-md": [ "0.8125rem", { "lineHeight": "1.375rem", "fontWeight": "400" } ], "body-sm": [ "0.75rem", { "lineHeight": "1.25rem", "fontWeight": "400" } ], "headline-sm": [ "1.125rem", { "lineHeight": "1.5rem", "letterSpacing": "-0.015em", "fontWeight": "600" } ], "body-lg": [ "1rem", { "lineHeight": "1.625rem", "fontWeight": "400" } ], "label-sm": [ "0.6875rem", { "lineHeight": "0.875rem", "letterSpacing": "0.04em", "fontWeight": "600" } ], "headline-lg": [ "1.5rem", { "lineHeight": "2rem", "letterSpacing": "-0.02em", "fontWeight": "600" } ] } } } };</script><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/><link href="assets/prototype.css" rel="stylesheet"/><script defer="" src="assets/prototype.js"></script></head><body class="bg-surface font-body-md text-body-md text-on-surface antialiased" data-screen="signin"><main class="min-h-screen w-full flex items-center justify-center p-space-lg bg-[radial-gradient(ellipse_80%_60%_at_50%_15%,#FFFBEB_0%,#FDF2F8_45%,#F5F3FF_80%,transparent_100%)]"><div class="flex flex-col w-full items-center justify-center py-space-xl relative overflow-hidden">
+<!-- Ambient Atmospheric Glow Backdrop -->
+<div class="absolute -top-32 left-1/2 -translate-x-1/2 w-[720px] h-[520px] bg-gradient-to-tr from-[#FFFBEB] via-[#FDF2F8] to-[#F5F3FF] rounded-full blur-3xl opacity-70 pointer-events-none -z-10"></div>
+<div class="absolute top-48 left-1/2 -translate-x-1/2 w-[480px] h-[340px] bg-secondary-fixed/30 rounded-full blur-2xl pointer-events-none -z-10"></div>
+<!-- Primary Authentication Container (max 420px) -->
+<div class="w-full max-w-[420px] bg-surface-container-lowest rounded-xl shadow-xl p-space-lg flex flex-col relative z-10 transition-all">
+<!-- Header: Logo & Title Hierarchy -->
+<div class="flex flex-col items-center text-center">
+<div class="w-12 h-12 rounded-xl bg-surface-container-low flex items-center justify-center p-2 mb-space-md shadow-sm">
+<span aria-label="NetCore Assist" class="nc-logo"><svg aria-label="NetCore Assist" role="img" viewbox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+<rect fill="#111111" height="32" rx="8" width="32"></rect>
+<path d="M10 21.5 16 10.5l6 11" fill="none" opacity=".55" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path>
+<path d="M10 21.5h12" fill="none" opacity=".55" stroke="#ffffff" stroke-linecap="round" stroke-width="1.8"></path>
+<circle cx="16" cy="10.5" fill="#ffffff" r="3"></circle>
+<circle cx="10" cy="21.5" fill="#ffffff" r="3"></circle>
+<circle cx="22" cy="21.5" fill="#FDE68A" r="3"></circle>
+</svg>
+</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight mb-space-xs">
+        Sign in to NetCore Assist
+      </h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-[340px] leading-relaxed">
+        Use your API key. Your role decides which knowledge-base articles you can see.
+      </p>
+</div>
+<!-- Credential Input Formulation -->
+<form class="mt-space-lg flex flex-col gap-space-sm" onsubmit="event.preventDefault();">
+<div class="flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<label class="font-label-md text-label-md text-on-surface font-semibold" for="apiKeyField">
+            API Secret Key
+          </label>
+<span class="font-code-sm text-code-sm text-outline uppercase tracking-wider">X-API-KEY</span>
+</div>
+<div class="relative flex items-center">
+<input class="w-full h-11 px-3.5 pr-11 font-code-md text-code-md rounded-lg bg-surface-container-low text-on-surface focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-on-primary-fixed transition-all" id="apiKeyField" placeholder="nca_live_••••••••••••••••••••••••" type="password" value="nca_live_99d14f4e19bce8a204fa671"/>
+<button aria-label="Toggle password visibility" class="absolute right-2.5 w-7 h-7 flex items-center justify-center text-outline hover:text-on-surface transition-colors rounded-full hover:bg-surface-container" id="toggleVisibilityBtn" type="button">
+<span class="material-symbols-outlined text-[18px]" id="eyeIcon">visibility</span>
+</button>
+</div>
+<!-- Inline Error Feedback State -->
+<div class="flex items-start gap-1.5 mt-1 px-1 text-error nc-hidden" id="nc-key-error">
+<span class="material-symbols-outlined text-[15px] shrink-0 translate-y-0.5">error</span>
+<span class="font-body-sm text-body-sm text-error font-medium leading-tight">
+            Missing or invalid API key (401). Check X-API-Key.
+          </span>
+</div>
+</div>
+<!-- Primary Confirmation Action -->
+<button class="mt-2 w-full h-11 rounded-lg bg-on-primary-fixed hover:bg-primary-container text-on-primary font-label-md text-label-md font-semibold flex items-center justify-center gap-2 shadow-sm transition-transform active:scale-[0.99]" type="submit">
+<span>Continue</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</form>
+<!-- Content Separation Divider -->
+<div class="relative my-space-lg flex items-center justify-center">
+<div class="w-full h-[1px] bg-surface-container-high absolute"></div>
+<span class="relative bg-surface-container-lowest px-3 font-label-sm text-label-sm text-outline uppercase tracking-wider">
+        or try a demo user
+      </span>
+</div>
+<!-- Demo Profiles Selector Group -->
+<div class="flex flex-col gap-2" id="demoUserList">
+<!-- Profile 1: Alice (Guest) -->
+<button class="user-card text-left p-2.5 rounded-lg bg-surface-container-lowest hover:bg-surface-container-low flex items-center justify-between transition-all group user-card" data-user-card="alice" onclick="selectUser('alice', this)" type="button">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center font-headline-sm text-headline-sm text-secondary font-semibold">
+            A
+          </div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Alice</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Public articles</span>
+</div>
+</div>
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-label-sm font-label-sm bg-surface-container-high text-secondary">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+          Guest
+        </span>
+</button>
+<!-- Profile 2: Bob (Selected Highlight State) -->
+<button class="user-card selected text-left p-2.5 rounded-lg bg-surface-container-lowest flex items-center justify-between shadow-sm transition-all ring-2 ring-on-secondary-fixed ring-offset-1 user-card" data-user-card="bob" onclick="selectUser('bob', this)" type="button">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center font-headline-sm text-headline-sm text-secondary font-semibold">B</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-semibold flex items-center gap-1.5">
+              Bob
+              <span class="material-symbols-outlined text-[14px] text-secondary">check_circle</span>
+</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Public + internal</span>
+</div>
+</div>
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-label-sm font-label-sm bg-secondary-container text-on-secondary-fixed">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+          Employee
+        </span>
+</button>
+<!-- Profile 3: Carol (Admin) -->
+<button class="user-card text-left p-2.5 rounded-lg bg-surface-container-lowest hover:bg-surface-container-low flex items-center justify-between transition-all group user-card" data-user-card="carol" onclick="selectUser('carol', this)" type="button">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-headline-sm text-headline-sm font-semibold">
+            C
+          </div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Carol</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">All, including restricted</span>
+</div>
+</div>
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-label-sm font-label-sm bg-primary-container text-on-primary">
+<span class="w-1.5 h-1.5 rounded-full bg-surface-container-lowest"></span>
+          Admin
+        </span>
+</button>
+</div>
+<!-- Security & Operational Scope Metadata -->
+<div class="mt-space-lg pt-space-sm flex items-center justify-between text-outline font-code-sm text-code-sm">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">shield</span>RBAC: guest · employee · admin</span>
+<span>API v0.7.0</span>
+</div>
+</div>
+<!-- Global Legal & Guidance Links -->
+<footer class="mt-space-lg flex items-center gap-4 text-on-surface-variant font-label-md text-label-md">
+<a class="hover:text-on-surface transition-colors" data-toast="Privacy: placeholder page (not part of the prototype)." href="#">Privacy</a>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<a class="hover:text-on-surface transition-colors" data-toast="Terms: placeholder page (not part of the prototype)." href="#">Terms</a>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<a class="hover:text-on-surface transition-colors" data-toast="Help center: placeholder page (not part of the prototype)." href="#">Help center</a>
+</footer>
+<script>
+    // Visibility toggle functionality for API Key field
+    const apiKeyField = document.getElementById('apiKeyField');
+    const toggleVisibilityBtn = document.getElementById('toggleVisibilityBtn');
+    const eyeIcon = document.getElementById('eyeIcon');
+
+    if (toggleVisibilityBtn && apiKeyField && eyeIcon) {
+      toggleVisibilityBtn.addEventListener('click', () => {
+        const isPassword = apiKeyField.type === 'password';
+        apiKeyField.type = isPassword ? 'text' : 'password';
+        eyeIcon.textContent = isPassword ? 'visibility_off' : 'visibility';
+      });
+    }
+
+    // Role preset selection simulator
+    function selectUser(userKey, element) {
+      const allCards = document.querySelectorAll('.user-card');
+      allCards.forEach(c => {
+        c.classList.remove('selected', 'ring-2', 'ring-on-secondary-fixed', 'ring-offset-1');
+      });
+
+      element.classList.add('selected', 'ring-2', 'ring-on-secondary-fixed', 'ring-offset-1');
+      
+      const keyMap = {
+        alice: 'nca_live_guest_820fa94bc21703e',
+        bob: 'nca_live_emp_99d14f4e19bce8a204fa671',
+        carol: 'nca_live_adm_44ae12cc80e227dfa8b'
+      };
+
+      if (apiKeyField && keyMap[userKey]) {
+        apiKeyField.value = keyMap[userKey];
+      }
+    }
+  </script>
+</div></main></body></html>

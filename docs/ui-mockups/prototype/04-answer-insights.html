@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><title>NetCore Assist · Answer + insights</title><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-primary-fixed": "#1c1b1b", "surface-tint": "#5f5e5e", "surface-container": "#eeeeee", "tertiary-container": "#1d1b1a", "surface-container-highest": "#e2e2e2", "surface-variant": "#e2e2e2", "secondary-fixed-dim": "#c0c7d6", "inverse-surface": "#2f3131", "on-surface": "#1a1c1c", "on-background": "#1a1c1c", "secondary-fixed": "#dce2f3", "primary": "#000000", "on-secondary-fixed-variant": "#404754", "on-error-container": "#93000a", "primary-fixed": "#e5e2e1", "surface-container-lowest": "#ffffff", "on-surface-variant": "#444748", "surface-container-high": "#e8e8e8", "outline-variant": "#c4c7c7", "on-secondary": "#ffffff", "secondary": "#585f6c", "on-error": "#ffffff", "surface-dim": "#dadada", "tertiary": "#000000", "on-secondary-fixed": "#151c27", "background": "#f9f9f9", "on-tertiary": "#ffffff", "outline": "#747878", "on-primary-fixed-variant": "#474646", "secondary-container": "#dce2f3", "on-primary-container": "#858383", "on-tertiary-container": "#868381", "inverse-primary": "#c8c6c5", "on-tertiary-fixed": "#1d1b1a", "on-primary": "#ffffff", "surface": "#f9f9f9", "primary-fixed-dim": "#c8c6c5", "on-tertiary-fixed-variant": "#484645", "tertiary-fixed": "#e6e1df", "on-secondary-container": "#5e6572", "surface-bright": "#f9f9f9", "error": "#ba1a1a", "error-container": "#ffdad6", "surface-container-low": "#f3f3f4", "primary-container": "#1c1b1b", "inverse-on-surface": "#f0f1f1", "tertiary-fixed-dim": "#cac6c3" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "gutter": "1.5rem", "space-xl": "2rem", "space-xs": "0.25rem", "space-sm": "0.5rem", "space-md": "1rem", "margin": "0rem", "space-lg": "1.5rem" }, "fontFamily": { "code-sm": [ "JetBrains Mono" ], "headline-xl": [ "Inter" ], "body-md": [ "Inter" ], "label-md": [ "Inter" ], "code-md": [ "JetBrains Mono" ], "body-sm": [ "Inter" ], "headline-sm": [ "Inter" ], "body-lg": [ "Inter" ], "label-sm": [ "Inter" ], "headline-lg": [ "Inter" ] }, "fontSize": { "code-sm": [ "0.75rem", { "lineHeight": "1.25rem", "fontWeight": "400" } ], "headline-xl": [ "2rem", { "lineHeight": "2.5rem", "letterSpacing": "-0.025em", "fontWeight": "600" } ], "body-md": [ "0.875rem", { "lineHeight": "1.45rem", "fontWeight": "400" } ], "label-md": [ "0.8125rem", { "lineHeight": "1rem", "letterSpacing": "0.01em", "fontWeight": "500" } ], "code-md": [ "0.8125rem", { "lineHeight": "1.375rem", "fontWeight": "400" } ], "body-sm": [ "0.75rem", { "lineHeight": "1.25rem", "fontWeight": "400" } ], "headline-sm": [ "1.125rem", { "lineHeight": "1.5rem", "letterSpacing": "-0.015em", "fontWeight": "600" } ], "body-lg": [ "1rem", { "lineHeight": "1.625rem", "fontWeight": "400" } ], "label-sm": [ "0.6875rem", { "lineHeight": "0.875rem", "letterSpacing": "0.04em", "fontWeight": "600" } ], "headline-lg": [ "1.5rem", { "lineHeight": "2rem", "letterSpacing": "-0.02em", "fontWeight": "600" } ] } } } };</script><link href="assets/prototype.css" rel="stylesheet"/><script defer="" src="assets/prototype.js"></script></head><body class="bg-surface font-body-md text-body-md text-on-surface antialiased" data-screen="answer"><aside class="fixed left-0 top-0 h-screen w-60 bg-[#FBFBFC] border-r border-[#ECECEC] z-40 flex flex-col justify-between select-none"><div class="flex flex-col h-full overflow-hidden"><div class="h-14 px-space-md flex items-center justify-between border-b border-[#ECECEC]/60"><div class="flex items-center gap-space-xs"><span aria-label="NetCore Assist" class="nc-logo"><svg aria-label="NetCore Assist" role="img" viewbox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+<rect fill="#111111" height="32" rx="8" width="32"></rect>
+<path d="M10 21.5 16 10.5l6 11" fill="none" opacity=".55" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path>
+<path d="M10 21.5h12" fill="none" opacity=".55" stroke="#ffffff" stroke-linecap="round" stroke-width="1.8"></path>
+<circle cx="16" cy="10.5" fill="#ffffff" r="3"></circle>
+<circle cx="10" cy="21.5" fill="#ffffff" r="3"></circle>
+<circle cx="22" cy="21.5" fill="#FDE68A" r="3"></circle>
+</svg>
+</span><span class="font-headline-sm text-headline-sm text-[#111111] tracking-tight">NetCore Assist</span></div><button aria-label="Search queries" class="w-8 h-8 flex items-center justify-center rounded-lg text-secondary hover:text-on-surface hover:bg-surface-container transition-colors" data-toast="Search filters your history (client-side over &lt;code&gt;GET /api/v1/agent/requests&lt;/code&gt;)." type="button"><span class="material-symbols-outlined text-[18px]">search</span></button></div><div class="p-space-sm"><button class="w-full flex items-center justify-between px-space-md py-space-sm bg-primary text-on-primary rounded-full hover:bg-primary/90 transition-all shadow-[0_2px_8px_rgba(0,0,0,0.06)]" data-href="02-new-chat.html" type="button"><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-[18px]">add</span><span class="font-label-md text-label-md text-on-primary">New chat</span></div><kbd class="font-code-sm text-code-sm bg-white/20 text-on-primary px-1.5 py-0.5 rounded">⌘K</kbd></button></div><div class="flex-1 overflow-y-auto px-space-sm py-space-xs space-y-space-md"><nav class="space-y-space-md" data-active-classes="bg-surface-container-high text-on-surface font-medium"><div><div class="px-space-sm mb-space-xs font-label-sm text-label-sm uppercase tracking-wider text-outline">Today</div><div class="space-y-0.5"><a aria-current="page" class="w-full flex items-center gap-2 px-space-sm py-1.5 rounded-lg transition-colors bg-surface-container-high text-on-surface font-medium" data-href="04-answer-insights.html" data-path="chat-session-active" href="04-answer-insights.html"><span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span><span class="truncate font-body-sm text-body-sm">MTG-MED-4102 packet loss SLA...</span></a><a class="w-full flex items-center gap-2 px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-href="03-live-run.html" data-path="bgp-route-incident" href="03-live-run.html"><span class="w-2 h-2 rounded-full bg-sky-500 animate-pulse shrink-0"></span><span class="truncate font-body-sm text-body-sm">BGP route flapping on edge NCX-1002</span></a></div></div><div><div class="px-space-sm mb-space-xs font-label-sm text-label-sm uppercase tracking-wider text-outline">Yesterday</div><div class="space-y-0.5"><a class="w-full flex items-center gap-2 px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-href="04-answer-insights.html" data-path="qos-policy-review" href="04-answer-insights.html"><span class="w-2 h-2 rounded-full bg-neutral-400 shrink-0"></span><span class="truncate font-body-sm text-body-sm">QoS DSCP 46 mapping policy</span></a><a class="w-full flex items-center gap-2 px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-href="04-answer-insights.html" data-path="bfd-diagnostics" href="04-answer-insights.html"><span class="w-2 h-2 rounded-full bg-neutral-400 shrink-0"></span><span class="truncate font-body-sm text-body-sm">BFD hold timer NCS-BFD-3004</span></a></div></div><div><div class="px-space-sm mb-space-xs font-label-sm text-label-sm uppercase tracking-wider text-outline">Earlier</div><div class="space-y-0.5"><a class="w-full flex items-center gap-2 px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-href="07-error-states.html" data-path="core-switch-provisioning" href="07-error-states.html"><span class="w-2 h-2 rounded-full bg-neutral-400 shrink-0"></span><span class="truncate font-body-sm text-body-sm">Core switch VLAN 100 trunking</span></a><a class="w-full flex items-center gap-2 px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-href="06-request-detail.html" data-path="acl-rule-verification" href="06-request-detail.html"><span class="w-2 h-2 rounded-full bg-neutral-400 shrink-0"></span><span class="truncate font-body-sm text-body-sm">ACL egress permit check</span></a></div></div></nav></div><div class="p-space-sm border-t border-[#ECECEC] space-y-space-xs bg-[#FBFBFC]"><a class="w-full flex items-center gap-2 px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-admin-only="" data-href="08-system-status.html" data-path="system-status" href="08-system-status.html"><span class="material-symbols-outlined text-[18px] text-secondary">shield</span><span class="font-label-md text-label-md">System status</span></a><div class="flex items-center justify-between p-space-sm rounded-xl bg-surface-container-lowest border border-[#ECECEC]" data-href="01-sign-in.html" title="Sign out (back to sign-in)"><div class="flex items-center gap-2 overflow-hidden"><span class="nc-avatar w-8 h-8" data-user-initial="">B</span><div class="flex flex-col truncate"><span class="font-label-md text-label-md text-on-surface leading-tight" data-user-name="">Bob</span><span class="font-label-sm text-label-sm text-outline" data-user-title="">NetOps Tier 3</span></div></div><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-surface-container-low text-secondary border border-outline-variant/60" data-user-role="">Employee</span></div></div></div></aside><div class="pl-60 min-h-screen flex flex-col bg-surface relative overflow-x-hidden"><header class="fixed top-0 left-60 right-0 h-14 bg-surface/85 backdrop-blur-xl border-b border-[#ECECEC] z-30 flex items-center justify-between px-space-lg"><div class="flex items-center gap-space-sm"><nav class="flex items-center gap-space-md" data-active-classes="text-on-surface font-semibold"><a class="transition-colors text-on-surface font-semibold font-label-md text-label-md" data-href="02-new-chat.html" href="02-new-chat.html">Chat</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" data-href="05-request-history.html" href="05-request-history.html">Requests</a></nav></div><div class="flex items-center gap-space-sm"><div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-lowest border border-[#ECECEC] text-on-surface"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span><span class="font-label-sm text-label-sm text-on-surface font-medium">API: connected</span></div><div class="flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container-lowest border border-[#ECECEC] text-on-surface"><span class="font-label-sm text-label-sm text-secondary font-medium">EN (US)</span></div><button aria-label="Help &amp; Documentation" class="w-8 h-8 flex items-center justify-center rounded-full text-secondary hover:text-on-surface hover:bg-surface-container transition-colors" data-href="index.html" title="Prototype index" type="button"><span class="material-symbols-outlined text-[18px]">help</span></button></div></header><main class="relative pt-14 flex-1 w-full bg-radial-ambient"><div class="fixed inset-0 left-60 top-14 pointer-events-none -z-10 bg-[radial-gradient(ellipse_80%_60%_at_50%_15%,#FFFBEB_0%,#FDF2F8_45%,#F5F3FF_80%,transparent_100%)] opacity-80"></div><div class="flex flex-col w-full">
+<div class="flex w-full min-h-[calc(100vh-3.5rem)]">
+<!-- Primary Conversation Stream Column (Fluid up to ~740px centered ergonomics) -->
+<div class="flex-1 flex flex-col items-center px-space-lg pb-32">
+<div class="w-full max-w-[740px] space-y-space-lg pt-space-lg">
+<!-- User Query Bubble -->
+<div class="flex justify-end">
+<div class="flex gap-space-sm max-w-[90%] items-start">
+<div class="bg-surface-container-high text-on-surface rounded-2xl rounded-tr-sm p-4 shadow-sm">
+<div class="flex items-center gap-2 mb-1.5">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary">User Prompt</span>
+<span class="font-code-sm text-code-sm text-outline">14:02:18 UTC</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface leading-relaxed">
+                Our NetCore Meet calls show MTG-MED-4102 packet loss at branch sites. Which SD-WAN QoS settings and SLA class should we apply, and what does the Meet troubleshooting guide recommend?
+              </p>
+</div>
+<div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center shrink-0 text-label-sm font-label-sm" data-user-initial="">
+              BO
+            </div>
+</div>
+</div>
+<!-- Assistant AI Diagnostic Response -->
+<div class="flex items-start gap-space-sm w-full">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary text-[18px]">smart_toy</span>
+</div>
+<div class="flex-1 min-w-0 bg-surface-container-lowest rounded-2xl p-space-lg shadow-sm space-y-space-md" id="nc-answer">
+<!-- Context Intro Header -->
+<div class="space-y-1">
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Answer</span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-surface-container-low text-secondary font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>answered</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface leading-relaxed">
+                Based on NetCore SD-WAN configuration guide (<a class="inline-flex items-center font-code-sm text-code-sm px-1.5 py-0.5 rounded bg-surface-container hover:bg-surface-container-high text-on-surface transition-colors" data-cite="kb-1010" href="#kb-1010">KB-NET-1010</a>) and Meet Media Troubleshooting (<a class="inline-flex items-center font-code-sm text-code-sm px-1.5 py-0.5 rounded bg-surface-container hover:bg-surface-container-high text-on-surface transition-colors" data-cite="kb-2006" href="#kb-2006">KB-MTG-2006</a>), apply the following policy adjustments:
+              </p>
+</div>
+<!-- Section 1: SLA Class -->
+<div class="space-y-2 pt-2">
+<div class="flex items-baseline justify-between flex-wrap gap-2">
+<h3 class="font-headline-sm text-headline-sm text-on-surface tracking-tight">1. Apply SLA class Gold-Voice</h3>
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-low text-on-surface hover:bg-surface-container transition-colors cursor-pointer text-label-sm font-label-sm" data-cite="kb-1010" title="Show this source">
+<span class="material-symbols-outlined text-[14px] text-secondary">menu_book</span>
+<span>KB-NET-1010 · p.3</span>
+</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                Branch routers provisioned with default Best-Effort transport degrade RTP packet handling under cellular or high-load MPLS failover. Transition tunnel steering to <span class="font-code-sm text-code-sm bg-surface-container px-1 py-0.5 rounded text-on-surface">SLA-GOLD-VOICE</span> to enforce dynamic multi-path rerouting before jitter cascades into session termination.
+              </p>
+</div>
+<!-- Section 2: QoS Configuration -->
+<div class="space-y-2 pt-2">
+<h3 class="font-headline-sm text-headline-sm text-on-surface tracking-tight">2. QoS: mark voice EF (DSCP 46)</h3>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                Map bi-directional voice streams into Expedited Forwarding with strict low-latency queuing (LLQ). Ensure priority bandwidth reservation guarantees at minimum <span class="font-label-md text-label-md text-on-surface font-semibold">30% capacity</span> with jitter tolerance set below <span class="font-code-sm text-code-sm bg-surface-container px-1 py-0.5 rounded text-on-surface">&lt;10ms</span> and packet loss bounded strictly below <span class="font-code-sm text-code-sm bg-surface-container px-1 py-0.5 rounded text-on-surface">&lt;0.5%</span>.
+              </p>
+<!-- CLI Snippet Card -->
+<div class="rounded-xl bg-[#1E1E1E] text-[#EDEDED] overflow-hidden my-3 shadow-md">
+<div class="flex items-center justify-between px-4 py-2.5 bg-[#171717] text-[#8A8A8A]">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-[#383838]"></span>
+<span class="font-code-sm text-code-sm uppercase tracking-wider text-neutral-400">sdwan-cli · edge-template</span>
+</div>
+<button class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#2A2A2A] hover:bg-[#383838] text-neutral-300 font-label-sm text-label-sm transition-colors" onclick="navigator.clipboard?.writeText('policy qos VOICE-POLICY\n  class CLASS-VOICE-EF\n    set dscp ef\n    priority percent 30\n  sla-profile SLA-GOLD-VOICE\n    latency 150\n    jitter 10\n    loss 0.5')" type="button">
+<span class="material-symbols-outlined text-[14px]">content_copy</span>
+<span>Copy</span>
+</button>
+</div>
+<div class="p-4 font-code-sm text-code-sm leading-relaxed overflow-x-auto selection:bg-[#383838]">
+<pre class="font-code-sm"><span class="text-[#93C5FD]">policy qos</span> VOICE-POLICY
+  <span class="text-[#93C5FD]">class</span> CLASS-VOICE-EF
+    <span class="text-[#FCA5A5]">set dscp</span> ef
+    <span class="text-[#FDE68A]">priority percent</span> 30
+  <span class="text-[#93C5FD]">sla-profile</span> SLA-GOLD-VOICE
+    latency <span class="text-[#86EFAC]">150</span>
+    jitter <span class="text-[#86EFAC]">10</span>
+    loss <span class="text-[#86EFAC]">0.5</span></pre>
+</div>
+</div>
+</div>
+<!-- Section 3: Meet Troubleshooting -->
+<div class="space-y-2 pt-2">
+<div class="flex items-baseline justify-between flex-wrap gap-2">
+<h3 class="font-headline-sm text-headline-sm text-on-surface tracking-tight">3. Meet troubleshooting steps</h3>
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-low text-on-surface hover:bg-surface-container transition-colors cursor-pointer text-label-sm font-label-sm" data-cite="kb-2006" title="Show this source">
+<span class="material-symbols-outlined text-[14px] text-secondary">library_books</span>
+<span>KB-MTG-2006 · chunk 2</span>
+</span>
+</div>
+<ul class="space-y-2 text-on-surface-variant font-body-md text-body-md pl-1">
+<li class="flex items-start gap-2.5">
+<span class="w-1.5 h-1.5 rounded-full bg-primary mt-2 shrink-0"></span>
+<span><strong>Alarm Clearance:</strong> Verify interface counters on the egress edge interface using <code class="font-code-sm text-code-sm bg-surface-container px-1 py-0.5 rounded text-on-surface">show interface tunnel100 stats</code> to guarantee <code class="font-code-sm text-code-sm bg-surface-container px-1 py-0.5 rounded text-on-surface">tx_drop</code> settles to zero.</span>
+</li>
+<li class="flex items-start gap-2.5">
+<span class="w-1.5 h-1.5 rounded-full bg-primary mt-2 shrink-0"></span>
+<span><strong>Client Re-negotiation:</strong> Active conference calls auto-heal within 4.2 seconds once DSCP 46 packets match the low-latency hardware queue.</span>
+</li>
+<li class="flex items-start gap-2.5">
+<span class="w-1.5 h-1.5 rounded-full bg-primary mt-2 shrink-0"></span>
+<span><strong>Meet Code Validation:</strong> Confirm NetCore Meet endpoint status shifts from degraded state <span class="font-code-sm text-code-sm bg-surface-container px-1 py-0.5 rounded text-on-surface">MTG-MED-4102</span> to <span class="font-code-sm text-code-sm bg-surface-container px-1 py-0.5 rounded text-on-surface">MTG-OK</span> in the Telemetry tab.</span>
+</li>
+</ul>
+</div>
+<!-- Meta Execution Row Pills & Actions -->
+<div class="pt-4 mt-4 bg-surface-container-low/50 -mx-space-lg -mb-space-lg p-space-md rounded-b-2xl flex flex-wrap items-center justify-between gap-3">
+<div class="flex flex-wrap items-center gap-1.5">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-900 font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+                  Answered
+                </span>
+<span class="inline-flex items-center px-2.5 py-1 rounded-full bg-surface-container text-on-surface font-label-sm text-label-sm">
+                  Plan mode
+                </span>
+<span class="inline-flex items-center px-2.5 py-1 rounded-full bg-surface-container text-on-surface font-label-sm text-label-sm">
+                  2 steps · 0 re-plans
+                </span>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[13px] text-emerald-600">verified</span>
+                  Judge passed
+                </span>
+<span class="inline-flex items-center px-2.5 py-1 rounded-full bg-surface-container text-secondary font-code-sm text-code-sm">
+                  63.1 s
+                </span>
+<span class="inline-flex items-center px-2.5 py-1 rounded-full bg-surface-container text-secondary font-label-sm text-label-sm">
+                  Not cached
+                </span>
+</div>
+<!-- Action Buttons -->
+<div class="flex items-center gap-1">
+<button aria-label="Copy Answer" class="w-8 h-8 rounded-full flex items-center justify-center text-secondary hover:text-on-surface hover:bg-surface-container transition-colors" id="nc-copy-answer" type="button">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+<button aria-label="Helpful response" class="w-8 h-8 rounded-full flex items-center justify-center text-secondary hover:text-on-surface hover:bg-surface-container transition-colors" data-toast="Feedback captured in the UI only: the API has no feedback endpoint yet." type="button">
+<span class="material-symbols-outlined text-[18px]">thumb_up</span>
+</button>
+<button aria-label="Unhelpful response" class="w-8 h-8 rounded-full flex items-center justify-center text-secondary hover:text-on-surface hover:bg-surface-container transition-colors" data-toast="Feedback captured in the UI only: the API has no feedback endpoint yet." type="button">
+<span class="material-symbols-outlined text-[18px]">thumb_down</span>
+</button>
+<button class="ml-1 inline-flex items-center gap-1 px-3 py-1 rounded-full bg-surface-container-lowest text-on-surface hover:bg-surface-container font-label-sm text-label-sm shadow-sm transition-colors" data-href="06-request-detail.html" type="button">
+<span>View request</span>
+<span class="material-symbols-outlined text-[14px]">arrow_outward</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right-Hand Contextual Insights Panel (Fixed 380px) -->
+<aside class="w-[380px] shrink-0 sticky top-14 h-[calc(100vh-3.5rem)] overflow-y-auto bg-surface-container-lowest/80 backdrop-blur-md p-5 space-y-space-md shadow-sm">
+<!-- Panel Header & Navigation -->
+<div class="space-y-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">insights</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface tracking-tight">Insights &amp; Transparency</h2>
+</div>
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+</div>
+<!-- Filter Sub-Tabs -->
+<div class="flex items-center gap-1 p-1 bg-surface-container-low rounded-xl overflow-x-auto">
+<button class="px-2.5 py-1 rounded-lg text-secondary font-label-sm text-label-sm hover:text-on-surface transition-colors" data-tab="plan" type="button">Plan</button>
+<button class="px-2.5 py-1 rounded-lg text-secondary font-label-sm text-label-sm hover:text-on-surface transition-colors" data-tab="sources" type="button">Sources</button>
+<button class="px-2.5 py-1 rounded-lg bg-surface-container-lowest text-on-surface font-label-sm text-label-sm shadow-sm font-semibold" data-tab="judge" type="button">Judge</button>
+<button class="px-2.5 py-1 rounded-lg text-secondary font-label-sm text-label-sm hover:text-on-surface transition-colors" data-tab="tools" type="button">Tool calls</button>
+<button class="px-2.5 py-1 rounded-lg text-secondary font-label-sm text-label-sm hover:text-on-surface transition-colors" data-tab="trace" type="button">Trace</button>
+<button class="px-2.5 py-1 rounded-lg text-secondary font-label-sm text-label-sm hover:text-on-surface transition-colors" data-tab="timing" type="button">Timing</button>
+</div>
+</div>
+<!-- Active Tab Content: Judge -->
+<div class="p-space-lg space-y-3" data-panel="plan"><div class="flex items-center justify-between"><span class="font-label-md text-label-md font-semibold">Plan v1</span><span class="font-code-sm text-code-sm text-outline">0 re-plans</span></div><p class="font-body-sm text-body-sm text-secondary">Split into networking QoS/SLA and Meet troubleshooting</p><div class="flex items-start gap-3 p-3 rounded-lg bg-surface-container-low"><span class="material-symbols-outlined text-[18px] text-emerald-600">check_circle</span><div class="min-w-0"><div class="font-label-md text-label-md">1. SD-WAN QoS and SLA class for voice</div><div class="font-code-sm text-code-sm text-secondary">search_knowledge_base · networking · “SD-WAN QoS SLA class voice packet loss”</div><div class="font-body-sm text-body-sm text-outline">done · 3 relevant · best 0.92 · 4.1 s</div></div></div><div class="flex items-start gap-3 p-3 rounded-lg bg-surface-container-low"><span class="material-symbols-outlined text-[18px] text-emerald-600">check_circle</span><div class="min-w-0"><div class="font-label-md text-label-md">2. Meet troubleshooting for MTG-MED-4102</div><div class="font-code-sm text-code-sm text-secondary">search_knowledge_base · meetings · “MTG-MED-4102 troubleshooting”</div><div class="font-body-sm text-body-sm text-outline">done · 2 relevant · best 0.88 · 3.6 s</div></div></div><p class="font-body-sm text-body-sm text-outline">Routes: vector, vector · cache: miss</p></div><div class="bg-surface-container-lowest rounded-2xl p-4 shadow-sm space-y-4" data-panel="judge">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Judge LLM</span>
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+</div>
+<span class="inline-flex items-center px-2 py-0.5 rounded-md bg-surface-container font-code-sm text-code-sm text-on-surface">gpt-6.1-sol</span>
+</div>
+<!-- Metrics with Progress Bars vs Threshold Markers -->
+<div class="space-y-3.5 pt-1">
+<!-- Faithfulness -->
+<div class="space-y-1.5">
+<div class="flex items-center justify-between text-body-sm font-body-sm">
+<span class="text-on-surface font-medium">Faithfulness</span>
+<div class="flex items-center gap-1.5">
+<span class="font-code-sm text-code-sm text-secondary">Target ≥0.70</span>
+<span class="font-code-sm text-code-sm font-semibold text-emerald-700 bg-emerald-50 px-1 rounded">1.00</span>
+</div>
+</div>
+<div class="relative w-full h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 bg-emerald-500 rounded-full" style="width: 100%;"></div>
+<div class="absolute top-0 bottom-0 w-0.5 bg-neutral-400 z-10" style="left: 70%;"></div>
+</div>
+</div>
+<!-- Groundedness -->
+<div class="space-y-1.5">
+<div class="flex items-center justify-between text-body-sm font-body-sm">
+<span class="text-on-surface font-medium">Groundedness</span>
+<div class="flex items-center gap-1.5">
+<span class="font-code-sm text-code-sm text-secondary">Target ≥0.70</span>
+<span class="font-code-sm text-code-sm font-semibold text-emerald-700 bg-emerald-50 px-1 rounded">1.00</span>
+</div>
+</div>
+<div class="relative w-full h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 bg-emerald-500 rounded-full" style="width: 100%;"></div>
+<div class="absolute top-0 bottom-0 w-0.5 bg-neutral-400 z-10" style="left: 70%;"></div>
+</div>
+</div>
+<!-- Context Precision -->
+<div class="space-y-1.5">
+<div class="flex items-center justify-between text-body-sm font-body-sm">
+<span class="text-on-surface font-medium">Context Precision</span>
+<div class="flex items-center gap-1.5">
+<span class="font-code-sm text-code-sm text-secondary">Target ≥0.60</span>
+<span class="font-code-sm text-code-sm font-semibold text-emerald-700 bg-emerald-50 px-1 rounded">1.00</span>
+</div>
+</div>
+<div class="relative w-full h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 bg-emerald-500 rounded-full" style="width: 100%;"></div>
+<div class="absolute top-0 bottom-0 w-0.5 bg-neutral-400 z-10" style="left: 60%;"></div>
+</div>
+</div>
+</div>
+<!-- Attempts Mini Timeline -->
+<div class="pt-3 bg-surface-container-low p-2.5 rounded-xl flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-emerald-600">check_circle</span>
+<span class="font-body-sm text-body-sm text-on-surface font-medium">Attempt #1 accepted</span>
+</div>
+<span class="font-code-sm text-code-sm text-secondary">9.9 s compute</span>
+</div>
+</div>
+<!-- Preview Stack: Sources Card -->
+<div class="bg-surface-container-lowest rounded-2xl p-4 shadow-sm space-y-3" data-panel="sources">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-secondary">auto_stories</span>
+<span class="font-headline-sm text-headline-sm text-on-surface tracking-tight text-[1rem]">Retrieved Sources</span>
+</div>
+<span class="font-code-sm text-code-sm text-secondary">2 matched</span>
+</div>
+<div class="space-y-2">
+<!-- Row 1 -->
+<div class="p-2.5 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors space-y-1.5" id="kb-1010">
+<div class="flex items-center justify-between">
+<span class="font-code-sm text-code-sm font-semibold text-on-surface">KB-NET-1010</span>
+<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-neutral-200 text-neutral-800">Internal</span>
+</div>
+<div class="flex items-center justify-between text-body-sm font-body-sm text-secondary">
+<span>SD-WAN Config Specification</span>
+<span class="font-code-sm text-code-sm text-emerald-700 font-medium">94% rel</span>
+</div>
+<div class="flex items-center justify-between text-body-sm font-body-sm text-outline">
+<span>Anchor: Voice queue parameters</span>
+<span class="font-code-sm text-code-sm">p.3</span>
+</div>
+</div>
+<!-- Row 2 -->
+<div class="p-2.5 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors space-y-1.5" id="kb-2006">
+<div class="flex items-center justify-between">
+<span class="font-code-sm text-code-sm font-semibold text-on-surface">KB-MTG-2006</span>
+<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-neutral-200 text-neutral-800">Internal</span>
+</div>
+<div class="flex items-center justify-between text-body-sm font-body-sm text-secondary">
+<span>Meet Media Diagnostics</span>
+<span class="font-code-sm text-code-sm text-emerald-700 font-medium">91% rel</span>
+</div>
+<div class="flex items-center justify-between text-body-sm font-body-sm text-outline">
+<span>Anchor: Alarm MTG-MED-4102</span>
+<span class="font-code-sm text-code-sm">chunk 2</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Preview Stack: Tool Calls Card -->
+<div class="bg-surface-container-lowest rounded-2xl p-4 shadow-sm space-y-2.5" data-panel="tools">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-secondary">build</span>
+<span class="font-headline-sm text-headline-sm text-on-surface tracking-tight text-[1rem]">Tool Invocations</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary">2 calls</span>
+</div>
+<div class="p-2.5 rounded-xl bg-surface-container-low flex items-center justify-between gap-2">
+<div class="min-w-0 flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
+<div class="truncate">
+<div class="font-code-sm text-code-sm font-medium text-on-surface truncate">search_knowledge_base</div>
+<div class="font-body-sm text-body-sm text-outline truncate">planner · done · networking</div>
+</div>
+</div>
+<span class="font-code-sm text-code-sm text-secondary shrink-0">4.1 s</span>
+</div><div class="p-2.5 rounded-xl bg-surface-container-low flex items-center justify-between gap-2">
+<div class="min-w-0 flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
+<div class="truncate">
+<div class="font-code-sm text-code-sm font-medium text-on-surface truncate">search_knowledge_base</div>
+<div class="font-body-sm text-body-sm text-outline truncate">planner · done · meetings</div>
+</div>
+</div>
+<span class="font-code-sm text-code-sm text-secondary shrink-0">3.6 s</span>
+</div>
+</div>
+<!-- Preview Stack: Timing Breakdown Card -->
+<div class="bg-surface-container-lowest rounded-2xl p-4 shadow-sm space-y-3" data-panel="timing">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-secondary">timer</span>
+<span class="font-headline-sm text-headline-sm text-on-surface tracking-tight text-[1rem]">Latency &amp; Pipeline</span>
+</div>
+<span class="font-code-sm text-code-sm font-semibold text-on-surface">63.1 s total</span>
+</div>
+<div class="space-y-1.5">
+<div class="flex items-center justify-between text-body-sm font-body-sm text-secondary">
+<span>Agent (agent_s)</span>
+<span class="font-code-sm text-code-sm text-on-surface">62.9 s</span>
+</div>
+<div class="flex items-center justify-between text-body-sm font-body-sm text-secondary">
+<span>Queued (queued_s)</span>
+<span class="font-code-sm text-code-sm text-on-surface">0.0 s</span>
+</div>
+</div>
+<!-- Latency Bar -->
+<div class="w-full h-1.5 bg-surface-container rounded-full overflow-hidden flex">
+<div class="h-full bg-primary" style="width: 99.6%;"></div>
+<div class="h-full bg-neutral-300" style="width: 0.4%;"></div>
+</div>
+</div><div class="p-space-lg" data-panel="trace"><div class="rounded-xl bg-[#1E1E1E] text-neutral-200 p-4 font-code-sm text-code-sm space-y-1 overflow-x-auto"><div class="flex gap-3"><span class="text-neutral-500 w-12 text-right shrink-0">0.10s</span><span class="text-sky-300 w-32 shrink-0">Request</span><span>bob · role=employee · mode=plan</span></div><div class="flex gap-3"><span class="text-neutral-500 w-12 text-right shrink-0">1.52s</span><span class="text-sky-300 w-32 shrink-0">Input guardrails</span><span>allowed</span></div><div class="flex gap-3"><span class="text-neutral-500 w-12 text-right shrink-0">1.56s</span><span class="text-sky-300 w-32 shrink-0">Semantic cache</span><span>miss</span></div><div class="flex gap-3"><span class="text-neutral-500 w-12 text-right shrink-0">4.31s</span><span class="text-sky-300 w-32 shrink-0">Planner</span><span>plan v1 · 2 steps</span></div><div class="flex gap-3"><span class="text-neutral-500 w-12 text-right shrink-0">8.40s</span><span class="text-sky-300 w-32 shrink-0">Plan executor</span><span>step 1 done · 3 relevant, best 0.92</span></div><div class="flex gap-3"><span class="text-neutral-500 w-12 text-right shrink-0">12.0s</span><span class="text-sky-300 w-32 shrink-0">Plan executor</span><span>step 2 done · 2 relevant, best 0.88</span></div><div class="flex gap-3"><span class="text-neutral-500 w-12 text-right shrink-0">14.2s</span><span class="text-sky-300 w-32 shrink-0">Context optimizer</span><span>5 chunks · 2 980 tokens</span></div><div class="flex gap-3"><span class="text-neutral-500 w-12 text-right shrink-0">52.9s</span><span class="text-sky-300 w-32 shrink-0">Judge LLM</span><span>pass {faithfulness 1.0, groundedness 1.0, precision 1.0}</span></div><div class="flex gap-3"><span class="text-neutral-500 w-12 text-right shrink-0">53.4s</span><span class="text-sky-300 w-32 shrink-0">Output guardrails</span><span>pass</span></div><div class="flex gap-3"><span class="text-neutral-500 w-12 text-right shrink-0">53.5s</span><span class="text-sky-300 w-32 shrink-0">Cache write</span><span>stored · scope=internal</span></div><div class="flex gap-3"><span class="text-neutral-500 w-12 text-right shrink-0">63.1s</span><span class="text-sky-300 w-32 shrink-0">Response</span><span>answered</span></div></div></div>
+</aside>
+</div>
+<!-- Bottom Floating Execution Composer -->
+<div class="fixed bottom-4 left-60 right-[380px] flex justify-center px-space-lg pointer-events-none z-20">
+<div class="w-full max-w-[740px] pointer-events-auto bg-surface-container-lowest rounded-2xl shadow-xl p-2.5 space-y-2">
+<div class="relative">
+<textarea class="w-full bg-transparent resize-none border-0 px-2 py-1 text-on-surface font-body-md text-body-md placeholder:text-outline focus:outline-none" placeholder="Ask a follow-up question…" rows="2"></textarea>
+</div>
+<div class="flex items-center justify-between pt-1">
+<div class="flex items-center gap-1.5 flex-wrap">
+<button class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-container-high font-label-md text-label-md" data-href="02-new-chat.html" type="button">Plan <span class="material-symbols-outlined text-[16px]">expand_more</span></button>
+
+
+</div>
+<button aria-label="Send Query" class="w-9 h-9 rounded-full bg-primary hover:bg-primary/90 text-on-primary flex items-center justify-center transition-all hover:scale-105 shadow-sm" data-href="03-live-run.html" type="button">
+<span class="material-symbols-outlined text-[18px]">arrow_upward</span>
+</button>
+</div>
+</div>
+</div>
+</div></main></div></body></html>

@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>NetCore Assist Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root { --ink:#111; --text:#333; --muted:#6b6b6b; --line:#ECECEC; --card:#fff; --bg:#f9f9f9; }
+  * { box-sizing: border-box; }
+  body { margin:0; font:400 15px/1.55 Inter, system-ui, sans-serif; color:var(--text); background:var(--bg); }
+  .glow { position:fixed; inset:0; z-index:-1; pointer-events:none;
+    background:radial-gradient(ellipse 70% 50% at 50% 0%, #FFFBEB 0%, #FDF2F8 45%, #F5F3FF 75%, transparent 100%); }
+  header, main, footer { max-width:1180px; margin:0 auto; padding:0 16px; }
+  header { padding-top:40px; }
+  .brand { display:flex; align-items:center; gap:10px; font-weight:600; color:var(--ink); }
+  .brand svg { width:32px; height:32px; }
+  h1 { font-size:32px; line-height:1.2; letter-spacing:-.025em; color:var(--ink); margin:18px 0 8px; }
+  .lead { max-width:760px; color:var(--muted); margin:0 0 18px; }
+  .start { display:inline-block; padding:10px 18px; border-radius:999px; background:var(--ink); color:#fff;
+    text-decoration:none; font-weight:500; }
+  .how { display:flex; flex-wrap:wrap; gap:8px; margin:18px 0 0; padding:0; list-style:none; }
+  .how li { padding:6px 12px; border:1px solid var(--line); border-radius:999px; background:#fff; font-size:13px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(340px, 1fr)); gap:18px; margin:32px 0; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:16px; overflow:hidden; display:flex;
+    flex-direction:column; box-shadow:0 4px 24px -6px rgba(17,17,17,.06); }
+  .thumb { display:block; aspect-ratio:16/10; overflow:hidden; background:#f3f3f4; border-bottom:1px solid var(--line); }
+  .thumb img { width:100%; height:100%; object-fit:cover; object-position:top left; transition:transform .3s; }
+  .card:hover .thumb img { transform:scale(1.02); }
+  .body { padding:16px 18px 18px; display:flex; flex-direction:column; flex:1; }
+  .num { font:500 12px "JetBrains Mono", monospace; color:var(--muted); }
+  h2 { font-size:18px; margin:2px 0 6px; letter-spacing:-.015em; }
+  h2 a { color:var(--ink); text-decoration:none; }
+  h3 { font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); margin:12px 0 4px; }
+  p { margin:0; }
+  ul { margin:0; padding-left:18px; font-size:14px; }
+  .chips { list-style:none; padding:0; display:flex; flex-wrap:wrap; gap:6px; }
+  code { font:400 12px "JetBrains Mono", monospace; background:#f3f3f4; padding:2px 6px; border-radius:6px;
+    overflow-wrap:anywhere; }
+  .open { margin-top:auto; padding-top:14px; color:var(--ink); font-weight:500; text-decoration:none; }
+  .fixes { background:#fff; border:1px solid var(--line); border-radius:16px; padding:18px 22px; margin-bottom:40px; }
+  .fixes h2 { margin-top:0; }
+  .fixes li { margin:6px 0; }
+  footer { color:var(--muted); font-size:13px; padding-bottom:40px; }
+  @media (max-width:420px) { .grid { grid-template-columns:1fr; } h1 { font-size:26px; } }
+</style>
+</head>
+<body>
+<div class="glow"></div>
+<header>
+  <div class="brand"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="NetCore Assist">
+  <rect width="32" height="32" rx="8" fill="#111111"/>
+  <path d="M10 21.5 16 10.5l6 11" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity=".55"/>
+  <path d="M10 21.5h12" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" opacity=".55"/>
+  <circle cx="16" cy="10.5" r="3" fill="#ffffff"/>
+  <circle cx="10" cy="21.5" r="3" fill="#ffffff"/>
+  <circle cx="22" cy="21.5" r="3" fill="#FDE68A"/>
+</svg>
+<span>NetCore Assist</span></div>
+  <h1>UI prototype: 8 screens</h1>
+  <p class="lead">Clickable prototype built from the Google Stitch mockups for the Agentic RAG REST API. Screens are
+    linked, the main behaviours are simulated (no API calls), and the data matches what the API returns.</p>
+  <a class="start" href="01-sign-in.html">Start the walkthrough →</a>
+  <ul class="how">
+    <li>Review bar (top): Index · Prev / Next · demo user</li>
+    <li>Alice = guest · Bob = employee · Carol = admin</li>
+    <li>Main journey: 01 → 02 → 03 → 04</li>
+    <li>Disconnect journey: 03 “Stop watching” → 06</li>
+  </ul>
+</header>
+<main>
+  <section class="grid">
+      <article class="card">
+        <a class="thumb" href="01-sign-in.html"><img src="assets/shots/01-sign-in.png"
+           alt="Sign in screenshot" loading="lazy"/></a>
+        <div class="body">
+          <div class="num">01</div>
+          <h2><a href="01-sign-in.html">Sign in</a></h2>
+          <p>Authenticate with an API key or pick a demo user; the role decides which KB articles the agent may use.</p>
+          <h3>API</h3><ul class="chips"><li><code>X-API-Key header (all agent endpoints)</code></li><li><code>401 problem on a bad key</code></li></ul>
+          <h3>Try</h3><ul><li>Pick Alice / Bob / Carol</li><li>Clear the key and press Continue (401 message)</li></ul>
+          <a class="open" href="01-sign-in.html">Open screen →</a>
+        </div>
+      </article>
+      <article class="card">
+        <a class="thumb" href="02-new-chat.html"><img src="assets/shots/02-new-chat.png"
+           alt="New chat screenshot" loading="lazy"/></a>
+        <div class="body">
+          <div class="num">02</div>
+          <h2><a href="02-new-chat.html">New chat</a></h2>
+          <p>Empty state: compose a question, choose Plan or ReAct, set the request options.</p>
+          <h3>API</h3><ul class="chips"><li><code>POST /api/v1/agent/ask/stream</code></li><li><code>body: question, mode, timeout_seconds, include_trace, bypass_cache</code></li></ul>
+          <h3>Try</h3><ul><li>Open the mode pill and the options (sliders) popover</li><li>Click an example, then send (Enter)</li></ul>
+          <a class="open" href="02-new-chat.html">Open screen →</a>
+        </div>
+      </article>
+      <article class="card">
+        <a class="thumb" href="03-live-run.html"><img src="assets/shots/03-live-run.png"
+           alt="Live run (streaming) screenshot" loading="lazy"/></a>
+        <div class="body">
+          <div class="num">03</div>
+          <h2><a href="03-live-run.html">Live run (streaming)</a></h2>
+          <p>Progress while the agent works: plan, steps, tool calls and judge arrive as SSE events.</p>
+          <h3>API</h3><ul class="chips"><li><code>POST /api/v1/agent/ask/stream (SSE)</code></li><li><code>events: accepted, plan, step, tool_call, trace, judge, result, done</code></li></ul>
+          <h3>Try</h3><ul><li>Watch step 2 finish and the answer become ready</li><li>Press &#x27;Stop watching&#x27; to simulate a disconnect</li></ul>
+          <a class="open" href="03-live-run.html">Open screen →</a>
+        </div>
+      </article>
+      <article class="card">
+        <a class="thumb" href="04-answer-insights.html"><img src="assets/shots/04-answer-insights.png"
+           alt="Answer + insights screenshot" loading="lazy"/></a>
+        <div class="body">
+          <div class="num">04</div>
+          <h2><a href="04-answer-insights.html">Answer + insights</a></h2>
+          <p>The answer with citations and every detail of the run in the Insights panel.</p>
+          <h3>API</h3><ul class="chips"><li><code>AskResponse: plan, executed_plan, sources, judge, tool_calls, trace, cache, timings</code></li></ul>
+          <h3>Try</h3><ul><li>Switch the Insights tabs</li><li>Click a citation chip to jump to its source</li></ul>
+          <a class="open" href="04-answer-insights.html">Open screen →</a>
+        </div>
+      </article>
+      <article class="card">
+        <a class="thumb" href="05-request-history.html"><img src="assets/shots/05-request-history.png"
+           alt="Request history screenshot" loading="lazy"/></a>
+        <div class="body">
+          <div class="num">05</div>
+          <h2><a href="05-request-history.html">Request history</a></h2>
+          <p>All earlier requests with status filters; owners see their own, the admin sees everyone&#x27;s.</p>
+          <h3>API</h3><ul class="chips"><li><code>GET /api/v1/agent/requests?status=&amp;limit=&amp;cursor=</code></li></ul>
+          <h3>Try</h3><ul><li>Filter by status / mode / text</li><li>Switch user in the review bar: Bob sees only his rows</li></ul>
+          <a class="open" href="05-request-history.html">Open screen →</a>
+        </div>
+      </article>
+      <article class="card">
+        <a class="thumb" href="06-request-detail.html"><img src="assets/shots/06-request-detail.png"
+           alt="Request detail / resume screenshot" loading="lazy"/></a>
+        <div class="body">
+          <div class="num">06</div>
+          <h2><a href="06-request-detail.html">Request detail / resume</a></h2>
+          <p>Reconnect after a dropped stream: missed events are replayed, then the stored result is shown.</p>
+          <h3>API</h3><ul class="chips"><li><code>GET /api/v1/agent/requests/{id}</code></li><li><code>GET /api/v1/agent/requests/{id}/events + Last-Event-ID</code></li></ul>
+          <h3>Try</h3><ul><li>Watch the replay catch up</li><li>Export JSON (sample payload)</li></ul>
+          <a class="open" href="06-request-detail.html">Open screen →</a>
+        </div>
+      </article>
+      <article class="card">
+        <a class="thumb" href="07-error-states.html"><img src="assets/shots/07-error-states.png"
+           alt="Error &amp; limit states screenshot" loading="lazy"/></a>
+        <div class="body">
+          <div class="num">07</div>
+          <h2><a href="07-error-states.html">Error &amp; limit states</a></h2>
+          <p>How RFC 9457 problems are presented: 429, 504, 401 and 503.</p>
+          <h3>API</h3><ul class="chips"><li><code>application/problem+json: type, title, status, detail, instance, request_id</code></li></ul>
+          <h3>Try</h3><ul><li>Wait for the 429 countdown to re-enable send</li><li>Expand the problem details</li></ul>
+          <a class="open" href="07-error-states.html">Open screen →</a>
+        </div>
+      </article>
+      <article class="card">
+        <a class="thumb" href="08-system-status.html"><img src="assets/shots/08-system-status.png"
+           alt="System status (admin) screenshot" loading="lazy"/></a>
+        <div class="body">
+          <div class="num">08</div>
+          <h2><a href="08-system-status.html">System status (admin)</a></h2>
+          <p>Dependency readiness and key metrics for admins.</p>
+          <h3>API</h3><ul class="chips"><li><code>GET /health</code></li><li><code>GET /ready</code></li><li><code>GET /metrics (Prometheus)</code></li></ul>
+          <h3>Try</h3><ul><li>Refresh</li><li>Switch to Bob: admin-only notice</li></ul>
+          <a class="open" href="08-system-status.html">Open screen →</a>
+        </div>
+      </article>
+  </section>
+  <section class="fixes">
+    <h2>Fixes applied to the Stitch output</h2>
+    <ul><li>Logo: the broken remote image is replaced by an inline SVG logo; avatars are initials (nothing loads from googleusercontent).</li><li>Top navigation: &#x27;Diagnostic Stream / Topology &amp; Telemetry / Audit Logs&#x27; (no backing API) became Chat | Requests.</li><li>RBAC: KB-MTG-2006 is an internal article, so Bob (Employee) sees it as Internal, not Restricted; history is owner-scoped for non-admins; System status and the user filter are admin-only.</li><li>Popovers that Stitch rendered open (mode, options) are closed by default and interactive.</li><li>Real vendor and product names (Cisco, IOS-XE, PagerDuty, Langfuse, S3, OpsGenie) were removed; NetCore stays fictional.</li><li>Invented telemetry and tools were replaced by what the API returns: SSE events instead of &#x27;websocket&#x27;, real tools (search_knowledge_base, search_web, federated_search, rewrite_query), judge thresholds 0.70 / 0.70 / 0.60, cache similarity 0.90 and TTL 24 h, problem type URIs, request ids.</li><li>Inconsistencies fixed: 2 tool calls for a 2-step plan, &#x27;plan v1 (2 steps)&#x27;, 4 replayed events, follow-up composer without attachment/scope chips.</li></ul>
+  </section>
+</main>
+<footer>Generated by <code>docs/ui-mockups/build_prototype.py</code> from
+  <code>docs/ui-mockups/stitch_netcore_assist_web_app/</code> (originals untouched).</footer>
+</body>
+</html>

@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-primary-fixed": "#1c1b1b", "surface-tint": "#5f5e5e", "surface-container": "#eeeeee", "tertiary-container": "#1d1b1a", "surface-container-highest": "#e2e2e2", "surface-variant": "#e2e2e2", "secondary-fixed-dim": "#c0c7d6", "inverse-surface": "#2f3131", "on-surface": "#1a1c1c", "on-background": "#1a1c1c", "secondary-fixed": "#dce2f3", "primary": "#000000", "on-secondary-fixed-variant": "#404754", "on-error-container": "#93000a", "primary-fixed": "#e5e2e1", "surface-container-lowest": "#ffffff", "on-surface-variant": "#444748", "surface-container-high": "#e8e8e8", "outline-variant": "#c4c7c7", "on-secondary": "#ffffff", "secondary": "#585f6c", "on-error": "#ffffff", "surface-dim": "#dadada", "tertiary": "#000000", "on-secondary-fixed": "#151c27", "background": "#f9f9f9", "on-tertiary": "#ffffff", "outline": "#747878", "on-primary-fixed-variant": "#474646", "secondary-container": "#dce2f3", "on-primary-container": "#858383", "on-tertiary-container": "#868381", "inverse-primary": "#c8c6c5", "on-tertiary-fixed": "#1d1b1a", "on-primary": "#ffffff", "surface": "#f9f9f9", "primary-fixed-dim": "#c8c6c5", "on-tertiary-fixed-variant": "#484645", "tertiary-fixed": "#e6e1df", "on-secondary-container": "#5e6572", "surface-bright": "#f9f9f9", "error": "#ba1a1a", "error-container": "#ffdad6", "surface-container-low": "#f3f3f4", "primary-container": "#1c1b1b", "inverse-on-surface": "#f0f1f1", "tertiary-fixed-dim": "#cac6c3" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "gutter": "1.5rem", "space-xl": "2rem", "space-xs": "0.25rem", "space-sm": "0.5rem", "space-md": "1rem", "margin": "0rem", "space-lg": "1.5rem" }, "fontFamily": { "code-sm": [ "JetBrains Mono" ], "headline-xl": [ "Inter" ], "body-md": [ "Inter" ], "label-md": [ "Inter" ], "code-md": [ "JetBrains Mono" ], "body-sm": [ "Inter" ], "headline-sm": [ "Inter" ], "body-lg": [ "Inter" ], "label-sm": [ "Inter" ], "headline-lg": [ "Inter" ] }, "fontSize": { "code-sm": [ "0.75rem", { "lineHeight": "1.25rem", "fontWeight": "400" } ], "headline-xl": [ "2rem", { "lineHeight": "2.5rem", "letterSpacing": "-0.025em", "fontWeight": "600" } ], "body-md": [ "0.875rem", { "lineHeight": "1.45rem", "fontWeight": "400" } ], "label-md": [ "0.8125rem", { "lineHeight": "1rem", "letterSpacing": "0.01em", "fontWeight": "500" } ], "code-md": [ "0.8125rem", { "lineHeight": "1.375rem", "fontWeight": "400" } ], "body-sm": [ "0.75rem", { "lineHeight": "1.25rem", "fontWeight": "400" } ], "headline-sm": [ "1.125rem", { "lineHeight": "1.5rem", "letterSpacing": "-0.015em", "fontWeight": "600" } ], "body-lg": [ "1rem", { "lineHeight": "1.625rem", "fontWeight": "400" } ], "label-sm": [ "0.6875rem", { "lineHeight": "0.875rem", "letterSpacing": "0.04em", "fontWeight": "600" } ], "headline-lg": [ "1.5rem", { "lineHeight": "2rem", "letterSpacing": "-0.02em", "fontWeight": "600" } ] } } } };</script></head><body class="bg-surface font-body-md text-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-screen w-60 bg-[#FBFBFC] border-r border-[#ECECEC] z-40 flex flex-col justify-between select-none"><div class="flex flex-col h-full overflow-hidden"><div class="h-14 px-space-md flex items-center justify-between border-b border-[#ECECEC]/60"><div class="flex items-center gap-space-xs"><img alt="NetCore Assist Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/ALJJyrDTHNYlj9CYn7It4m8rK9hPJ1Oyah5jtxoKgK2cdA1M6aUD_pn73AN68s3nVdIPtBdbPBpM23Bkpb_mqcC1w8mQlK8LZj1WFS3nrhqRVZ7fu6RGxauCWXVaMat8QFVIQReyuRJokU7AlkZEzhSd76bSm1FX_JQelcmrzFkpI7bAZM5OoNzBGAi_IWcanFD7f8qx5aEDU_u6hn7o_1oJ8RRAG4i_JQM4nHRLWfYri_DfVQ"/><span class="font-headline-sm text-headline-sm text-[#111111] tracking-tight">NetCore Assist</span></div><button aria-label="Search queries" class="w-8 h-8 flex items-center justify-center rounded-lg text-secondary hover:text-on-surface hover:bg-surface-container transition-colors" type="button"><span class="material-symbols-outlined text-[18px]">search</span></button></div><div class="p-space-sm"><button class="w-full flex items-center justify-between px-space-md py-space-sm bg-primary text-on-primary rounded-full hover:bg-primary/90 transition-all shadow-[0_2px_8px_rgba(0,0,0,0.06)]" type="button"><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-[18px]">add</span><span class="font-label-md text-label-md text-on-primary">New chat</span></div><kbd class="font-code-sm text-code-sm bg-white/20 text-on-primary px-1.5 py-0.5 rounded">⌘K</kbd></button></div><div class="flex-1 overflow-y-auto px-space-sm py-space-xs space-y-space-md"><nav class="space-y-space-md" data-active-classes="bg-surface-container-high text-on-surface font-medium"><div><div class="px-space-sm mb-space-xs font-label-sm text-label-sm uppercase tracking-wider text-outline">Today</div><div class="space-y-0.5"><a class="w-full flex items-center gap-2 px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="chat-session-active" href="#"><span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span><span class="truncate font-body-sm text-body-sm">MTG-MED-4102 packet loss SLA...</span></a><a class="w-full flex items-center gap-2 px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="bgp-route-incident" href="#"><span class="w-2 h-2 rounded-full bg-sky-500 animate-pulse shrink-0"></span><span class="truncate font-body-sm text-body-sm">BGP route flapping on edge NCX-1002</span></a></div></div><div><div class="px-space-sm mb-space-xs font-label-sm text-label-sm uppercase tracking-wider text-outline">Yesterday</div><div class="space-y-0.5"><a class="w-full flex items-center gap-2 px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="qos-policy-review" href="#"><span class="w-2 h-2 rounded-full bg-neutral-400 shrink-0"></span><span class="truncate font-body-sm text-body-sm">QoS DSCP 46 mapping policy</span></a><a class="w-full flex items-center gap-2 px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="bfd-diagnostics" href="#"><span class="w-2 h-2 rounded-full bg-neutral-400 shrink-0"></span><span class="truncate font-body-sm text-body-sm">BFD hold timer NCS-BFD-3004</span></a></div></div><div><div class="px-space-sm mb-space-xs font-label-sm text-label-sm uppercase tracking-wider text-outline">Earlier</div><div class="space-y-0.5"><a class="w-full flex items-center gap-2 px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="core-switch-provisioning" href="#"><span class="w-2 h-2 rounded-full bg-neutral-400 shrink-0"></span><span class="truncate font-body-sm text-body-sm">Core switch VLAN 100 trunking</span></a><a class="w-full flex items-center gap-2 px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="acl-rule-verification" href="#"><span class="w-2 h-2 rounded-full bg-neutral-400 shrink-0"></span><span class="truncate font-body-sm text-body-sm">ACL egress permit check</span></a></div></div></nav></div><div class="p-space-sm border-t border-[#ECECEC] space-y-space-xs bg-[#FBFBFC]"><a class="w-full flex items-center gap-2 px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="system-status" href="#"><span class="material-symbols-outlined text-[18px] text-secondary">shield</span><span class="font-label-md text-label-md">System status</span></a><div class="flex items-center justify-between p-space-sm rounded-xl bg-surface-container-lowest border border-[#ECECEC]"><div class="flex items-center gap-2 overflow-hidden"><img alt="Profile" class="w-8 h-8 rounded-full object-cover shrink-0" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAyjrzSvRl1KfVgZzjJH6icl8RLnI2Inolkap42MUT5zelwHWgRuQ3EXxVqvjHR2qtKDewaMTlJZnj4OBdcldqr8WcC9lUCVvYkdGXbkXeHPZ3Ib1GFFTtHFiJMzwn8eovZKxwmb8AU5eDPIUK9BLlPXY2VYicRhdMGxR1yK_C8i8fmJsRs3gY-9oyshNc09w2Ncy4ZCmiy4jrUNiLftY-5FvxC09KNo3RcFKRwvsZY"/><div class="flex flex-col truncate"><span class="font-label-md text-label-md text-on-surface leading-tight">Bob</span><span class="font-label-sm text-label-sm text-outline">NetOps Tier 3</span></div></div><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-surface-container-low text-secondary border border-outline-variant/60">Employee</span></div></div></div></aside><div class="pl-60 min-h-screen flex flex-col bg-surface relative overflow-x-hidden"><header class="fixed top-0 left-60 right-0 h-14 bg-surface/85 backdrop-blur-xl border-b border-[#ECECEC] z-30 flex items-center justify-between px-space-lg"><div class="flex items-center gap-space-sm"><nav class="flex items-center gap-space-md" data-active-classes="text-on-surface font-semibold"><a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="chat-session-active" href="#">Diagnostic Stream</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="topology-inspector" href="#">Topology &amp; Telemetry</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="incident-history" href="#">Audit Logs</a></nav></div><div class="flex items-center gap-space-sm"><div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-lowest border border-[#ECECEC] text-on-surface"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span><span class="font-label-sm text-label-sm text-on-surface font-medium">API: connected</span></div><div class="flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container-lowest border border-[#ECECEC] text-on-surface"><span class="font-label-sm text-label-sm text-secondary font-medium">EN (US)</span></div><button aria-label="Help &amp; Documentation" class="w-8 h-8 flex items-center justify-center rounded-full text-secondary hover:text-on-surface hover:bg-surface-container transition-colors" type="button"><span class="material-symbols-outlined text-[18px]">help</span></button></div></header><main class="relative pt-14 flex-1 w-full bg-radial-ambient"><div class="fixed inset-0 left-60 top-14 pointer-events-none -z-10 bg-[radial-gradient(ellipse_80%_60%_at_50%_15%,#FFFBEB_0%,#FDF2F8_45%,#F5F3FF_80%,transparent_100%)] opacity-80"></div><div class="flex flex-col w-full">
+<div class="p-space-lg max-w-[1360px] mx-auto w-full space-y-space-lg pb-16">
+<!-- Top Sub-Header & System State Banner -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md pt-2">
+<div class="flex flex-wrap items-center gap-space-md">
+<h1 class="font-headline-lg text-headline-lg text-[#111111] tracking-tight">System status</h1>
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container-lowest shadow-sm">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+</span>
+<span class="font-label-sm text-label-sm text-on-surface font-semibold tracking-wide">
+            All systems operational <span class="text-outline">·</span> v0.7.0 <span class="text-outline">·</span> checked 5 s ago
+          </span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm">
+<button class="group inline-flex items-center gap-2 px-4 py-2 rounded-full bg-surface-container-lowest text-on-surface hover:bg-surface-container-high transition-all shadow-sm" id="refreshBtn" type="button">
+<span class="material-symbols-outlined text-[18px] group-hover:rotate-180 transition-transform duration-500 text-secondary">sync</span>
+<span class="font-label-md text-label-md font-medium">Refresh</span>
+</button>
+<div class="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-container-lowest shadow-sm text-outline font-code-sm text-code-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+          Cluster: us-east-prod-04
+        </div>
+</div>
+</div>
+<!-- Row of 3 Core Infrastructure Dependencies -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md">
+<!-- Card 1: Chroma Vector DB -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm relative overflow-hidden flex flex-col justify-between">
+<div class="flex items-start justify-between">
+<div class="space-y-1">
+<div class="font-label-sm text-label-sm uppercase tracking-wider text-outline font-semibold">Vector Store</div>
+<div class="font-headline-sm text-headline-sm text-on-surface font-semibold">Chroma Vector DB</div>
+</div>
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-emerald-700 bg-emerald-50 font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Up
+          </span>
+</div>
+<div class="my-space-md flex items-baseline justify-between">
+<div>
+<div class="font-headline-lg text-headline-lg font-bold text-on-surface tracking-tight">24 <span class="font-body-sm text-body-sm font-normal text-secondary">ms</span></div>
+<div class="font-label-sm text-label-sm text-outline">Avg Query Latency</div>
+</div>
+<div class="w-28 h-9">
+<svg class="w-full h-full overflow-visible" fill="none" viewbox="0 0 110 32">
+<path d="M 0,22 Q 15,10 30,16 T 60,8 T 85,18 T 110,12" fill="none" stroke="#10b981" stroke-linecap="round" stroke-width="2"></path>
+<path d="M 0,22 Q 15,10 30,16 T 60,8 T 85,18 T 110,12 L 110,32 L 0,32 Z" fill="url(#gradChroma)" opacity="0.15"></path>
+<defs>
+<lineargradient id="gradChroma" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#10b981"></stop>
+<stop offset="100%" stop-color="#10b981" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+</svg>
+</div>
+</div>
+<div class="pt-space-sm border-t border-surface-container flex items-center justify-between text-on-surface-variant font-code-sm text-code-sm">
+<span>2.4M embeddings</span>
+<span class="text-secondary font-medium">HNSW cos_dist</span>
+</div>
+</div>
+<!-- Card 2: Redis Semantic Cache -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm relative overflow-hidden flex flex-col justify-between">
+<div class="flex items-start justify-between">
+<div class="space-y-1">
+<div class="font-label-sm text-label-sm uppercase tracking-wider text-outline font-semibold">In-Memory Cache</div>
+<div class="font-headline-sm text-headline-sm text-on-surface font-semibold">Redis Semantic Cache</div>
+</div>
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-emerald-700 bg-emerald-50 font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Up
+          </span>
+</div>
+<div class="my-space-md flex items-baseline justify-between">
+<div>
+<div class="font-headline-lg text-headline-lg font-bold text-on-surface tracking-tight">2.1 <span class="font-body-sm text-body-sm font-normal text-secondary">ms</span></div>
+<div class="font-label-sm text-label-sm text-outline">P99 Read Latency</div>
+</div>
+<div class="w-28 h-9">
+<svg class="w-full h-full overflow-visible" fill="none" viewbox="0 0 110 32">
+<path d="M 0,18 Q 20,24 40,14 T 75,19 T 110,8" fill="none" stroke="#10b981" stroke-linecap="round" stroke-width="2"></path>
+<path d="M 0,18 Q 20,24 40,14 T 75,19 T 110,8 L 110,32 L 0,32 Z" fill="url(#gradRedis)" opacity="0.15"></path>
+<defs>
+<lineargradient id="gradRedis" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#10b981"></stop>
+<stop offset="100%" stop-color="#10b981" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+</svg>
+</div>
+</div>
+<div class="pt-space-sm border-t border-surface-container flex items-center justify-between text-on-surface-variant font-code-sm text-code-sm">
+<span>99.98% hit reliability</span>
+<span class="text-secondary font-medium">TTL 48h active</span>
+</div>
+</div>
+<!-- Card 3: Postgres Audit DB -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm relative overflow-hidden flex flex-col justify-between">
+<div class="flex items-start justify-between">
+<div class="space-y-1">
+<div class="font-label-sm text-label-sm uppercase tracking-wider text-outline font-semibold">Relational State</div>
+<div class="font-headline-sm text-headline-sm text-on-surface font-semibold">Postgres Audit DB</div>
+</div>
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-emerald-700 bg-emerald-50 font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Up
+          </span>
+</div>
+<div class="my-space-md flex items-baseline justify-between">
+<div>
+<div class="font-headline-lg text-headline-lg font-bold text-on-surface tracking-tight">8.4 <span class="font-body-sm text-body-sm font-normal text-secondary">ms</span></div>
+<div class="font-label-sm text-label-sm text-outline">Write Transaction Time</div>
+</div>
+<div class="w-28 h-9">
+<svg class="w-full h-full overflow-visible" fill="none" viewbox="0 0 110 32">
+<path d="M 0,14 Q 25,6 50,18 T 85,12 T 110,16" fill="none" stroke="#10b981" stroke-linecap="round" stroke-width="2"></path>
+<path d="M 0,14 Q 25,6 50,18 T 85,12 T 110,16 L 110,32 L 0,32 Z" fill="url(#gradPostgres)" opacity="0.15"></path>
+<defs>
+<lineargradient id="gradPostgres" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#10b981"></stop>
+<stop offset="100%" stop-color="#10b981" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+</svg>
+</div>
+</div>
+<div class="pt-space-sm border-t border-surface-container flex items-center justify-between text-on-surface-variant font-code-sm text-code-sm">
+<span>WAL replication sync</span>
+<span class="text-secondary font-medium">Lag: 0 B</span>
+</div>
+</div>
+</div>
+<!-- 6 Across KPI Tiles Row -->
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-space-sm">
+<div class="bg-surface-container-lowest rounded-xl p-3.5 shadow-sm space-y-1">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider block">Requests (24h)</span>
+<div class="flex items-baseline gap-1.5">
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface">1,284</span>
+<span class="font-code-sm text-code-sm text-emerald-600 font-medium">+12%</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant block truncate">vs. yesterday</span>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-3.5 shadow-sm space-y-1">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider block">Agent runs</span>
+<div class="flex items-baseline gap-1.5">
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface">312</span>
+<span class="font-code-sm text-code-sm text-secondary">total</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant block truncate">18 parallel peaks</span>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-3.5 shadow-sm space-y-1">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider block">Avg run time</span>
+<div class="flex items-baseline gap-1.5">
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface">48 s</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant block truncate">p50: 38 s</span>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-3.5 shadow-sm space-y-1">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider block">Judge pass rate</span>
+<div class="flex items-baseline gap-1.5">
+<span class="font-headline-sm text-headline-sm font-bold text-emerald-600">91%</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant block truncate">threshold ≥85%</span>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-3.5 shadow-sm space-y-1">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider block">Cache hit rate</span>
+<div class="flex items-baseline gap-1.5">
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface">27%</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant block truncate">Semantic cosine ≥0.92</span>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-3.5 shadow-sm space-y-1">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider block">Rate-limit blocks</span>
+<div class="flex items-baseline gap-1.5">
+<span class="font-headline-sm text-headline-sm font-bold text-amber-600">3</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant block truncate">all auto-recovered</span>
+</div>
+</div>
+<!-- Telemetry Charts (2 Columns) -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-space-md">
+<!-- Chart 1: Agent runs by outcome (Stacked Bar Chart per hour for 12 hours) -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between pb-space-sm">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Agent runs by outcome</h2>
+<p class="font-label-sm text-label-sm text-outline">Hourly execution distribution across the last 12 hours</p>
+</div>
+<span class="font-code-sm text-code-sm px-2 py-0.5 bg-surface-container rounded text-secondary font-medium">12h window</span>
+</div>
+<!-- Legend -->
+<div class="flex flex-wrap items-center gap-3 pt-space-xs pb-space-md font-label-sm text-label-sm text-on-surface-variant">
+<span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-sm bg-emerald-500"></span> Answered</span>
+<span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-sm bg-neutral-400"></span> Cache hit</span>
+<span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-sm bg-amber-400"></span> Low confidence</span>
+<span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-sm bg-rose-300"></span> No info</span>
+<span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-sm bg-rose-600"></span> Error</span>
+</div>
+<!-- Stacked Bar Chart Graphic -->
+<div class="h-44 w-full flex items-end gap-2 sm:gap-3 pt-4 pb-2 px-1">
+<!-- 12 Hours: 08:00 to 19:00 -->
+<!-- Bar 1 -->
+<div class="flex-1 flex flex-col justify-end h-full gap-0.5 group relative">
+<div class="w-full bg-rose-600 rounded-t-[2px] transition-all" style="height: 0%;"></div>
+<div class="w-full bg-rose-300" style="height: 4%;"></div>
+<div class="w-full bg-amber-400" style="height: 8%;"></div>
+<div class="w-full bg-neutral-400" style="height: 18%;"></div>
+<div class="w-full bg-emerald-500 rounded-b-[2px]" style="height: 45%;"></div>
+</div>
+<!-- Bar 2 -->
+<div class="flex-1 flex flex-col justify-end h-full gap-0.5 group relative">
+<div class="w-full bg-rose-600 rounded-t-[2px]" style="height: 0%;"></div>
+<div class="w-full bg-rose-300" style="height: 3%;"></div>
+<div class="w-full bg-amber-400" style="height: 5%;"></div>
+<div class="w-full bg-neutral-400" style="height: 22%;"></div>
+<div class="w-full bg-emerald-500 rounded-b-[2px]" style="height: 52%;"></div>
+</div>
+<!-- Bar 3 -->
+<div class="flex-1 flex flex-col justify-end h-full gap-0.5 group relative">
+<div class="w-full bg-rose-600 rounded-t-[2px]" style="height: 3%;"></div>
+<div class="w-full bg-rose-300" style="height: 6%;"></div>
+<div class="w-full bg-amber-400" style="height: 10%;"></div>
+<div class="w-full bg-neutral-400" style="height: 15%;"></div>
+<div class="w-full bg-emerald-500 rounded-b-[2px]" style="height: 60%;"></div>
+</div>
+<!-- Bar 4 -->
+<div class="flex-1 flex flex-col justify-end h-full gap-0.5 group relative">
+<div class="w-full bg-rose-600 rounded-t-[2px]" style="height: 0%;"></div>
+<div class="w-full bg-rose-300" style="height: 2%;"></div>
+<div class="w-full bg-amber-400" style="height: 6%;"></div>
+<div class="w-full bg-neutral-400" style="height: 25%;"></div>
+<div class="w-full bg-emerald-500 rounded-b-[2px]" style="height: 58%;"></div>
+</div>
+<!-- Bar 5 -->
+<div class="flex-1 flex flex-col justify-end h-full gap-0.5 group relative">
+<div class="w-full bg-rose-600 rounded-t-[2px]" style="height: 0%;"></div>
+<div class="w-full bg-rose-300" style="height: 4%;"></div>
+<div class="w-full bg-amber-400" style="height: 4%;"></div>
+<div class="w-full bg-neutral-400" style="height: 30%;"></div>
+<div class="w-full bg-emerald-500 rounded-b-[2px]" style="height: 55%;"></div>
+</div>
+<!-- Bar 6 -->
+<div class="flex-1 flex flex-col justify-end h-full gap-0.5 group relative">
+<div class="w-full bg-rose-600 rounded-t-[2px]" style="height: 4%;"></div>
+<div class="w-full bg-rose-300" style="height: 5%;"></div>
+<div class="w-full bg-amber-400" style="height: 9%;"></div>
+<div class="w-full bg-neutral-400" style="height: 20%;"></div>
+<div class="w-full bg-emerald-500 rounded-b-[2px]" style="height: 50%;"></div>
+</div>
+<!-- Bar 7 -->
+<div class="flex-1 flex flex-col justify-end h-full gap-0.5 group relative">
+<div class="w-full bg-rose-600 rounded-t-[2px]" style="height: 0%;"></div>
+<div class="w-full bg-rose-300" style="height: 2%;"></div>
+<div class="w-full bg-amber-400" style="height: 7%;"></div>
+<div class="w-full bg-neutral-400" style="height: 26%;"></div>
+<div class="w-full bg-emerald-500 rounded-b-[2px]" style="height: 62%;"></div>
+</div>
+<!-- Bar 8 -->
+<div class="flex-1 flex flex-col justify-end h-full gap-0.5 group relative">
+<div class="w-full bg-rose-600 rounded-t-[2px]" style="height: 0%;"></div>
+<div class="w-full bg-rose-300" style="height: 3%;"></div>
+<div class="w-full bg-amber-400" style="height: 5%;"></div>
+<div class="w-full bg-neutral-400" style="height: 28%;"></div>
+<div class="w-full bg-emerald-500 rounded-b-[2px]" style="height: 60%;"></div>
+</div>
+<!-- Bar 9 -->
+<div class="flex-1 flex flex-col justify-end h-full gap-0.5 group relative">
+<div class="w-full bg-rose-600 rounded-t-[2px]" style="height: 2%;"></div>
+<div class="w-full bg-rose-300" style="height: 3%;"></div>
+<div class="w-full bg-amber-400" style="height: 8%;"></div>
+<div class="w-full bg-neutral-400" style="height: 18%;"></div>
+<div class="w-full bg-emerald-500 rounded-b-[2px]" style="height: 66%;"></div>
+</div>
+<!-- Bar 10 -->
+<div class="flex-1 flex flex-col justify-end h-full gap-0.5 group relative">
+<div class="w-full bg-rose-600 rounded-t-[2px]" style="height: 0%;"></div>
+<div class="w-full bg-rose-300" style="height: 1%;"></div>
+<div class="w-full bg-amber-400" style="height: 4%;"></div>
+<div class="w-full bg-neutral-400" style="height: 32%;"></div>
+<div class="w-full bg-emerald-500 rounded-b-[2px]" style="height: 58%;"></div>
+</div>
+<!-- Bar 11 -->
+<div class="flex-1 flex flex-col justify-end h-full gap-0.5 group relative">
+<div class="w-full bg-rose-600 rounded-t-[2px]" style="height: 0%;"></div>
+<div class="w-full bg-rose-300" style="height: 2%;"></div>
+<div class="w-full bg-amber-400" style="height: 5%;"></div>
+<div class="w-full bg-neutral-400" style="height: 24%;"></div>
+<div class="w-full bg-emerald-500 rounded-b-[2px]" style="height: 64%;"></div>
+</div>
+<!-- Bar 12 -->
+<div class="flex-1 flex flex-col justify-end h-full gap-0.5 group relative">
+<div class="w-full bg-rose-600 rounded-t-[2px]" style="height: 0%;"></div>
+<div class="w-full bg-rose-300" style="height: 2%;"></div>
+<div class="w-full bg-amber-400" style="height: 3%;"></div>
+<div class="w-full bg-neutral-400" style="height: 29%;"></div>
+<div class="w-full bg-emerald-500 rounded-b-[2px]" style="height: 65%;"></div>
+</div>
+</div>
+</div>
+<div class="flex justify-between pt-2 px-1 font-code-sm text-code-sm text-outline border-t border-surface-container">
+<span>08:00</span>
+<span>11:00</span>
+<span>14:00</span>
+<span>17:00</span>
+<span>Now (19:00)</span>
+</div>
+</div>
+<!-- Chart 2: Latency p50 / p95 (Dual Line Graph with subtle gradient fill) -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between pb-space-sm">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Latency p50 / p95</h2>
+<p class="font-label-sm text-label-sm text-outline">Response durations tracked through Langfuse proxy</p>
+</div>
+<div class="flex items-center gap-3 font-code-sm text-code-sm">
+<span class="inline-flex items-center gap-1.5 text-on-surface font-medium">
+<span class="w-2.5 h-1 bg-[#111111] rounded-full"></span> p50: ~38s
+              </span>
+<span class="inline-flex items-center gap-1.5 text-secondary font-medium">
+<span class="w-2.5 h-1 bg-sky-500 rounded-full"></span> p95: ~62s
+              </span>
+</div>
+</div>
+<div class="relative h-44 w-full mt-2">
+<svg class="w-full h-full overflow-visible" preserveaspectratio="none" viewbox="0 0 500 160">
+<defs>
+<lineargradient id="p95Grad" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#0284c7" stop-opacity="0.18"></stop>
+<stop offset="100%" stop-color="#0284c7" stop-opacity="0.0"></stop>
+</lineargradient>
+<lineargradient id="p50Grad" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#111111" stop-opacity="0.12"></stop>
+<stop offset="100%" stop-color="#111111" stop-opacity="0.0"></stop>
+</lineargradient>
+</defs>
+<!-- Grid reference lines -->
+<line stroke="#eeeeee" stroke-dasharray="3 3" x1="0" x2="500" y1="40" y2="40"></line>
+<line stroke="#eeeeee" stroke-dasharray="3 3" x1="0" x2="500" y1="80" y2="80"></line>
+<line stroke="#eeeeee" stroke-dasharray="3 3" x1="0" x2="500" y1="120" y2="120"></line>
+<!-- Area fills -->
+<!-- P95 Area -->
+<path d="M 0,55 Q 80,45 150,60 T 300,50 T 420,40 T 500,52 L 500,150 L 0,150 Z" fill="url(#p95Grad)"></path>
+<!-- P50 Area -->
+<path d="M 0,102 Q 80,95 150,105 T 300,98 T 420,92 T 500,100 L 500,150 L 0,150 Z" fill="url(#p50Grad)"></path>
+<!-- Lines -->
+<!-- P95 Line (Cyan-Sky) -->
+<path d="M 0,55 Q 80,45 150,60 T 300,50 T 420,40 T 500,52" fill="none" stroke="#0284c7" stroke-linecap="round" stroke-width="2"></path>
+<!-- P50 Line (Solid Deep Charcoal) -->
+<path d="M 0,102 Q 80,95 150,105 T 300,98 T 420,92 T 500,100" fill="none" stroke="#111111" stroke-linecap="round" stroke-width="2"></path>
+<!-- Active P95 Point Marker -->
+<circle cx="420" cy="40" fill="#0284c7" r="3.5" stroke="#ffffff" stroke-width="2"></circle>
+<!-- Active P50 Point Marker -->
+<circle cx="420" cy="92" fill="#111111" r="3.5" stroke="#ffffff" stroke-width="2"></circle>
+</svg>
+<!-- Inline Overlay badges on graph -->
+<div class="absolute right-14 top-2 text-[10px] font-code-sm bg-sky-50 text-sky-800 px-1.5 py-0.5 rounded shadow-sm">
+              p95: 61.8s
+            </div>
+<div class="absolute right-14 top-16 text-[10px] font-code-sm bg-surface-container text-on-surface px-1.5 py-0.5 rounded shadow-sm">
+              p50: 38.2s
+            </div>
+</div>
+</div>
+<div class="flex justify-between pt-2 px-1 font-code-sm text-code-sm text-outline border-t border-surface-container">
+<span>-12h</span>
+<span>-9h</span>
+<span>-6h</span>
+<span>-3h</span>
+<span>Current</span>
+</div>
+</div>
+</div>
+<!-- Data Table Card: Tool calls & Execution telemetry -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
+<div class="p-space-md flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm border-b border-surface-container">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Tool calls &amp; Execution telemetry</h2>
+<p class="font-label-sm text-label-sm text-outline">Real-time function execution overhead, failure rates, and invocation volume</p>
+</div>
+<div class="flex items-center gap-2">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-outline text-[16px]">filter_list</span>
+<input class="pl-8 pr-3 py-1 bg-surface rounded-full text-body-sm font-body-sm text-on-surface outline-none focus:bg-surface-container transition-colors w-40 sm:w-48 placeholder:text-outline" placeholder="Filter tools..." type="text"/>
+</div>
+<button class="p-1.5 text-secondary hover:text-on-surface hover:bg-surface-container rounded-lg transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">download</span>
+</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low text-outline font-label-sm text-label-sm uppercase tracking-wider">
+<th class="py-3 px-space-md font-semibold">Tool Name</th>
+<th class="py-3 px-space-md font-semibold">Origin</th>
+<th class="py-3 px-space-md font-semibold text-right">Invocations (24h)</th>
+<th class="py-3 px-space-md font-semibold text-right">Avg Duration</th>
+<th class="py-3 px-space-md font-semibold text-right">No-Results %</th>
+<th class="py-3 px-space-md font-semibold text-center">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container font-body-md text-body-md">
+<!-- Row 1 -->
+<tr class="hover:bg-surface/50 transition-colors group">
+<td class="py-3 px-space-md">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-secondary">database</span>
+<span class="font-code-md text-code-md text-on-surface font-medium">search_knowledge_base</span>
+</div>
+</td>
+<td class="py-3 px-space-md">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-surface-container text-secondary">
+                  Planner
+                </span>
+</td>
+<td class="py-3 px-space-md text-right font-code-md text-code-md font-medium text-on-surface">842</td>
+<td class="py-3 px-space-md text-right font-code-md text-code-md text-secondary">4.1 s</td>
+<td class="py-3 px-space-md text-right font-code-md text-code-md">
+<span class="text-amber-700 bg-amber-50 px-2 py-0.5 rounded">1.4%</span>
+</td>
+<td class="py-3 px-space-md text-center">
+<span class="inline-flex w-2 h-2 rounded-full bg-emerald-500"></span>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface/50 transition-colors group">
+<td class="py-3 px-space-md">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-secondary">query_stats</span>
+<span class="font-code-md text-code-md text-on-surface font-medium">query_telemetry_influx</span>
+</div>
+</td>
+<td class="py-3 px-space-md">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-surface-container-high text-on-surface">
+                  Agent
+                </span>
+</td>
+<td class="py-3 px-space-md text-right font-code-md text-code-md font-medium text-on-surface">512</td>
+<td class="py-3 px-space-md text-right font-code-md text-code-md text-secondary">6.8 s</td>
+<td class="py-3 px-space-md text-right font-code-md text-code-md">
+<span class="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">0.8%</span>
+</td>
+<td class="py-3 px-space-md text-center">
+<span class="inline-flex w-2 h-2 rounded-full bg-emerald-500"></span>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface/50 transition-colors group">
+<td class="py-3 px-space-md">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-secondary">network_check</span>
+<span class="font-code-md text-code-md text-on-surface font-medium">bfd_diagnostic_check</span>
+</div>
+</td>
+<td class="py-3 px-space-md">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-surface-container-high text-on-surface">
+                  Agent
+                </span>
+</td>
+<td class="py-3 px-space-md text-right font-code-md text-code-md font-medium text-on-surface">198</td>
+<td class="py-3 px-space-md text-right font-code-md text-code-md text-secondary">3.2 s</td>
+<td class="py-3 px-space-md text-right font-code-md text-code-md">
+<span class="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded font-semibold">0.0%</span>
+</td>
+<td class="py-3 px-space-md text-center">
+<span class="inline-flex w-2 h-2 rounded-full bg-emerald-500"></span>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface/50 transition-colors group">
+<td class="py-3 px-space-md">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-secondary">policy</span>
+<span class="font-code-md text-code-md text-on-surface font-medium">sdwan_policy_evaluator</span>
+</div>
+</td>
+<td class="py-3 px-space-md">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-surface-container text-secondary">
+                  Planner
+                </span>
+</td>
+<td class="py-3 px-space-md text-right font-code-md text-code-md font-medium text-on-surface">144</td>
+<td class="py-3 px-space-md text-right font-code-md text-code-md text-secondary">8.9 s</td>
+<td class="py-3 px-space-md text-right font-code-md text-code-md">
+<span class="text-amber-700 bg-amber-50 px-2 py-0.5 rounded">2.1%</span>
+</td>
+<td class="py-3 px-space-md text-center">
+<span class="inline-flex w-2 h-2 rounded-full bg-emerald-500"></span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Scrape/Source Telemetry Details Footer -->
+<div class="p-space-md bg-surface-container-low flex flex-col sm:flex-row items-start sm:items-center justify-between text-outline font-code-sm text-code-sm gap-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-secondary">terminal</span>
+<span>Source: /health, /ready, /metrics (Prometheus) · Scrape interval: 15s</span>
+</div>
+<div class="flex items-center gap-4 text-secondary">
+<span>Target pool: 12 nodes</span>
+<span class="inline-flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Scraper: Healthy
+          </span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  // Dynamic user switcher to Carol (Admin) as requested in prompt spec
+  document.addEventListener('DOMContentLoaded', () => {
+    const profileContainer = document.querySelector('aside .flex.items-center.gap-2.overflow-hidden');
+    if (profileContainer) {
+      const nameEl = profileContainer.querySelector('span.font-label-md');
+      const roleEl = profileContainer.querySelector('span.font-label-sm');
+      if (nameEl) nameEl.textContent = 'Carol';
+      if (roleEl) roleEl.textContent = 'Admin · SRE Lead';
+      
+      const badgeEl = profileContainer.parentElement.querySelector('span.inline-flex');
+      if (badgeEl) {
+        badgeEl.textContent = 'Admin';
+        badgeEl.className = 'inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-primary text-on-primary';
+      }
+    }
+
+    // Refresh simulation
+    const refreshBtn = document.getElementById('refreshBtn');
+    if (refreshBtn) {
+      refreshBtn.addEventListener('click', () => {
+        const icon = refreshBtn.querySelector('.material-symbols-outlined');
+        if (icon) {
+          icon.classList.add('animate-spin');
+          setTimeout(() => {
+            icon.classList.remove('animate-spin');
+          }, 800);
+        }
+      });
+    }
+  });
+</script></main></div></body></html>

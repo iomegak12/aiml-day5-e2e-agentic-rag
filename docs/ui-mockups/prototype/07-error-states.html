@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><title>NetCore Assist · Error &amp; limit states</title><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-primary-fixed": "#1c1b1b", "surface-tint": "#5f5e5e", "surface-container": "#eeeeee", "tertiary-container": "#1d1b1a", "surface-container-highest": "#e2e2e2", "surface-variant": "#e2e2e2", "secondary-fixed-dim": "#c0c7d6", "inverse-surface": "#2f3131", "on-surface": "#1a1c1c", "on-background": "#1a1c1c", "secondary-fixed": "#dce2f3", "primary": "#000000", "on-secondary-fixed-variant": "#404754", "on-error-container": "#93000a", "primary-fixed": "#e5e2e1", "surface-container-lowest": "#ffffff", "on-surface-variant": "#444748", "surface-container-high": "#e8e8e8", "outline-variant": "#c4c7c7", "on-secondary": "#ffffff", "secondary": "#585f6c", "on-error": "#ffffff", "surface-dim": "#dadada", "tertiary": "#000000", "on-secondary-fixed": "#151c27", "background": "#f9f9f9", "on-tertiary": "#ffffff", "outline": "#747878", "on-primary-fixed-variant": "#474646", "secondary-container": "#dce2f3", "on-primary-container": "#858383", "on-tertiary-container": "#868381", "inverse-primary": "#c8c6c5", "on-tertiary-fixed": "#1d1b1a", "on-primary": "#ffffff", "surface": "#f9f9f9", "primary-fixed-dim": "#c8c6c5", "on-tertiary-fixed-variant": "#484645", "tertiary-fixed": "#e6e1df", "on-secondary-container": "#5e6572", "surface-bright": "#f9f9f9", "error": "#ba1a1a", "error-container": "#ffdad6", "surface-container-low": "#f3f3f4", "primary-container": "#1c1b1b", "inverse-on-surface": "#f0f1f1", "tertiary-fixed-dim": "#cac6c3" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "gutter": "1.5rem", "space-xl": "2rem", "space-xs": "0.25rem", "space-sm": "0.5rem", "space-md": "1rem", "margin": "0rem", "space-lg": "1.5rem" }, "fontFamily": { "code-sm": [ "JetBrains Mono" ], "headline-xl": [ "Inter" ], "body-md": [ "Inter" ], "label-md": [ "Inter" ], "code-md": [ "JetBrains Mono" ], "body-sm": [ "Inter" ], "headline-sm": [ "Inter" ], "body-lg": [ "Inter" ], "label-sm": [ "Inter" ], "headline-lg": [ "Inter" ] }, "fontSize": { "code-sm": [ "0.75rem", { "lineHeight": "1.25rem", "fontWeight": "400" } ], "headline-xl": [ "2rem", { "lineHeight": "2.5rem", "letterSpacing": "-0.025em", "fontWeight": "600" } ], "body-md": [ "0.875rem", { "lineHeight": "1.45rem", "fontWeight": "400" } ], "label-md": [ "0.8125rem", { "lineHeight": "1rem", "letterSpacing": "0.01em", "fontWeight": "500" } ], "code-md": [ "0.8125rem", { "lineHeight": "1.375rem", "fontWeight": "400" } ], "body-sm": [ "0.75rem", { "lineHeight": "1.25rem", "fontWeight": "400" } ], "headline-sm": [ "1.125rem", { "lineHeight": "1.5rem", "letterSpacing": "-0.015em", "fontWeight": "600" } ], "body-lg": [ "1rem", { "lineHeight": "1.625rem", "fontWeight": "400" } ], "label-sm": [ "0.6875rem", { "lineHeight": "0.875rem", "letterSpacing": "0.04em", "fontWeight": "600" } ], "headline-lg": [ "1.5rem", { "lineHeight": "2rem", "letterSpacing": "-0.02em", "fontWeight": "600" } ] } } } };</script><link href="assets/prototype.css" rel="stylesheet"/><script defer="" src="assets/prototype.js"></script></head><body class="bg-surface font-body-md text-body-md text-on-surface antialiased" data-screen="errors"><aside class="fixed left-0 top-0 h-screen w-60 bg-[#FBFBFC] border-r border-[#ECECEC] z-40 flex flex-col justify-between select-none"><div class="flex flex-col h-full overflow-hidden"><div class="h-14 px-space-md flex items-center justify-between border-b border-[#ECECEC]/60"><div class="flex items-center gap-space-xs"><span aria-label="NetCore Assist" class="nc-logo"><svg aria-label="NetCore Assist" role="img" viewbox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+<rect fill="#111111" height="32" rx="8" width="32"></rect>
+<path d="M10 21.5 16 10.5l6 11" fill="none" opacity=".55" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path>
+<path d="M10 21.5h12" fill="none" opacity=".55" stroke="#ffffff" stroke-linecap="round" stroke-width="1.8"></path>
+<circle cx="16" cy="10.5" fill="#ffffff" r="3"></circle>
+<circle cx="10" cy="21.5" fill="#ffffff" r="3"></circle>
+<circle cx="22" cy="21.5" fill="#FDE68A" r="3"></circle>
+</svg>
+</span><span class="font-headline-sm text-headline-sm text-[#111111] tracking-tight">NetCore Assist</span></div><button aria-label="Search queries" class="w-8 h-8 flex items-center justify-center rounded-lg text-secondary hover:text-on-surface hover:bg-surface-container transition-colors" data-toast="Search filters your history (client-side over &lt;code&gt;GET /api/v1/agent/requests&lt;/code&gt;)." type="button"><span class="material-symbols-outlined text-[18px]">search</span></button></div><div class="p-space-sm"><button class="w-full flex items-center justify-between px-space-md py-space-sm bg-primary text-on-primary rounded-full hover:bg-primary/90 transition-all shadow-[0_2px_8px_rgba(0,0,0,0.06)]" data-href="02-new-chat.html" type="button"><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-[18px]">add</span><span class="font-label-md text-label-md text-on-primary">New chat</span></div><kbd class="font-code-sm text-code-sm bg-white/20 text-on-primary px-1.5 py-0.5 rounded">⌘K</kbd></button></div><div class="flex-1 overflow-y-auto px-space-sm py-space-xs space-y-space-md"><nav class="space-y-space-md" data-active-classes="bg-surface-container-high text-on-surface font-medium"><div><div class="px-space-sm mb-space-xs font-label-sm text-label-sm uppercase tracking-wider text-outline">Today</div><div class="space-y-0.5"><a aria-current="page" class="w-full flex items-center gap-2 px-space-sm py-1.5 rounded-lg transition-colors bg-surface-container-high text-on-surface font-medium" data-href="04-answer-insights.html" data-path="chat-session-active" href="04-answer-insights.html"><span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span><span class="truncate font-body-sm text-body-sm">MTG-MED-4102 packet loss SLA...</span></a><a class="w-full flex items-center gap-2 px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-href="03-live-run.html" data-path="bgp-route-incident" href="03-live-run.html"><span class="w-2 h-2 rounded-full bg-sky-500 animate-pulse shrink-0"></span><span class="truncate font-body-sm text-body-sm">BGP route flapping on edge NCX-1002</span></a></div></div><div><div class="px-space-sm mb-space-xs font-label-sm text-label-sm uppercase tracking-wider text-outline">Yesterday</div><div class="space-y-0.5"><a class="w-full flex items-center gap-2 px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-href="04-answer-insights.html" data-path="qos-policy-review" href="04-answer-insights.html"><span class="w-2 h-2 rounded-full bg-neutral-400 shrink-0"></span><span class="truncate font-body-sm text-body-sm">QoS DSCP 46 mapping policy</span></a><a class="w-full flex items-center gap-2 px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-href="04-answer-insights.html" data-path="bfd-diagnostics" href="04-answer-insights.html"><span class="w-2 h-2 rounded-full bg-neutral-400 shrink-0"></span><span class="truncate font-body-sm text-body-sm">BFD hold timer NCS-BFD-3004</span></a></div></div><div><div class="px-space-sm mb-space-xs font-label-sm text-label-sm uppercase tracking-wider text-outline">Earlier</div><div class="space-y-0.5"><a class="w-full flex items-center gap-2 px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-href="07-error-states.html" data-path="core-switch-provisioning" href="07-error-states.html"><span class="w-2 h-2 rounded-full bg-neutral-400 shrink-0"></span><span class="truncate font-body-sm text-body-sm">Core switch VLAN 100 trunking</span></a><a class="w-full flex items-center gap-2 px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-href="06-request-detail.html" data-path="acl-rule-verification" href="06-request-detail.html"><span class="w-2 h-2 rounded-full bg-neutral-400 shrink-0"></span><span class="truncate font-body-sm text-body-sm">ACL egress permit check</span></a></div></div></nav></div><div class="p-space-sm border-t border-[#ECECEC] space-y-space-xs bg-[#FBFBFC]"><a class="w-full flex items-center gap-2 px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-admin-only="" data-href="08-system-status.html" data-path="system-status" href="08-system-status.html"><span class="material-symbols-outlined text-[18px] text-secondary">shield</span><span class="font-label-md text-label-md">System status</span></a><div class="flex items-center justify-between p-space-sm rounded-xl bg-surface-container-lowest border border-[#ECECEC]" data-href="01-sign-in.html" title="Sign out (back to sign-in)"><div class="flex items-center gap-2 overflow-hidden"><span class="nc-avatar w-8 h-8" data-user-initial="">B</span><div class="flex flex-col truncate"><span class="font-label-md text-label-md text-on-surface leading-tight" data-user-name="">Bob</span><span class="font-label-sm text-label-sm text-outline" data-user-title="">NetOps Tier 3</span></div></div><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-surface-container-low text-secondary border border-outline-variant/60" data-user-role="">Employee</span></div></div></div></aside><div class="pl-60 min-h-screen flex flex-col bg-surface relative overflow-x-hidden"><header class="fixed top-0 left-60 right-0 h-14 bg-surface/85 backdrop-blur-xl border-b border-[#ECECEC] z-30 flex items-center justify-between px-space-lg"><div class="flex items-center gap-space-sm"><nav class="flex items-center gap-space-md" data-active-classes="text-on-surface font-semibold"><a class="transition-colors text-on-surface font-semibold font-label-md text-label-md" data-href="02-new-chat.html" href="02-new-chat.html">Chat</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" data-href="05-request-history.html" href="05-request-history.html">Requests</a></nav></div><div class="flex items-center gap-space-sm"><div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-lowest border border-[#ECECEC] text-on-surface"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span><span class="font-label-sm text-label-sm text-on-surface font-medium">API: connected</span></div><div class="flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container-lowest border border-[#ECECEC] text-on-surface"><span class="font-label-sm text-label-sm text-secondary font-medium">EN (US)</span></div><button aria-label="Help &amp; Documentation" class="w-8 h-8 flex items-center justify-center rounded-full text-secondary hover:text-on-surface hover:bg-surface-container transition-colors" data-href="index.html" title="Prototype index" type="button"><span class="material-symbols-outlined text-[18px]">help</span></button></div></header><main class="relative pt-14 flex-1 w-full bg-radial-ambient"><div class="fixed inset-0 left-60 top-14 pointer-events-none -z-10 bg-[radial-gradient(ellipse_80%_60%_at_50%_15%,#FFFBEB_0%,#FDF2F8_45%,#F5F3FF_80%,transparent_100%)] opacity-80"></div><div class="flex flex-col w-full">
+<div class="w-full px-space-lg py-space-md">
+<div class="flex items-center justify-between pb-space-sm mb-space-md">
+<div class="flex items-center gap-space-sm">
+<span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-surface-container-high text-on-surface">
+<span class="material-symbols-outlined text-[16px]">emergency_home</span>
+</span>
+<div>
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-headline-sm text-on-surface">Fault Tolerance &amp; Guardrail Diagnostics</span>
+<span class="px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-surface-container-high text-secondary">RFC 9457 Matrix</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">How the UI presents RFC 9457 problem details returned by the API.</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-code-sm text-code-sm text-secondary bg-surface-container-low px-2.5 py-1 rounded-full">application/problem+json</span>
+<button class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container hover:bg-surface-container-high transition-colors font-label-sm text-label-sm text-on-surface" data-toast="Re-polled &lt;code&gt;GET /ready&lt;/code&gt;." onclick="document.querySelectorAll('.copy-trigger').forEach(b =&gt; b.classList.add('opacity-50'))" type="button">
+<span class="material-symbols-outlined text-[15px]">refresh</span>Re-check</button>
+</div>
+</div>
+<!-- 2x2 Matrix Container -->
+<div class="grid grid-cols-1 xl:grid-cols-2 gap-space-md">
+<!-- 1. 429 Rate limited (Top Left) -->
+<section class="flex flex-col bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden p-space-md justify-between">
+<div>
+<div class="flex items-start justify-between gap-space-sm mb-space-sm">
+<div class="flex items-center gap-2.5 min-w-0">
+<span class="w-2.5 h-2.5 rounded-full bg-amber-500 shrink-0"></span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface truncate">
+                429 · Rate limited: You’re sending requests too quickly
+              </h2>
+</div>
+<!-- Circular countdown badge -->
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-50 text-amber-900 shrink-0 shadow-sm">
+<svg class="w-3.5 h-3.5 -rotate-90 animate-spin" style="animation-duration: 6s;" viewbox="0 0 24 24">
+<circle cx="12" cy="12" fill="none" opacity="0.3" r="9" stroke="currentColor" stroke-dasharray="56" stroke-dashoffset="18" stroke-width="3"></circle>
+<circle cx="12" cy="12" fill="none" r="9" stroke="currentColor" stroke-dasharray="56" stroke-dashoffset="40" stroke-width="3"></circle>
+</svg>
+<span class="font-code-sm text-code-sm font-medium tracking-tight" id="countdown-timer">Retry in 27 s</span>
+</div>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mb-space-md">
+            Limit: 100 requests per minute per IP. This IP is paused for 30 s.
+          </p>
+<!-- Disabled composer preview with active tooltip -->
+<div class="relative mb-space-md">
+<div class="bg-surface-container-low rounded-xl p-space-sm opacity-70 cursor-not-allowed">
+<div class="flex items-center justify-between mb-2">
+<span class="font-code-sm text-code-sm text-outline">MTG-MED-4102 diagnostic session</span>
+<span class="material-symbols-outlined text-outline text-[16px]">lock_clock</span>
+</div>
+<div class="font-body-sm text-body-sm text-outline py-2">Ask NetCore Assist a question…</div>
+<div class="flex items-center justify-between pt-2">
+<div class="flex items-center gap-1.5">
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-outline font-label-sm text-label-sm">Plan</span>
+
+</div>
+<!-- Disabled circular action button -->
+<div class="w-8 h-8 rounded-full bg-outline-variant flex items-center justify-center text-surface-container-lowest" id="nc-429-send">
+<span class="material-symbols-outlined text-[16px]">arrow_upward</span>
+</div>
+</div>
+</div>
+<!-- Prominent Tooltip Overlay -->
+<div class="absolute -top-3 right-6 bg-primary text-on-primary px-3 py-1 rounded-full shadow-md flex items-center gap-1.5 z-10" id="nc-429-tip">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span>
+<span class="font-label-sm text-label-sm tracking-wide" data-retry-seconds="">Rate limit active: retry in 27s</span>
+</div>
+</div>
+</div>
+<!-- Collapsible Problem Details RFC 9457 -->
+<details class="group bg-surface-container-low rounded-lg transition-all" open="">
+<summary class="flex items-center justify-between px-space-sm py-2 cursor-pointer list-none select-none text-on-surface hover:text-primary">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-secondary group-open:rotate-90 transition-transform">chevron_right</span>
+<span class="font-label-md text-label-md font-semibold">Problem details (RFC 9457)</span>
+</div>
+<span class="font-code-sm text-code-sm text-secondary">application/problem+json</span>
+</summary>
+<div class="px-space-sm pb-space-sm pt-1">
+<div class="bg-[#1E1E1E] text-[#ECECEC] rounded-lg p-space-sm font-code-sm text-code-sm overflow-x-auto relative">
+<button class="copy-trigger absolute top-2 right-2 px-2 py-0.5 bg-white/10 hover:bg-white/20 text-white rounded font-label-sm text-label-sm transition-colors" type="button">
+                Copy
+              </button>
+<pre class="leading-relaxed"><code>{
+  <span class="text-sky-300">"type"</span>: <span class="text-amber-200">"https://netcore.example/problems/rate-limited"</span>,
+  <span class="text-sky-300">"title"</span>: <span class="text-amber-200">"Too many requests"</span>,
+  <span class="text-sky-300">"status"</span>: <span class="text-orange-400">429</span>,
+  <span class="text-sky-300">"detail"</span>: <span class="text-amber-200">"Rate limit of 100 requests/minute exceeded; this IP is blocked for 30 s."</span>,
+  <span class="text-sky-300">"instance"</span>: <span class="text-amber-200">"/api/v1/agent/ask"</span>,
+  <span class="text-sky-300">"request_id"</span>: <span class="text-amber-200">"f4d807e7-91a2-4c22-b5e1-8849b291c940"</span>,
+  <span class="text-sky-300">"retry_after"</span>: <span class="text-orange-400">30</span>
+}</code></pre>
+</div>
+</div>
+</details>
+</section>
+<!-- 2. 504 Agent timeout (Top Right) -->
+<section class="flex flex-col bg-surface-container-lowest rounded-xl shadow-sm p-space-md justify-between">
+<div>
+<div class="flex items-start justify-between gap-space-sm mb-space-sm">
+<div class="flex items-center gap-2.5 min-w-0">
+<span class="w-2.5 h-2.5 rounded-full bg-rose-500 shrink-0"></span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface truncate">
+                504 · Gateway Timeout: This is taking longer than expected
+              </h2>
+</div>
+<span class="px-2.5 py-0.5 rounded-full bg-rose-50 text-rose-800 font-label-sm text-label-sm font-semibold shrink-0">
+              t &gt; 120s
+            </span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mb-space-lg leading-relaxed">No result within the 120 s budget + 15 s grace. The run may still finish in the background: its result_url stays valid.</p>
+<!-- Vector store progress telemetry visual -->
+<div class="bg-surface-container-low rounded-xl p-space-md mb-space-lg space-y-space-sm"><div class="rounded-lg bg-surface-container-low p-3 font-code-sm text-code-sm space-y-1"><div><span class="text-outline">status</span> running</div><div><span class="text-outline">request_id</span> 7c1e09d2-55aa-4b8e-9f10-2a4c6d8e0b31</div><div><span class="text-outline">result_url</span> /api/v1/agent/requests/7c1e09d2…</div></div></div>
+</div>
+<!-- Action row -->
+<div class="flex flex-wrap items-center justify-between gap-space-sm pt-space-sm">
+<button class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-surface-container text-on-surface font-label-md text-label-md hover:bg-surface-container-high transition-all" data-href="06-request-detail.html" type="button">
+<span class="material-symbols-outlined text-[16px] text-secondary">hourglass_bottom</span>
+            Check result later
+          </button>
+<button class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary text-on-primary font-label-md text-label-md hover:bg-neutral-800 transition-all shadow-sm" data-href="02-new-chat.html" type="button">
+<span>Try again with a longer time budget</span>
+<span class="material-symbols-outlined text-[16px]">timer</span>
+</button>
+</div>
+</section>
+<!-- 3. 401 Invalid API key (Bottom Left) -->
+<section class="flex flex-col bg-surface-container-lowest rounded-xl shadow-sm p-space-md justify-between">
+<div>
+<div class="flex items-start justify-between gap-space-sm mb-space-sm">
+<div class="flex items-center gap-2.5 min-w-0">
+<span class="w-2.5 h-2.5 rounded-full bg-neutral-400 shrink-0"></span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface truncate">
+                401 · Unauthorized: Your session key is not valid
+              </h2>
+</div>
+<span class="px-2.5 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm font-semibold shrink-0">unauthorized</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mb-space-md leading-relaxed">Missing or invalid API key. Send a valid key in the X-API-Key header.</p>
+<!-- Key state credential card -->
+<div class="bg-surface-container-low rounded-xl p-space-md mb-space-lg space-y-2">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary">Credential Fingerprint</span>
+<span class="font-code-sm text-code-sm text-error font-medium">REVOKED / INVALID</span>
+</div>
+<div class="flex items-center justify-between font-code-sm text-code-sm bg-surface-container-lowest px-3 py-2 rounded-lg text-on-surface-variant">
+<span>nca_live_9941a87************01e</span>
+<span class="material-symbols-outlined text-[16px] text-error">key_off</span>
+</div>
+<div class="flex items-center gap-1.5 text-secondary font-body-sm text-body-sm pt-1">
+<span class="material-symbols-outlined text-[14px]">info</span>
+<span>Keys are configured by your admin (API_KEYS); ask them to issue or rotate yours.</span>
+</div>
+</div>
+</div>
+<!-- Actions -->
+<div class="flex items-center justify-end pt-space-sm">
+<a class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-primary text-on-primary font-label-md text-label-md hover:bg-neutral-800 transition-all shadow-sm" data-href="01-sign-in.html" href="01-sign-in.html">
+<span>Sign in again</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+</section>
+<!-- 4. 503 Service unavailable (Bottom Right) -->
+<section class="flex flex-col bg-surface-container-lowest rounded-xl shadow-sm p-space-md justify-between">
+<div>
+<div class="flex items-start justify-between gap-space-sm mb-space-sm">
+<div class="flex items-center gap-2.5 min-w-0">
+<span class="w-2.5 h-2.5 rounded-full bg-error shrink-0"></span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface truncate">
+                503 · Service Unavailable: Assistant temporarily unavailable
+              </h2>
+</div>
+<span class="px-2.5 py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-semibold shrink-0">
+              DEGRADED
+            </span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mb-space-md leading-relaxed">
+            Knowledge base or cache is not ready to serve requests.
+          </p>
+<!-- Mini dependency health check list -->
+<div class="bg-surface-container-low rounded-xl p-space-md mb-space-md">
+<div class="flex items-center justify-between mb-space-sm">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary">Upstream Health Matrix</span>
+<span class="font-code-sm text-code-sm text-secondary">1/3 subsystems offline</span>
+</div>
+<div class="space-y-2">
+<!-- Item 1: Vector DB Error -->
+<div class="flex items-center justify-between px-3 py-2 rounded-lg bg-surface-container-lowest text-on-surface">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-secondary">hub</span>
+<span class="font-body-sm text-body-sm font-medium">Chroma vector DB</span>
+</div>
+<div class="flex items-center gap-1.5 font-label-sm text-label-sm text-error font-medium bg-error-container/40 px-2 py-0.5 rounded-full">
+<span>✕</span>
+<span>Unreachable</span>
+</div>
+</div>
+<!-- Item 2: Redis Healthy -->
+<div class="flex items-center justify-between px-3 py-2 rounded-lg bg-surface-container-lowest text-on-surface">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-secondary">memory</span>
+<span class="font-body-sm text-body-sm font-medium">Redis cache</span>
+</div>
+<div class="flex items-center gap-1.5 font-label-sm text-label-sm text-emerald-700 font-medium bg-emerald-50 px-2 py-0.5 rounded-full">
+<span>✓</span>
+<span>Healthy (0.4ms)</span>
+</div>
+</div>
+<!-- Item 3: Postgres Healthy -->
+<div class="flex items-center justify-between px-3 py-2 rounded-lg bg-surface-container-lowest text-on-surface">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-secondary">database</span>
+<span class="font-body-sm text-body-sm font-medium">Postgres audit DB</span>
+</div>
+<div class="flex items-center gap-1.5 font-label-sm text-label-sm text-emerald-700 font-medium bg-emerald-50 px-2 py-0.5 rounded-full">
+<span>✓</span>
+<span>Healthy (1.1ms)</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Action row -->
+<div class="flex items-center justify-between pt-space-sm">
+<span class="font-code-sm text-code-sm text-secondary">GET /ready → 503 not-ready</span>
+<button class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary text-on-primary font-label-md text-label-md hover:bg-neutral-800 transition-all shadow-sm" data-toast="Retrying &lt;code&gt;GET /ready&lt;/code&gt;… Chroma still unreachable." type="button">
+<span class="material-symbols-outlined text-[16px]">refresh</span>
+<span>Retry</span>
+</button>
+</div>
+</section>
+</div>
+<!-- Bottom contextual guidance note -->
+<div class="mt-space-md p-space-sm bg-surface-container-lowest rounded-xl flex items-center justify-between text-secondary"><div class="flex items-center gap-2 font-body-sm text-body-sm text-secondary"><span class="material-symbols-outlined text-[18px]">shield</span>Every error is RFC 9457 <code>application/problem+json</code> with a <code>request_id</code>; quote it to support.</div></div>
+</div>
+
+</div></main></div></body></html>
