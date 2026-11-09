@@ -1,0 +1,12 @@
+{
+  "servers": {
+    "netcore-itsm-server": {
+      "url": "http://localhost:9090/mcp",
+      "type": "http",
+      "headers": {
+        "X-User-Id": "bob"
+      }
+    }
+  },
+  "inputs": []
+}

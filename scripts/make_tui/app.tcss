@@ -1,0 +1,181 @@
+/* NetCore make TUI */
+
+#main {
+    height: 1fr;
+}
+
+/* ---------------- left: search + targets ---------------- */
+#left {
+    width: 34;
+    min-width: 26;
+    border-right: solid $primary-darken-2;
+}
+
+#search {
+    margin: 0 0 1 0;
+}
+
+#targets {
+    height: 1fr;
+    scrollbar-size-vertical: 1;
+}
+
+/* ---------------- center: details + log ---------------- */
+#center {
+    width: 1fr;
+    padding: 0 1;
+}
+
+#details {
+    height: auto;
+    border: round $primary;
+    border-title-color: $text-primary;
+    padding: 0 1;
+}
+
+#target-title {
+    text-style: bold;
+    margin-bottom: 0;
+}
+
+#target-desc {
+    color: $text-muted;
+    margin-bottom: 1;
+}
+
+#params {
+    height: auto;
+}
+
+.param-row {
+    height: auto;
+    margin-bottom: 0;
+}
+
+.param-label {
+    width: 10;
+    padding: 1 1 0 0;
+    text-style: bold;
+}
+
+.param-row Input,
+.param-row Select {
+    width: 1fr;
+}
+
+.param-row Checkbox {
+    width: auto;
+}
+
+#preview {
+    margin-top: 1;
+    color: $success;
+    text-style: bold;
+}
+
+#problems {
+    height: auto;
+}
+
+#actions {
+    height: auto;
+    margin-top: 1;
+}
+
+#actions Button {
+    margin-right: 1;
+    min-width: 14;
+}
+
+#engine {
+    width: 22;
+    margin-left: 2;
+}
+
+#log {
+    height: 1fr;
+    margin-top: 1;
+    border: round $surface-lighten-2;
+    scrollbar-size-vertical: 1;
+}
+
+#run-status {
+    height: 1;
+    padding: 0 1;
+}
+
+/* ---------------- right: containers + history ---------------- */
+#right {
+    width: 42;
+    min-width: 30;
+    border-left: solid $primary-darken-2;
+    padding: 0 1;
+}
+
+.panel-title {
+    text-style: bold;
+    color: $text-primary;
+    margin-top: 1;
+}
+
+#status {
+    height: auto;
+    max-height: 50%;
+}
+
+#status-table {
+    height: auto;
+    max-height: 14;
+}
+
+#status-note {
+    color: $text-muted;
+}
+
+#history {
+    height: 1fr;
+}
+
+#history-table {
+    height: 1fr;
+}
+
+/* ---------------- confirm dialog ---------------- */
+ConfirmScreen {
+    align: center middle;
+    background: $background 60%;
+}
+
+#confirm-box {
+    width: 76;
+    height: auto;
+    padding: 1 2;
+    background: $surface;
+}
+
+#confirm-box.danger {
+    border: thick $error;
+}
+
+#confirm-box.cost {
+    border: thick $warning;
+}
+
+#confirm-title {
+    text-style: bold;
+    margin-bottom: 1;
+}
+
+#confirm-command {
+    margin: 1 0;
+    color: $success;
+}
+
+#confirm-buttons {
+    height: auto;
+    align-horizontal: right;
+}
+
+#confirm-buttons Button {
+    margin-left: 1;
+}

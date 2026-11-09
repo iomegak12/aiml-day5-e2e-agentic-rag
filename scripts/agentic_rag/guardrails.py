@@ -22,12 +22,14 @@ DISCLAIMER = ("\n\n> Low-confidence answer: automated evaluation could not fully
 
 TOPIC_POLICY = ("Allowed topics: NetCore Systems products (NetCore SD-WAN, NetCore Meet, NetCore Calling, "
                 "NetCore Control Hub/Orchestrator) and general enterprise networking (SD-WAN, routing, QoS, SLA, "
-                "firewalls, VPN) or collaboration (meetings, calling, video, voice, SSO) questions. "
+                "firewalls, VPN) or collaboration (meetings, calling, video, voice, SSO) questions, and IT support "
+                "tickets (open, list, view, search or resolve tickets; ticket ids like TKT-000123; Jira). "
                 "Everything else is off-topic.")
 
 # Built-in LangChain PII detectors (also used by PIIMiddleware for output redaction)
 PII_DETECTORS = {"email": detect_email, "credit_card": detect_credit_card}
-CITATION = re.compile(r"\[(KB-[A-Z]{3}-\d{4}|WEB-\d+)[^\]]*\]")
+# [KB-NET-1003, Table 1] | [WEB-2] | [TKT-000123] | [TICKETS] (IT ticket data)
+CITATION = re.compile(r"\[(KB-[A-Z]{3}-\d{4}|WEB-\d+|TKT-\d{6}|TICKETS)[^\]]*\]")
 
 
 def detect_pii(text: str) -> list[str]:
@@ -95,8 +97,9 @@ def check_output(question: str, answer: str, log=None) -> GuardrailResult:
     verdict: OutputVerdict = with_retry(lambda: llm.invoke([
         ("system", "You review an AI support assistant's answer before it is shown to an authenticated NetCore "
                    "user. Flag only clear problems. EXPECTED and allowed (never a violation): citations such as "
-                   "[KB-NET-1003, Table 1] or [WEB-2], CLI commands, error codes, configuration values, notes about "
-                   "superseded articles, and a low-confidence disclaimer."),
+                   "[KB-NET-1003, Table 1], [WEB-2], [TKT-000123] or [TICKETS], CLI commands, error codes, "
+                   "configuration values, notes about superseded articles, a low-confidence disclaimer, and IT "
+                   "ticket details (ticket ids, user ids such as bob, Jira keys and links, status, remarks)."),
         ("human", f"QUESTION:\n{question}\n\nANSWER:\n<<<\n{answer}\n>>>"),
     ]), what="output-guardrail", log=log)
     violations += [name for name, flag in (("toxicity", verdict.toxic), ("policy", verdict.policy_violation)) if flag]

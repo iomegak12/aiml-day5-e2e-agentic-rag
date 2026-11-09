@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 # NetCore Agentic RAG API - multi-stage, slim, non-root. Builds with Docker or Podman:
-#   docker build -f Containerfile -t localhost/netcore-rag-api:0.7.0 .
-#   podman build -f Containerfile --format docker -t localhost/netcore-rag-api:0.7.0 .   (keeps HEALTHCHECK)
+#   docker build -f Containerfile -t localhost/netcore-rag-api:0.10.0 .
+#   podman build -f Containerfile --format docker -t localhost/netcore-rag-api:0.10.0 .   (keeps HEALTHCHECK)
 
 # ---------- 1. builder: resolve and install dependencies with uv ----------
 FROM docker.io/library/python:3.12-slim AS builder

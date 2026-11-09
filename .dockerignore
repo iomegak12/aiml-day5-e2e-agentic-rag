@@ -21,10 +21,12 @@ data/
 logs/
 
 # not needed at runtime
+web/
 docs/
 notebooks/
 archives/
 api/tests/
+netcore_mcp/tests/
 tests/
 *.md
 !README.md

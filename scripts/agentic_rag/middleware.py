@@ -15,6 +15,7 @@ Retry with exponential backoff: built-in ModelRetryMiddleware / ToolRetryMiddlew
 
 from __future__ import annotations
 
+import re
 import time
 from typing import Any
 
@@ -27,6 +28,9 @@ from .context import build_system_prompt, optimize_context
 from .guardrails import DISCLAIMER, NO_INFO, SAFE_REFUSAL, check_input, check_output
 from .retrieval import NO_RESULTS, ROUTE_BY_TOOL
 from .state import RAGState, RequestContext
+
+# IT ticket requests read or change live, per-user data: never answered from the semantic cache
+TICKET_QUESTION = re.compile(r"\bticket|\bTKT-?\d|\bjira\b", re.IGNORECASE)
 
 TIMEOUT_APOLOGY = ("I'm sorry - I couldn't complete this request within the time budget. "
                    "Please try again or narrow the question.")
@@ -98,6 +102,9 @@ class SemanticCacheMiddleware(AgentMiddleware):
         if ctx.bypass_cache:
             ctx.log("Semantic cache", "bypassed", "requested by the client")
             return None
+        if TICKET_QUESTION.search(ctx.question):
+            ctx.log("Semantic cache", "bypassed", "IT ticket request: live, per-user data")
+            return None
         hits = cache.lookup(ctx.question, log=ctx.log)
         if not hits:
             ctx.log("Semantic cache", "miss")
@@ -130,6 +137,9 @@ class SemanticCacheMiddleware(AgentMiddleware):
         ctx = _ctx(runtime)
         status = state.get("status", "")
         if status == "cache_hit":
+            return None
+        if ctx.used_tickets:
+            ctx.log("Cache write", "skipped", "the answer uses IT ticket data (per user, changes over time)")
             return None
         if status != "answered" or not state.get("judge_passed"):
             ctx.log("Cache write", "skipped", f"status={status or 'n/a'} (only judge-passed answers are cached)")
@@ -336,13 +346,13 @@ class PlanExecuteMiddleware(AgentMiddleware):
                 break
 
         executed_now = [st for st in steps if st["id"] not in already_executed
-                        and st["status"] in ("done", "no_results", "replanned")]
+                        and st["status"] in ("done", "no_results", "replanned", "error", "skipped")]
         update: dict[str, Any] = {
             "plan": steps, "plan_version": version, "force_rewrite": False,
             "relevant_docs": found,                      # reducer merges with earlier evidence
             "rewrite_count": rewrites_used,              # reducer adds (each re-plan = one rewrite)
             "routes": [ROUTE_BY_TOOL[st["tool"]] for st in executed_now],  # reducer appends
-            "web_tried": web_tried or any(st["tool"] != "search_knowledge_base" for st in executed_now),
+            "web_tried": web_tried or any(st["tool"] in ("search_web", "federated_search") for st in executed_now),
         }
         if not have_docs:
             ctx.log("Corrective RAG", "no information", f"{s.max_rewrites} re-plans + online search exhausted")

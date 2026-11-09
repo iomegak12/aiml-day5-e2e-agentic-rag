@@ -20,7 +20,7 @@ We pledge to make participation in this project and its learning community a har
 
 ## Scope
 
-This code applies to every project space: issues, pull requests, reviews, discussions about the course material, the agent and the REST API, and anywhere you represent the project.
+This code applies to every project space: issues, pull requests, reviews, discussions about the course material, the agent, the REST API, the web UI and the MCP server, and anywhere you represent the project.
 
 ## Enforcement
 

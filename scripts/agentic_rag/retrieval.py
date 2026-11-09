@@ -71,7 +71,10 @@ def merge_dedupe(*doc_lists: list[Document]) -> list[Document]:
 
 # ---------------------------- Shared pipeline (used by the tools AND the plan executor) ----------------------------
 
-ROUTE_BY_TOOL = {"search_knowledge_base": "vector", "search_web": "web", "federated_search": "federated"}
+ROUTE_BY_TOOL = {"search_knowledge_base": "vector", "search_web": "web", "federated_search": "federated",
+                 # IT support tickets (MCP server, see tickets.py)
+                 **dict.fromkeys(("register_ticket", "list_my_tickets", "get_ticket", "search_tickets",
+                                  "resolve_ticket", "sync_pending_tickets"), "tickets")}
 
 
 def federated(query: str, domains: list[str], ctx: RequestContext) -> list[Document]:

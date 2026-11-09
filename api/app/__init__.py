@@ -12,4 +12,4 @@ _SCRIPTS = PROJECT_ROOT / "scripts"
 if _SCRIPTS.is_dir() and str(_SCRIPTS) not in sys.path:
     sys.path.insert(0, str(_SCRIPTS))
 
-__version__ = "0.7.0"
+__version__ = "0.10.0"

@@ -2,7 +2,9 @@
 #   chroma   : vector database            (make chroma-up)
 #   redis    : semantic cache + API rate limit / SSE event buffer (make redis-up)
 #   postgres : API audit log + agent runs (make db-up)
+#   mcp      : IT ticket MCP server (FastMCP, streamable HTTP :9090) -> Postgres (itsm) + Jira  (make mcp-up)
 #   api      : FastAPI service            (make api-up)
+#   web      : React UI + Nginx gateway (same-origin /api proxy)  (make web-up)  -> http://localhost/
 # Data lives in named volumes (no bind mounts: avoids rootless-Podman UID/SELinux issues).
 # Ports come from .env. The previous docker-compose.yml is kept in archives/.
 
@@ -61,11 +63,36 @@ services:
       start_period: 10s
     restart: unless-stopped
 
+  mcp:
+    build:
+      context: .
+      dockerfile: netcore_mcp/Containerfile
+    image: localhost/netcore-rag-mcp:0.10.0
+    container_name: netcore-mcp
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-netcore}:${POSTGRES_PASSWORD:-netcore}@postgres:5432/${POSTGRES_DB:-netcore_api}
+      MCP_HOST: 0.0.0.0
+      MCP_PORT: "9090"
+    ports:
+      # no authentication yet (X-User-Id is trusted): keep it on localhost / a private network (see SECURITY.md)
+      - "${MCP_PORT:-9090}:9090"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:9090/health', timeout=3)"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    restart: unless-stopped
+
   api:
     build:
       context: .
       dockerfile: Containerfile
-    image: localhost/netcore-rag-api:0.7.0
+    image: localhost/netcore-rag-api:0.10.0
     container_name: netcore-api
     env_file: .env
     environment:
@@ -75,6 +102,11 @@ services:
       REDIS_URL: redis://redis:6379
       DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-netcore}:${POSTGRES_PASSWORD:-netcore}@postgres:5432/${POSTGRES_DB:-netcore_api}
       LOG_FILE: /app/logs/api.log
+      # behind the web (Nginx) gateway: rate-limit by the real client IP from X-Forwarded-For.
+      # Nginx overwrites that header; direct calls to the published 8080 could spoof it (see SECURITY.md).
+      TRUST_PROXY_HEADERS: "true"
+      # the agent's ticket tools (langchain-mcp-adapters -> netcore_mcp)
+      MCP_SERVER_URL: http://mcp:9090/mcp
     ports:
       - "${API_PORT:-8080}:8080"
     volumes:
@@ -86,6 +118,8 @@ services:
         condition: service_healthy
       postgres:
         condition: service_healthy
+      mcp:
+        condition: service_healthy
     healthcheck:
       # Podman drops a Containerfile HEALTHCHECK when building OCI images, so it is (also) defined here
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/health', timeout=3)"]
@@ -93,6 +127,27 @@ services:
       timeout: 5s
       retries: 5
       start_period: 20s
+    restart: unless-stopped
+
+  web:
+    build:
+      context: ./web
+      dockerfile: Containerfile
+    image: localhost/netcore-rag-web:0.10.0
+    container_name: netcore-web
+    ports:
+      # Nginx (non-root) listens on 8080 inside the container; the browser uses http://localhost/
+      - "${WEB_PORT:-80}:8080"
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      # also defined here because Podman drops a Containerfile HEALTHCHECK when building OCI images
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8080/healthz"]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
     restart: unless-stopped
 
 volumes:

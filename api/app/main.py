@@ -13,7 +13,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from app.container import Container
-from app.controllers import agent, health, requests
+from app.controllers import agent, health, me, requests
 from app.core.config import ApiSettings, get_api_settings
 from app.core.logging import get_logger, setup_logging
 from app.core.problems import register_problem_handlers
@@ -34,6 +34,7 @@ cache, RBAC, an LLM judge and a full trace.
 TAGS = [
     {"name": "Agent", "description": "Ask the agent (blocking or streaming)"},
     {"name": "Requests", "description": "Reconnect: list, fetch and resume earlier requests"},
+    {"name": "Identity", "description": "Who am I (profile and RBAC levels of the API key)"},
     {"name": "Health", "description": "Liveness, readiness and Prometheus metrics"},
 ]
 
@@ -60,5 +61,6 @@ def create_app(settings: ApiSettings | None = None, container: Container | None 
     app.add_middleware(RequestContextMiddleware)   # outer: sees rate-limited responses too
     app.include_router(agent.router)
     app.include_router(requests.router)
+    app.include_router(me.router)
     app.include_router(health.router)
     return app

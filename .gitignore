@@ -28,3 +28,15 @@ pg-data/
 # API logs and test caches
 logs/
 .pytest_cache/
+
+# make TUI run history (uv run tui.py)
+.make_tui_history.json
+
+# Terraform (iac/): providers, local state (contains the generated private key), keys, build inputs
+iac/.terraform/
+iac/*.tfstate
+iac/*.tfstate.*
+iac/.keys/
+iac/.build/
+iac/*.tfvars
+iac/crash.log

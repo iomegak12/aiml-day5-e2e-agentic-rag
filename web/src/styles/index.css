@@ -1,0 +1,255 @@
+/* NetCore Assist design tokens (from docs/ui-mockups/prototype + Stitch DESIGN.md).
+   Light values live in @theme; .dark overrides the same variables, so every utility follows the theme. */
+@import 'tailwindcss';
+@import '@fontsource-variable/inter';
+@import '@fontsource/jetbrains-mono/400.css';
+@import '@fontsource/jetbrains-mono/500.css';
+@import '@fontsource/material-symbols-outlined/400.css';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: 'Inter Variable', Inter, ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* surfaces */
+  --color-canvas: #f9f9f9;
+  --color-card: #ffffff;
+  --color-well: #f3f3f4;
+  --color-sidebar: #fbfbfc;
+  --color-line: #ececec;
+  --color-line-strong: #c4c7c7;
+  --color-code: #1e1e1e;
+  --color-code-ink: #e6e6e6;
+
+  /* text */
+  --color-ink: #1a1c1c;
+  --color-ink-2: #585f6c;
+  --color-ink-3: #747878;
+
+  /* brand */
+  --color-primary: #000000;
+  --color-on-primary: #ffffff;
+  --color-accent: #fde68a;
+
+  /* status (text / fill / border) */
+  --color-ok: #059669;
+  --color-ok-bg: #ecfdf5;
+  --color-ok-line: #a7f3d0;
+  --color-warn: #b45309;
+  --color-warn-bg: #fffbeb;
+  --color-warn-line: #fde68a;
+  --color-bad: #dc2626;
+  --color-bad-bg: #fef2f2;
+  --color-bad-line: #fecaca;
+  --color-info: #2563eb;
+  --color-info-bg: #eff6ff;
+  --color-info-line: #bfdbfe;
+  --color-mute: #6b7280;
+  --color-mute-bg: #f3f4f6;
+  --color-mute-line: #e5e7eb;
+
+  /* dots (brighter, as in the prototype) */
+  --color-dot-ok: #10b981;
+  --color-dot-warn: #f59e0b;
+  --color-dot-bad: #ef4444;
+  --color-dot-info: #3b82f6;
+  --color-dot-mute: #9ca3af;
+
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+
+  --animate-flash: flash 1.6s ease-out;
+  --animate-pulse-dot: pulse-dot 1.4s ease-in-out infinite;
+
+  @keyframes flash {
+    0% {
+      background-color: var(--color-warn-bg);
+      box-shadow: 0 0 0 2px var(--color-warn-line);
+    }
+    100% {
+      background-color: transparent;
+      box-shadow: 0 0 0 0 transparent;
+    }
+  }
+  @keyframes pulse-dot {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.35;
+    }
+  }
+}
+
+@layer base {
+  .dark {
+    --color-canvas: #0e0f10;
+    --color-card: #17181a;
+    --color-well: #212226;
+    --color-sidebar: #121315;
+    --color-line: #2a2b2f;
+    --color-line-strong: #3d3f44;
+    --color-code: #0a0a0b;
+    --color-code-ink: #e6e6e6;
+
+    --color-ink: #ececee;
+    --color-ink-2: #a8aeb9;
+    --color-ink-3: #8a8f96;
+
+    --color-primary: #f4f4f5;
+    --color-on-primary: #0e0f10;
+
+    --color-ok: #34d399;
+    --color-ok-bg: #0f2a20;
+    --color-ok-line: #1f5a43;
+    --color-warn: #fbbf24;
+    --color-warn-bg: #2b2210;
+    --color-warn-line: #5c4512;
+    --color-bad: #f87171;
+    --color-bad-bg: #2d1414;
+    --color-bad-line: #632323;
+    --color-info: #60a5fa;
+    --color-info-bg: #111f36;
+    --color-info-line: #1f3f6e;
+    --color-mute: #a1a1aa;
+    --color-mute-bg: #222327;
+    --color-mute-line: #34363b;
+    color-scheme: dark;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+  body {
+    @apply bg-canvas font-sans text-ink antialiased;
+  }
+  ::selection {
+    background: var(--color-accent);
+    color: #000;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-info);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  .icon {
+    font-family: 'Material Symbols Outlined';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 1.25rem;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+    user-select: none;
+  }
+  .ambient {
+    background:
+      radial-gradient(60% 50% at 20% 10%, #fffbeb 0%, transparent 60%),
+      radial-gradient(50% 50% at 85% 20%, #fdf2f8 0%, transparent 60%),
+      radial-gradient(70% 60% at 50% 100%, #f5f3ff 0%, transparent 60%), var(--color-canvas);
+  }
+  .dark .ambient {
+    background:
+      radial-gradient(60% 50% at 20% 10%, #2b2210 0%, transparent 60%),
+      radial-gradient(50% 50% at 85% 20%, #2a1424 0%, transparent 60%),
+      radial-gradient(70% 60% at 50% 100%, #1d1a33 0%, transparent 60%), var(--color-canvas);
+  }
+  .card {
+    @apply rounded-xl border border-line bg-card;
+  }
+  .btn-primary,
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium transition disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-primary {
+    @apply bg-primary text-on-primary hover:opacity-90;
+  }
+  .btn-ghost {
+    @apply border border-line bg-card text-ink hover:bg-well;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium;
+  }
+  .kbd {
+    @apply rounded border border-line-strong px-1.5 py-0.5 font-mono text-[11px];
+  }
+  .label {
+    @apply text-[11px] font-semibold tracking-wider text-ink-3 uppercase;
+  }
+  .mono {
+    @apply font-mono;
+  }
+  .scroll-thin {
+    scrollbar-width: thin;
+  }
+
+  /* Markdown answer */
+  .prose-answer {
+    @apply text-[15px] leading-7 text-ink;
+  }
+  .prose-answer h1,
+  .prose-answer h2,
+  .prose-answer h3 {
+    @apply mt-5 mb-2 font-semibold text-ink;
+  }
+  .prose-answer h1 {
+    @apply text-xl;
+  }
+  .prose-answer h2 {
+    @apply text-lg;
+  }
+  .prose-answer h3 {
+    @apply text-base;
+  }
+  .prose-answer p {
+    @apply my-2;
+  }
+  .prose-answer ul {
+    @apply my-2 list-disc pl-6;
+  }
+  .prose-answer ol {
+    @apply my-2 list-decimal pl-6;
+  }
+  .prose-answer li {
+    @apply my-1;
+  }
+  .prose-answer strong {
+    @apply font-semibold;
+  }
+  .prose-answer a {
+    @apply underline underline-offset-2;
+  }
+  .prose-answer :not(pre) > code {
+    @apply rounded bg-well px-1 py-0.5 font-mono text-[13px];
+  }
+  .prose-answer pre {
+    @apply my-3 overflow-x-auto rounded-lg bg-code p-4 font-mono text-[13px] leading-6 text-code-ink;
+  }
+  .prose-answer table {
+    @apply my-3 w-full border-collapse text-sm;
+  }
+  .prose-answer th,
+  .prose-answer td {
+    @apply border border-line px-3 py-1.5 text-left;
+  }
+  .prose-answer th {
+    @apply bg-well font-semibold;
+  }
+  .prose-answer blockquote {
+    @apply my-3 border-l-4 border-line-strong pl-4 text-ink-2;
+  }
+}

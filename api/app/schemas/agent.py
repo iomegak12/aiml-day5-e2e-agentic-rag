@@ -37,10 +37,11 @@ class PlanStep(BaseModel):
     domains: list[str] = []
     query: str
     depends_on: list[int] = []
+    ticket_args: dict[str, Any] = Field({}, description="Arguments of an IT ticket step (MCP ticket tools)")
 
 
 class ExecutedStep(PlanStep):
-    status: str = Field(description="done | no_results | replanned | skipped | pending")
+    status: str = Field(description="done | no_results | replanned | skipped | error | pending")
     relevant: int = Field(0, description="Relevant chunks found")
     best: float = Field(0.0, description="Best rerank relevance score")
     seconds: float = 0.0

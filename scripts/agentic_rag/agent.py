@@ -30,24 +30,37 @@ from .middleware import (
 from .retrieval import federated_search, search_knowledge_base, search_web
 from .rewrite import rewrite_query
 from .state import RAGState, RequestContext, TraceEvent
+from .tickets import langchain_tools as ticket_tools
 
 
 Mode = Literal["plan", "react"]
 
 
-@lru_cache(maxsize=2)
 def build_agent(mode: Mode = "plan"):
-    """Compile the agent graph once per mode.
+    """The compiled agent graph for a mode (cached).
 
     plan  : Plan-and-Execute - planner + deterministic executor (PlanExecuteMiddleware); the model only synthesises.
-    react : the model routes itself with tools (search / rewrite) under CorrectiveRAGMiddleware.
+            Ticket steps call the MCP server from the executor.
+    react : the model routes itself with tools (search / rewrite / IT tickets) under CorrectiveRAGMiddleware.
+            The ticket tools come from the MCP server; the graph is rebuilt when they appear or disappear.
     """
+    if mode == "plan":
+        return _build(mode, ())
+    return _build(mode, tuple(t.name for t in ticket_tools()))
+
+
+@lru_cache(maxsize=4)
+def _build(mode: Mode, ticket_names: tuple[str, ...]):
     s = get_settings()
     if mode == "plan":
         tools, core = [], [PlanExecuteMiddleware()]
     else:
-        tools = [search_knowledge_base, search_web, federated_search, rewrite_query]
-        core = [CorrectiveRAGMiddleware(), ToolRetryMiddleware(max_retries=1, backoff_factor=2.0, initial_delay=1.0)]
+        tickets = [t for t in ticket_tools() if t.name in ticket_names]
+        tools = [search_knowledge_base, search_web, federated_search, rewrite_query, *tickets]
+        # ToolRetry only for the search tools: a ticket write must never be repeated automatically
+        core = [CorrectiveRAGMiddleware(), ToolRetryMiddleware(max_retries=1, backoff_factor=2.0, initial_delay=1.0,
+                                                               tools=["search_knowledge_base", "search_web",
+                                                                      "federated_search", "rewrite_query"])]
     return create_agent(
         model=ChatOpenAI(model=s.chat_model),
         tools=tools,
@@ -127,7 +140,8 @@ def ask(question: str, user_id: str = "bob", verbose: bool = True, mode: Mode = 
     else:
         from rag_search import location
         sources = [{"kb_id": d["metadata"].get("kb_id"), "score": d["score"],
-                    "location": d["metadata"].get("url") or location(d["metadata"]),
+                    "location": d["metadata"].get("url") or ("IT ticket service" if d["metadata"].get(
+                        "content_type") == "ticket" else location(d["metadata"])),
                     "access_level": d["metadata"].get("access_level", ""), "status": d["metadata"].get("status", "")}
                    for d in state.get("relevant_docs", [])]
     ctx.log("Response", status, f"{len(answer)} chars in {ctx.elapsed:.1f}s")

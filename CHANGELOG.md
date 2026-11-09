@@ -3,6 +3,91 @@
 All notable changes to this project are documented here.
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) · Versioning: [SemVer](https://semver.org/).
 
+## [0.10.0] - 2026-11-10
+
+### Added
+- **`make publish`** (`scripts/publish_images.py`): builds and pushes `iomega/netcore-rag-{api,mcp,web}` as `:0.10.0` and `:latest` to Docker Hub (token login via `--password-stdin`; `HUB_USER` overridable).
+- **Terraform module `iac/`** (AWS provider 6.72, local state):
+  - one t3.small Ubuntu 24.04 instance in the default VPC: 30 GiB encrypted gp3, IMDSv2 only, an Elastic IP and a new ED25519 key pair saved to `iac/.keys/`;
+  - security group: SSH only from your current public IP (`ssh_cidr` overridable), HTTP 80 from anywhere;
+  - cloud-init installs Docker CE + the compose plugin from Docker's apt repository, adds 2 GiB swap and log rotation;
+  - deployment over SSH within `terraform apply`: `compose.prod.yaml` (Hub images, memory limits, api/mcp bound to loopback, DBs internal), a `.env` with `AWS_*` / `DOCKERHUB_*` removed, and a snapshot of the local Chroma volume restored on the first deploy. It re-deploys when the version, env or files change.
+- Make targets `publish`, `iac-init`, `iac-prepare`, `iac-plan`, `iac-up`, `iac-output`, `iac-ssh` (`CMD=` runs a remote command, also from the TUI) and `iac-down`, all visible in `make help` and the TUI.
+- `.gitattributes`: shell scripts and `iac/*.yaml` keep LF line endings.
+
+### Changed
+- Version 0.10.0 (API, MCP server, web UI, image tags); the Makefile has a single `VERSION`.
+- `.env`: the AWS secret key is read as the standard `AWS_SECRET_ACCESS_KEY`; new `DOCKERHUB_USERNAME` / `DOCKERHUB_TOKEN`.
+
+## [0.9.1] - 2026-11-10
+
+### Added
+- **Terminal UI for the make targets** (`uv run tui.py` or `make tui`, Textual 8; code in `scripts/make_tui/`):
+  - grouped, searchable target list with badges for destructive (`!`), costly (`$`) and long-running (`~`) targets;
+  - a form for each target's parameters (text, drop-downs, checkboxes) with a live command preview, and **Run** blocked until required values are filled;
+  - live output with colours, exit code and duration; **Stop** ends the whole process tree; dry run (`make -n`);
+  - a confirmation dialog before `[danger]` / `[cost]` targets;
+  - run history (last 50, `.make_tui_history.json`, Enter re-runs), container health panel (docker or podman), and every target in the command palette (`Ctrl+P`).
+- 17 parser tests (`scripts/make_tui/tests`), including a check that every Makefile target is documented.
+
+### Changed
+- Every Makefile target is annotated with `## description [tags] {params}` and `##@` groups. `make help` is now generated from these comments (`python -m make_tui.help`) instead of hand-written `echo` lines.
+- `textual` added to the dev dependency group.
+
+## [0.9.0] - 2026-11-10
+
+### Added
+- **IT support ticket MCP server** in `netcore_mcp/`: FastMCP 3.4 over streamable HTTP (stateless) on port 9090, hosted by uvicorn, with `/health`.
+  - **Tools:** `register_ticket`, `list_my_tickets`, `get_ticket` (everyone, own tickets); `search_tickets` (keyword, product, region, severity, user, date range, status), `resolve_ticket` (remarks required) and `sync_pending_tickets` (admin only).
+  - **Identity:** the caller comes from the `X-User-Id` header, mapped to the demo users (alice, bob, carol); RBAC is enforced on the server.
+  - **Postgres:** table `itsm.tickets` in its own schema, with its own Alembic chain (`netcore_mcp/alembic.ini`). Ids look like `TKT-000123`, and the Jira id, key and URL are stored on the row.
+  - **Jira Cloud mirror** (one-way, REST v3, project KAN, issue type Incident): priority from severity, labels, ADF description header, resolution comment and `Resolved` transition. Postgres is written first; a Jira failure leaves `jira_sync=pending`, retried by a background loop and the admin tool without duplicate issues or comments.
+  - 29 tests (in-memory FastMCP client, fake repository, respx-mocked Jira).
+- **Agent integration** (`scripts/agentic_rag/tickets.py`, `langchain-mcp-adapters` 0.3):
+  - react mode gets the ticket tools; plan mode can plan ticket steps with typed `ticket_args`, run by the executor.
+  - Ticket results are cited as `[TKT-000123]` / `[TICKETS]` and judged like KB sources. Ticket runs bypass and never write the semantic cache.
+  - Safety: writes only when explicitly asked, never from a re-plan, never repeated within a request; admin steps are skipped for non-admins.
+  - If the MCP server is down, KB questions still work and ticket requests report "ticket service unavailable".
+  - 19 tests with a fake bridge (`api/tests/test_agent_tickets.py`).
+- `compose.yaml` service `mcp` (`localhost/netcore-rag-mcp:0.9.0`, port `MCP_PORT`); `netcore_mcp/Containerfile`.
+- Make targets: `mcp-run`, `mcp-test`, `mcp-migrate`, `mcp-build`, `mcp-up`, `mcp-down`, `mcp-logs`.
+- `.env` settings: `MCP_HOST`, `MCP_PORT`, `MCP_SERVER_URL`, `MCP_RETRY_SECONDS`, `ATLASSIAN_SITE_URL`, `ATLASSIAN_EMAIL`, `ATLASSIAN_API_TOKEN`, `JIRA_PROJECT_KEY`, `JIRA_ISSUE_TYPE`, `JIRA_RESOLVE_TRANSITION`, `JIRA_SYNC_INTERVAL_SECONDS`.
+
+### Changed
+- Version 0.9.0 (API `__version__`, `web/package.json`, image tags `netcore-rag-api`, `netcore-rag-web`, `netcore-rag-mcp`).
+- `make up-all`, `stack-up` and `bootstrap` include the MCP server and the itsm migrations; the `api` container waits for a healthy `mcp`.
+- The input guardrail's topic policy allows IT ticket requests; the citation format accepts `[TKT-000123]` and `[TICKETS]` (agent and web UI).
+- API plan steps carry `ticket_args`, and step status can be `error`.
+- Dependencies: `fastmcp==3.4.11` and `langchain-mcp-adapters` (fastmcp 4.x needs mcp 2.x, which `langchain-mcp-adapters` does not support yet); dev: `respx`.
+
+## [0.8.0] - 2026-11-10
+
+### Added
+- **Web UI** in `web/` ("NetCore Assist"): React 18 + Vite, pure JavaScript, built from the approved prototype (`docs/ui-mockups/prototype/`).
+  - **Screens:** sign in, new chat, live run (SSE), answer & insights (Plan, Sources, Judge, Tool calls, Trace, Timing), request history, request detail with replay/resume, and admin-only system status. The prototype's error-states screen became reusable components (RFC 9457 problem panel, 429 countdown, 504 / 503 cards, 401 → sign-in).
+  - **Streaming:** `@microsoft/fetch-event-source` (POST + `X-API-Key`), a pure SSE reducer and a run store that keeps streams alive across navigation. "Stop watching" detaches; **Resume** sends `Last-Event-ID` and highlights the replayed events.
+  - **Extras:** Ctrl/⌘+K new chat, light/dark theme (follows the OS, remembered), copy answer, and citation chips that jump to their source.
+  - **Stack:** React Router 7, TanStack Query 5, Tailwind CSS 4 (prototype design tokens), react-markdown (raw HTML disabled), self-hosted fonts (`@fontsource`).
+  - **Quality:** ESLint flat config, Prettier, 27 Vitest + Testing Library tests.
+- **Nginx gateway** (`web/nginx/`, `web/Containerfile`): `nginxinc/nginx-unprivileged` (non-root) serves the build and proxies `/api/*`, `/health` and `/ready` to the API on the same origin. It is SSE-safe: no buffering and a 330 s read timeout. `/metrics` and `/docs` are not proxied.
+- `compose.yaml` service `web` (`localhost/netcore-rag-web:0.8.0`, host port `WEB_PORT`, default 80) that waits for a healthy `api`.
+- `GET /api/v1/me`: profile and RBAC levels of the calling API key (used at sign-in), with 5 new tests (53 in total).
+- Make targets: `web-install`, `web-dev`, `web-lint`, `web-test`, `web-build`, `web-image`, `web-up`, `web-down`, `web-logs`.
+- `make up-all`: the whole stack in dependency order (chroma, redis, postgres, populate, access levels, migrations, api, web). Populate runs only for empty domains; `REPOPULATE=1` forces it.
+- `populate_vector_dbs.py --if-empty`: skip domains that already have chunks (no LLM or embedding calls).
+- `.env` setting: `WEB_PORT`.
+
+### Changed
+- Version 0.8.0 (API `__version__`, image tags `netcore-rag-api:0.8.0` and `netcore-rag-web:0.8.0`).
+- `make stack-up` / `stack-down` include the web container.
+- The `api` container runs with `TRUST_PROXY_HEADERS=true` (set in `compose.yaml`), so the rate limit sees the real client IP forwarded by Nginx.
+- `.dockerignore` excludes `web/` from the API build context.
+
+### Security
+- Strict Content-Security-Policy (`default-src 'self'`, no inline scripts, no third-party origins), `nosniff`, `no-referrer`, `frame-ancestors 'none'`, Permissions-Policy.
+- The API key is kept in `sessionStorage` (per tab, cleared on close) and is never bundled; every 401 signs the user out.
+- Nginx overwrites `X-Forwarded-For` with the connecting address, so clients cannot spoof their IP through the gateway.
+
 ## [0.7.0] - 2026-11-09
 
 ### Added

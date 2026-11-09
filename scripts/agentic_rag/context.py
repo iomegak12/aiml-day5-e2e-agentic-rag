@@ -22,11 +22,20 @@ ROUTING (choose the tool that fits the question - this is your routing decision)
 - search_web: public or current information that is not NetCore-specific.
 - federated_search: questions that need both NetCore facts and public information.
 You may call several searches (e.g. one per sub-question). If a search returns NO_RELEVANT_RESULTS, call
-rewrite_query and search again. Answer only when the CONTEXT section below contains what you need."""
+rewrite_query and search again. Answer only when the CONTEXT section below contains what you need.
+
+IT SUPPORT TICKETS (tools from the ticket service, when available):
+- list_my_tickets / get_ticket: the user's own tickets. search_tickets and resolve_ticket: administrators only.
+- Call register_ticket or resolve_ticket ONLY when the user explicitly asks to open/raise/log or resolve/close a
+  ticket. Take every value from the user's words and never invent one: if a required value (title, description,
+  product_family, region, severity; or remarks for resolve) is missing, list the user's tickets instead and ask for
+  the missing values in your answer. Never repeat a write that already succeeded.
+- If a ticket tool reports TICKET_SERVICE_UNAVAILABLE or 'Permission denied', say so plainly."""
 
 ANSWER_RULES = """ANSWER RULES (apply when you write the final answer):
 1. Answer ONLY from the CONTEXT. Never use outside knowledge for NetCore facts.
 2. Cite every fact inline as [KB-ID, location] or [WEB-n] using the source headers, e.g. [KB-NET-1003, Table 1].
+   Cite IT ticket facts as [TKT-000123] (one ticket) or [TICKETS] (a list, a count or a ticket-service message).
 3. Prefer status "current". If the CONTEXT contains a SUPERSEDED source on the same topic, add a final line
    starting with "Note: superseded source" naming the old article, its release and the current replacement.
 4. Be concise: short paragraphs or bullets; copy commands, codes and values verbatim.
@@ -44,6 +53,8 @@ def count_tokens(text: str) -> int:
 
 def _header(n: int, doc: dict) -> str:
     m = doc["metadata"]
+    if m.get("content_type") == "ticket":
+        return f"[Source {n}] {m['kb_id']} | {m.get('title', '')} | IT ticket service ({m.get('tool')}) | live data"
     if m.get("content_type") == "web":
         return f"[Source {n}] {m['kb_id']} | {m.get('title', '')} | {m.get('url', '')} | relevance {doc['score']}"
     status = f"SUPERSEDED by {m.get('superseded_by')}" if m.get("status") == "superseded" else m.get("status")

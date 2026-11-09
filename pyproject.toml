@@ -10,11 +10,13 @@ dependencies = [
     "beautifulsoup4>=4.15.0",
     "chromadb-client==1.5.9",
     "fastapi>=0.162.2",
+    "fastmcp==3.4.11",
     "langchain>=1.4.9",
     "langchain-chroma>=1.1.0",
     "langchain-classic>=1.0.8",
     "langchain-community==0.3.31",
     "langchain-core>=1.7.6",
+    "langchain-mcp-adapters>=0.3.2",
     "langchain-openai>=1.7.4",
     "langchain-text-splitters>=1.1.3",
     "lxml>=6.1.3",
@@ -43,6 +45,8 @@ dev = [
     "ipykernel>=7.4.0",
     "pytest>=9.2.0",
     "pytest-asyncio>=1.4.1.post1",
+    "respx>=0.23.1",
+    "textual>=8.2.8",
 ]
 kb = [
     "reportlab>=5.1.0",
@@ -57,8 +61,8 @@ default-groups = ["dev", "kb"]
 override-dependencies = ["chromadb; sys_platform == 'never'"]
 
 [tool.pytest.ini_options]
-testpaths = ["api/tests"]
-pythonpath = ["api", "scripts"]
+testpaths = ["api/tests", "netcore_mcp/tests", "scripts/make_tui/tests"]
+pythonpath = [".", "api", "scripts"]
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
 filterwarnings = ["ignore::DeprecationWarning"]

@@ -430,6 +430,14 @@ def populate(domain: str, cfg: Config) -> None:
     print(f"  stored {len(docs)} chunks ({dict(counts)}) with '{cfg.embedding_model}'")
 
 
+def chunk_count(domain: str, cfg: Config) -> int:
+    """Chunks already stored for a domain (0 when its database or collection does not exist yet)."""
+    try:
+        return http_client(cfg, cfg.databases[domain]).get_collection(cfg.collection).count()
+    except Exception:  # noqa: BLE001 - missing database/collection
+        return 0
+
+
 def stats(domain: str, cfg: Config) -> None:
     database = cfg.databases[domain]
     collection = http_client(cfg, database).get_collection(cfg.collection)
@@ -448,6 +456,8 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Populate the Chroma vector databases from the KB articles.")
     parser.add_argument("--domain", choices=[*DOMAINS, "all"], default="all")
     parser.add_argument("--stats", action="store_true", help="Only print what is stored")
+    parser.add_argument("--if-empty", action="store_true",
+                        help="Skip domains that already have chunks (no LLM/embedding calls on re-runs)")
     args = parser.parse_args()
 
     cfg = load_config()
@@ -459,7 +469,12 @@ def main() -> None:
                          f"(run `make chroma-up`): {exc}") from exc
 
     for domain in domains:
-        stats(domain, cfg) if args.stats else populate(domain, cfg)
+        if args.stats:
+            stats(domain, cfg)
+        elif args.if_empty and (count := chunk_count(domain, cfg)):
+            print(f"\n== {domain}: already populated ({count} chunks) - skipped (force with REPOPULATE=1)")
+        else:
+            populate(domain, cfg)
 
 
 if __name__ == "__main__":

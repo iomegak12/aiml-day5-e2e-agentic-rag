@@ -30,7 +30,7 @@ class RAGState(AgentState):
 
     # written by tools (reducers make parallel tool calls safe)
     relevant_docs: NotRequired[Annotated[list[dict], merge_docs]]  # reranked chunks above the threshold
-    routes: NotRequired[Annotated[list[str], operator.add]]  # vector | web | federated, in order
+    routes: NotRequired[Annotated[list[str], operator.add]]  # vector | web | federated | tickets, in order
     rewrite_count: NotRequired[Annotated[int, operator.add]]
     web_tried: NotRequired[Annotated[bool, operator.or_]]
     # written by middleware only (sequential hooks)
@@ -74,6 +74,9 @@ class RequestContext:
     _lock: Any = field(default_factory=threading.Lock, repr=False)  # parallel tool calls append concurrently
     web_seq: int = 0  # running number for WEB-n citations (unique across searches in one request)
     _web_ids: dict[str, str] = field(default_factory=dict)  # url -> WEB-n
+    used_tickets: bool = False  # a ticket tool ran: the answer is per user and live -> never cached
+    ticket_seq: int = 0  # running number of ticket tool calls (unique doc ids)
+    ticket_writes: dict[str, Any] = field(default_factory=dict)  # write call key -> result (no double writes)
 
     def web_id(self, url: str) -> str:
         """Stable, request-unique citation id for a web result."""

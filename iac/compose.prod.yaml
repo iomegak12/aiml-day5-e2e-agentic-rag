@@ -1,0 +1,133 @@
+# NetCore Agentic RAG - production compose for the EC2 instance (installed as /opt/netcore/compose.yaml by deploy.sh).
+# Images come from Docker Hub (make publish); nothing is built here.
+#   public : web (Nginx gateway) on :80
+#   host loopback only (SSH tunnel): api :8080 (/docs), mcp :9090
+#   internal only: chroma, redis, postgres
+# Interpolation: /opt/netcore/.env (app settings, no AWS / Docker Hub secrets) + release.env (HUB_USER, APP_VERSION).
+
+name: netcore-rag
+
+x-restart: &restart
+  restart: unless-stopped
+
+services:
+  chroma:
+    <<: *restart
+    image: docker.io/chromadb/chroma:1.5.9
+    volumes:
+      - chroma-data:/data
+    environment:
+      ANONYMIZED_TELEMETRY: "FALSE"
+    mem_limit: 512m
+    healthcheck:
+      test: ["CMD", "bash", "-c", "exec 3<>/dev/tcp/127.0.0.1/8000 && printf 'GET /api/v2/heartbeat HTTP/1.0\\r\\n\\r\\n' >&3 && grep -q '200 OK' <&3"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 10s
+
+  redis:
+    <<: *restart
+    image: docker.io/redis/redis-stack-server:7.4.0-v8
+    volumes:
+      - redis-data:/data
+    mem_limit: 256m
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 5s
+
+  postgres:
+    <<: *restart
+    image: docker.io/library/postgres:17-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-netcore}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-netcore}
+      POSTGRES_DB: ${POSTGRES_DB:-netcore_api}
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    mem_limit: 256m
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 10s
+
+  mcp:
+    <<: *restart
+    image: docker.io/${HUB_USER:-iomega}/netcore-rag-mcp:${APP_VERSION:?set APP_VERSION}
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-netcore}:${POSTGRES_PASSWORD:-netcore}@postgres:5432/${POSTGRES_DB:-netcore_api}
+      MCP_HOST: 0.0.0.0
+      MCP_PORT: "9090"
+    ports:
+      - "127.0.0.1:9090:9090" # no authentication: loopback only (SSH tunnel)
+    mem_limit: 256m
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:9090/health', timeout=3)"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  api:
+    <<: *restart
+    image: docker.io/${HUB_USER:-iomega}/netcore-rag-api:${APP_VERSION:?set APP_VERSION}
+    env_file: .env
+    environment:
+      CHROMA_HOST: chroma
+      CHROMA_PORT: "8000"
+      REDIS_URL: redis://redis:6379
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-netcore}:${POSTGRES_PASSWORD:-netcore}@postgres:5432/${POSTGRES_DB:-netcore_api}
+      LOG_FILE: /app/logs/api.log
+      TRUST_PROXY_HEADERS: "true" # only Nginx reaches it publicly; 8080 is bound to loopback
+      MCP_SERVER_URL: http://mcp:9090/mcp
+    ports:
+      - "127.0.0.1:8080:8080" # /docs through an SSH tunnel
+    volumes:
+      - api-logs:/app/logs
+    mem_limit: 768m
+    depends_on:
+      chroma:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      mcp:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/health', timeout=3)"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  web:
+    <<: *restart
+    image: docker.io/${HUB_USER:-iomega}/netcore-rag-web:${APP_VERSION:?set APP_VERSION}
+    ports:
+      - "80:8080"
+    mem_limit: 64m
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8080/healthz"]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+volumes:
+  chroma-data:
+  redis-data:
+  pg-data:
+  api-logs:

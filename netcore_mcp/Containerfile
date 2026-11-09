@@ -1,0 +1,51 @@
+# syntax=docker/dockerfile:1
+# NetCore IT ticket MCP server (FastMCP, streamable HTTP on :9090) - multi-stage, slim, non-root.
+# Build from the repository root (it shares pyproject.toml / uv.lock with the API):
+#   docker build -f netcore_mcp/Containerfile -t localhost/netcore-rag-mcp:0.10.0 .
+#   podman build -f netcore_mcp/Containerfile --format docker -t localhost/netcore-rag-mcp:0.10.0 .
+
+# ---------- 1. builder: resolve and install dependencies with uv ----------
+FROM docker.io/library/python:3.12-slim AS builder
+COPY --from=ghcr.io/astral-sh/uv:0.9.16 /uv /bin/uv
+RUN apt-get update && apt-get install -y --no-install-recommends binutils && rm -rf /var/lib/apt/lists/*
+
+ENV UV_COMPILE_BYTECODE=1 \
+    UV_LINK_MODE=copy \
+    UV_PYTHON_DOWNLOADS=never \
+    UV_PROJECT_ENVIRONMENT=/app/.venv
+
+WORKDIR /app
+COPY pyproject.toml uv.lock ./
+# runtime dependencies only (no dev / kb groups), from the lock file
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --frozen --no-default-groups --no-install-project
+RUN find /app/.venv/lib/python3.12/site-packages -mindepth 2 -type d -name tests -prune -exec rm -rf {} + \
+    && find /app/.venv -name "*.pyi" -delete \
+    && find /app/.venv -type f -name "*.so*" -exec strip --strip-debug {} + 2>/dev/null; \
+    du -sh /app/.venv
+
+# ---------- 2. runtime: python slim + the venv + the server code only ----------
+FROM docker.io/library/python:3.12-slim AS runtime
+
+ENV PATH=/app/.venv/bin:$PATH \
+    PYTHONPATH=/app \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    MCP_HOST=0.0.0.0 \
+    MCP_PORT=9090
+
+RUN groupadd --system --gid 10001 app \
+    && useradd --system --uid 10001 --gid app --home-dir /app --shell /usr/sbin/nologin app
+
+WORKDIR /app
+COPY --from=builder --chown=app:app /app/.venv /app/.venv
+COPY --chown=app:app netcore_mcp/ /app/netcore_mcp/
+
+USER app
+EXPOSE 9090
+
+HEALTHCHECK --interval=15s --timeout=5s --start-period=15s --retries=5 \
+    CMD ["python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:9090/health', timeout=3)"]
+
+# apply the itsm migrations (own Alembic chain), then serve streamable HTTP on /mcp
+CMD ["sh", "-c", "alembic -c netcore_mcp/alembic.ini upgrade head && exec python -m netcore_mcp"]
