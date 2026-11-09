@@ -1,0 +1,102 @@
+# NetCore Agentic RAG stack - works with Docker Compose and podman-compose (>= 1.3).
+#   chroma   : vector database            (make chroma-up)
+#   redis    : semantic cache + API rate limit / SSE event buffer (make redis-up)
+#   postgres : API audit log + agent runs (make db-up)
+#   api      : FastAPI service            (make api-up)
+# Data lives in named volumes (no bind mounts: avoids rootless-Podman UID/SELinux issues).
+# Ports come from .env. The previous docker-compose.yml is kept in archives/.
+
+name: netcore-rag
+
+services:
+  chroma:
+    image: docker.io/chromadb/chroma:1.5.9 # keep in step with the chromadb client version in uv.lock
+    container_name: netcore-chroma
+    ports:
+      - "${CHROMA_PORT:-8000}:8000"
+    volumes:
+      - chroma-data:/data
+    environment:
+      ANONYMIZED_TELEMETRY: "FALSE"
+    healthcheck:
+      # image has no curl/wget - probe the heartbeat endpoint with bash /dev/tcp
+      test: ["CMD", "bash", "-c", "exec 3<>/dev/tcp/127.0.0.1/8000 && printf 'GET /api/v2/heartbeat HTTP/1.0\\r\\n\\r\\n' >&3 && grep -q '200 OK' <&3"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 5s
+    restart: unless-stopped
+
+  redis:
+    image: docker.io/redis/redis-stack-server:7.4.0-v8
+    container_name: netcore-redis
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 5s
+    restart: unless-stopped
+
+  postgres:
+    image: docker.io/library/postgres:17-alpine
+    container_name: netcore-postgres
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-netcore}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-netcore}
+      POSTGRES_DB: ${POSTGRES_DB:-netcore_api}
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 10s
+    restart: unless-stopped
+
+  api:
+    build:
+      context: .
+      dockerfile: Containerfile
+    image: localhost/netcore-rag-api:0.7.0
+    container_name: netcore-api
+    env_file: .env
+    environment:
+      # inside the compose network the services are reached by name (overrides the localhost values in .env)
+      CHROMA_HOST: chroma
+      CHROMA_PORT: "8000"
+      REDIS_URL: redis://redis:6379
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-netcore}:${POSTGRES_PASSWORD:-netcore}@postgres:5432/${POSTGRES_DB:-netcore_api}
+      LOG_FILE: /app/logs/api.log
+    ports:
+      - "${API_PORT:-8080}:8080"
+    volumes:
+      - api-logs:/app/logs
+    depends_on:
+      chroma:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      # Podman drops a Containerfile HEALTHCHECK when building OCI images, so it is (also) defined here
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/health', timeout=3)"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    restart: unless-stopped
+
+volumes:
+  chroma-data:
+  redis-data:
+  pg-data:
+  api-logs:

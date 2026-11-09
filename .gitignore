@@ -20,3 +20,11 @@ chroma-data/
 
 # Redis semantic cache data (docker bind mount)
 redis-data/
+
+# Legacy bind-mount data (archived docker-compose.yml); compose.yaml uses named volumes
+# (chroma-data/ and redis-data/ above stay ignored until you delete those folders)
+pg-data/
+
+# API logs and test caches
+logs/
+.pytest_cache/

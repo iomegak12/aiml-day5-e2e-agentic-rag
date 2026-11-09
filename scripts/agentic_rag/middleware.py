@@ -7,7 +7,7 @@ Hook order for one request:
                    plan : PlanExecuteMiddleware (plan -> show -> execute -> re-plan on failure -> no-info exit)
   wrap_model   : react: CorrectiveRAGMiddleware (force retrieve / rewrite / web fallback) | plan: synthesis only
                  (both: Context Optimizer + Prompt Builder)
-  after_model  : PII redaction (built-in) -> AnswerQualityMiddleware (RAGAS judge escalation, output guardrails)
+  after_model  : PII redaction (built-in) -> AnswerQualityMiddleware (LLM judge escalation, output guardrails)
   wrap_tool    : TimeoutMiddleware (skip tools when the budget is gone)
   after_agent  : SemanticCacheMiddleware (write only judge-passed answers)
 Retry with exponential backoff: built-in ModelRetryMiddleware / ToolRetryMiddleware (see agent.py).
@@ -15,6 +15,7 @@ Retry with exponential backoff: built-in ModelRetryMiddleware / ToolRetryMiddlew
 
 from __future__ import annotations
 
+import time
 from typing import Any
 
 from langchain.agents.middleware import AgentMiddleware, hook_config
@@ -52,6 +53,15 @@ def _last_search_empty(state: dict) -> bool:
     return bool(tools) and all(str(t.content).startswith((NO_RESULTS, "TIMEOUT")) for t in tools)
 
 
+def _tool_result_text(result) -> str:
+    """Summary text of a tool result (a ToolMessage, or a Command carrying one)."""
+    if isinstance(result, ToolMessage):
+        return str(result.content)
+    update = getattr(result, "update", None)
+    messages = update.get("messages", []) if isinstance(update, dict) else []
+    return str(messages[-1].content) if messages else str(result)[:500]
+
+
 # =============================================================================
 # 1. Input guardrails
 # =============================================================================
@@ -85,6 +95,9 @@ class SemanticCacheMiddleware(AgentMiddleware):
         if state.get("status"):  # already blocked by the input guardrails
             return None
         ctx = _ctx(runtime)
+        if ctx.bypass_cache:
+            ctx.log("Semantic cache", "bypassed", "requested by the client")
+            return None
         hits = cache.lookup(ctx.question, log=ctx.log)
         if not hits:
             ctx.log("Semantic cache", "miss")
@@ -155,11 +168,24 @@ class TimeoutMiddleware(AgentMiddleware):
         return {"messages": [AIMessage(message)], "status": "timeout", "jump_to": "end"}
 
     def wrap_tool_call(self, request, handler):
+        """Skips tools once the budget is gone, and records every LLM tool call (react mode)."""
         ctx = _ctx(request.runtime)
+        name, args = request.tool_call["name"], dict(request.tool_call.get("args", {}))
         if ctx.timed_out:
             ctx.log("Timeout budget", "tool skipped", request.tool_call["name"])
+            ctx.record_tool_call(name, args, "agent", "skipped: time budget exceeded", 0.0, status="skipped")
             return ToolMessage("TIMEOUT: time budget exceeded; tool skipped.", tool_call_id=request.tool_call["id"])
-        return handler(request)
+        started = time.monotonic()
+        try:
+            result = handler(request)
+        except Exception as exc:
+            ctx.record_tool_call(name, args, "agent", f"{type(exc).__name__}: {exc}", time.monotonic() - started,
+                                 status="error")
+            raise
+        text = _tool_result_text(result)
+        ctx.record_tool_call(name, args, "agent", text, time.monotonic() - started,
+                             status="no_results" if text.startswith(NO_RESULTS) else "ok")
+        return result
 
 
 # =============================================================================
@@ -239,6 +265,9 @@ class PlanExecuteMiddleware(AgentMiddleware):
     @staticmethod
     def _announce(ctx: RequestContext, steps: list[dict], version: int, rationale: str, label: str) -> None:
         ctx.log("Planner", f"{label} v{version}", f"{len(steps)} steps - {rationale}")
+        ctx.plan_rationales[version] = rationale
+        ctx.emit("plan", {"version": version, "label": label, "rationale": rationale,
+                          "steps": [dict(st) for st in steps]})
         for st in steps:
             ctx.log("Plan", f"step {st['id']}", f"{st['tool']} {st['domains'] or ''} '{st['query']}'")
         if ctx.on_plan:
@@ -331,7 +360,7 @@ class PlanExecuteMiddleware(AgentMiddleware):
 
 
 # =============================================================================
-# 5. Judge (RAGAS) escalation + output guardrails
+# 5. Judge (LLM-as-a-judge) escalation + output guardrails
 # =============================================================================
 
 
@@ -349,35 +378,50 @@ class AnswerQualityMiddleware(AgentMiddleware):
             return None  # still planning / retrieving
         answer, update, status = message.text, {}, "answered"
 
-        # ---------------- Judge LLM evaluation (RAGAS) ----------------
+        # ---------------- Judge LLM evaluation ----------------
         if state.get("relevant_docs"):
             failures = state.get("judge_failures", 0)
+            started = time.monotonic()
+            attempt = {"attempt": len(ctx.judge_attempts) + 1, "scores": {}, "passed": False, "failed": [],
+                       "action": "", "error": None, "seconds": 0.0}
+            ctx.judge_attempts.append(attempt)
             try:
                 result = judge.evaluate(ctx.question, answer, ctx.context_blocks, timeout=max(15.0, ctx.remaining))
                 update["judge_scores"] = result.scores
-                ctx.log("Judge (RAGAS)", "pass" if result.passed else f"FAIL {result.failed}", str(result.scores))
+                attempt.update(scores=result.scores, passed=result.passed, failed=result.failed)
+                ctx.log("Judge LLM", "pass" if result.passed else f"FAIL {result.failed}", str(result.scores))
             except Exception as exc:  # noqa: BLE001 - judge unavailable/timeout -> cannot verify
                 result = None
-                ctx.log("Judge (RAGAS)", "error", f"{type(exc).__name__}: {str(exc)[:100]}")
+                attempt["error"] = f"{type(exc).__name__}: {str(exc)[:200]}"
+                ctx.log("Judge LLM", "error", f"{type(exc).__name__}: {str(exc)[:100]}")
+            attempt["seconds"] = round(time.monotonic() - started, 2)
             if result and result.passed:
                 update["judge_passed"] = True
+                attempt["action"] = "accept"
+                ctx.emit("judge", dict(attempt))
             else:
                 failures += 1
                 update["judge_failures"] = failures
                 remove = RemoveMessage(id=message.id)
                 if result and failures == 1:
                     ctx.log("Judge escalation", "1st: regenerate")
+                    attempt["action"] = "regenerate"
+                    ctx.emit("judge", dict(attempt))
                     feedback = (f"[Evaluator] Your answer failed grounding checks {result.failed} {result.scores}. "
                                 "Regenerate it using ONLY facts stated in the CONTEXT, with citations.")
                     return {**update, "messages": [remove, HumanMessage(feedback)], "jump_to": "model"}
                 if result and failures == 2:
                     ctx.log("Judge escalation", "2nd: re-retrieve")
+                    attempt["action"] = "re-retrieve"
+                    ctx.emit("judge", dict(attempt))
                     feedback = (f"[Evaluator] The answer still failed {result.failed}. The context is probably "
                                 "insufficient: rewrite the query, search again, then answer.")
                     return {**update, "force_rewrite": True, "messages": [remove, HumanMessage(feedback)],
                             "jump_to": "model"}
                 ctx.log("Judge escalation", "3rd: give up" if result else "judge unavailable",
                         "add low-confidence disclaimer")
+                attempt["action"] = "disclaimer"
+                ctx.emit("judge", dict(attempt))
                 answer, status = answer + DISCLAIMER, "low_confidence"
 
         # ---------------- Output guardrails ----------------

@@ -13,14 +13,14 @@ The generator writes 10 articles per domain, spread evenly across **PDF, HTML an
 
 ## Quick Start
 
-Prerequisites: Python 3.12+, [uv](https://docs.astral.sh/uv/), GNU make, Docker, an OpenAI API key.
+Prerequisites: Python 3.12+, [uv](https://docs.astral.sh/uv/), GNU make, Docker **or** Podman ([details](#docker-or-podman)), an OpenAI API key.
 
 ```bash
 cp .env.example .env      # then set OPENAI_API_KEY (and review the other settings)
 make install              # uv sync
 make generate             # 1. write missing KB articles to data/raw/
 make verify               #    load every article with LangChain loaders
-make chroma-up            # 2. start the Chroma server (docker compose)
+make chroma-up            # 2. start the Chroma server (docker compose / podman-compose)
 make populate             #    Pre-RAG pipeline -> one Chroma database per domain
 make db-stats             #    check what was stored
 ```
@@ -37,7 +37,7 @@ make db-stats             #    check what was stored
 | `make verify` | Smoke-test loading, KB IDs and vendor-name leaks |
 | `make clean` / `make clean-data` | Remove caches / delete `data/raw` |
 | `make chroma-up` / `chroma-down` / `chroma-logs` | Start / stop / follow the Chroma server |
-| `make chroma-reset` | Stop the server and delete `./chroma-data` |
+| `make chroma-reset` | Stop the server and delete its `chroma-data` volume |
 | `make populate` | Run the Pre-RAG pipeline for both domains (upserts, safe to re-run) |
 | `make populate-networking` / `populate-meetings` | Populate one database |
 | `make db-stats` | Chunk counts by type/format/status, plus sample metadata |
@@ -46,6 +46,14 @@ make db-stats             #    check what was stored
 | `make redis-up` / `redis-down` | Start / stop the Redis Stack semantic cache |
 | `make assign-access-levels` | Patch RBAC `access_level` into the Chroma metadata (no re-embedding) |
 | `make agent-ask Q="..." U=bob [M=react]` | Ask the agentic RAG agent as a demo user, with a live trace (default `M=plan`) |
+| `make db-up` / `db-down` / `db-migrate` | Start / stop Postgres; apply Alembic migrations |
+| `make api-run` | Run the REST API locally with auto-reload (`/docs`) |
+| `make api-test` | API unit tests (no network or containers) |
+| `make agent-api-test [U=bob] [TRACE=1]` | Planning smoke test against the running API: 1-step plan, cross-domain multi-step plan, cache repeat; PASS/FAIL table, exit 1 on failure |
+| `make api-build` / `api-up` / `api-down` / `api-logs` | Build the image / run the API container |
+| `make stack-up` / `stack-down` | Start / stop chroma, redis, postgres and api together |
+| `make bootstrap` | First run: infrastructure + populate + access levels + migrations |
+| `make engine` | Show the detected container engine (`ENGINE=podman` to force) |
 
 ## Query Demos ([scripts/test_query_vector_dbs.py](scripts/test_query_vector_dbs.py))
 
@@ -87,7 +95,7 @@ make agent-ask Q="How do I troubleshoot BFD tunnel flaps?" U=bob    # alice=gues
 | Rerank and relevance check | LLM reranker (`RERANKER_OPENAI_MODEL`), `RELEVANCE_THRESHOLD` |
 | Corrective RAG | `rewrite_query` tool. Middleware forces up to `MAX_REWRITES` rewrites, then one web fallback, then "no reliable information" |
 | Context optimizer and prompt builder | tiktoken budget, LLM summary of the overflow, lost-in-the-middle reordering; citations and superseded-source rules |
-| Judge | RAGAS faithfulness, groundedness and context precision (`JUDGE_OPENAI_MODEL`). Failures escalate: regenerate, then re-retrieve, then a disclaimer |
+| Judge | LLM-as-a-judge (`JUDGE_OPENAI_MODEL`): faithfulness (supported claims / claims), groundedness (0/1/2 rating) and context precision (average precision of useful chunks), each 0–1. Failures escalate: regenerate, then re-retrieve, then a disclaimer |
 | Output guardrails | PII, citations, LLM toxicity/policy check, plus built-in `PIIMiddleware` redaction. A failing answer is regenerated once, then refused |
 | Cross-cutting | `ModelRetryMiddleware` / `ToolRetryMiddleware` (exponential backoff), `ModelCallLimitMiddleware`, `TimeoutMiddleware` (`AGENT_TIMEOUT_SECONDS`) |
 
@@ -103,6 +111,66 @@ RBAC: `access_level` is derived from `article_type` (faq/help = public; config/r
 Test scenarios: [notebooks/agentic-rag.ipynb](notebooks/agentic-rag.ipynb) (scenarios only; all code lives in the package).
 
 The reusable retrieval functions live in [scripts/rag_search.py](scripts/rag_search.py): `similarity_search`, `keyword_search`, `hybrid_search`, `search`, `get_retriever` (a LangChain `BaseRetriever`), `format_docs` and `show_results`. Smoke test: `uv run scripts/rag_search.py`.
+
+## REST API ([api/](api/))
+
+FastAPI service that exposes the agent with all of its details: plan, executed plan, sources, judge result and attempts, tool calls, trace, cache info, the answer and timings.
+
+```bash
+make bootstrap        # first run: chroma, redis, postgres + populate + access levels + DB migrations
+make api-run          # local, auto-reload -> http://localhost:8080/docs
+# or, fully containerised:
+make api-up           # build the image (Containerfile) and start it with its dependencies
+```
+
+| Method | Path | Purpose |
+|---|---|---|
+| GET | `/health` | Liveness |
+| GET | `/ready` | Readiness: Chroma, Redis, Postgres (503 problem when one is down) |
+| GET | `/metrics` | Prometheus metrics (HTTP + agent: runs, re-plans, judge, cache hits, tool calls, rate-limit blocks) |
+| POST | `/api/v1/agent/ask` | Ask, blocking: the full `AskResponse` |
+| POST | `/api/v1/agent/ask/stream` | Ask, Server-Sent Events: `accepted`, `plan`, `step`, `tool_call`, `trace`, `judge`, `result` / `error`, `done` |
+| GET | `/api/v1/agent/requests` | My earlier requests (admin: everyone's), cursor pagination |
+| GET | `/api/v1/agent/requests/{request_id}` | Status + the stored result |
+| GET | `/api/v1/agent/requests/{request_id}/events` | Resume a stream after `Last-Event-ID` (replay, then live) |
+
+Swagger UI: `/docs` · ReDoc: `/redoc` · OpenAPI: `/openapi.json`
+
+```bash
+curl -s localhost:8080/api/v1/agent/ask -H "X-API-Key: <bob's key from API_KEYS>" \
+     -H "Content-Type: application/json" \
+     -d '{"question": "What does alarm NCS-BFD-3004 mean?", "mode": "plan"}'
+curl -N localhost:8080/api/v1/agent/ask/stream -H "X-API-Key: ..." -H "Content-Type: application/json" \
+     -d '{"question": "...", "include_trace": false}'
+```
+
+| Concern | Implementation |
+|---|---|
+| Layout | `controllers/` (routes) → `services/` (agent, audit, health) → `repositories/` (Postgres, Redis Streams); `schemas/` DTOs; `core/` config, logging, security, problems, metrics; `middleware/` |
+| Auth / RBAC | `X-API-Key` → demo user (`API_KEYS` in `.env`); the agent applies the user's access levels |
+| Request options | `question`, `mode` (`plan` \| `react`), `timeout_seconds`, `include_trace`, `bypass_cache` |
+| Errors | RFC 9457 `application/problem+json` (`type`, `title`, `status`, `detail`, `instance`, `request_id`, `errors[]`) |
+| Rate limit | Per client IP, `RATE_LIMIT_PER_MINUTE=100`; the request that exceeds it blocks the IP for `RATE_LIMIT_BLOCK_SECONDS=30` (429 + `Retry-After`). Redis-backed, fail-open; probes exempt |
+| Timeout | Agent budget `timeout_seconds` (bounded by `API_TIMEOUT_MIN/MAX`), hard cap = budget + `API_TIMEOUT_GRACE` → 504 |
+| Retry | Postgres audit writes (tenacity, exponential backoff). An audit failure never fails a response. The agent keeps its own LLM/tool retries |
+| Reconnect | Runs are decoupled from the HTTP connection. Events go to a Redis Stream (`EVENT_BUFFER_TTL_SECONDS=3600`); after expiry the stored result is replayed from Postgres. Others' requests return 404 |
+| Audit | Postgres `api_requests` (every request: metadata + PII-redacted bodies; API keys masked) and `agent_runs` (status + result). Alembic migrations |
+| Logging | structlog JSON to the console and `LOG_FILE` (rotating), with `request_id`, user, IP |
+| CORS | Not enabled (same-origin only) |
+| Tests | `make api-test`: pytest + httpx with a fake agent, fake repositories and fakeredis (no network, no containers) |
+
+## Docker or Podman
+
+Every container target works with either engine. The Makefile uses `docker` when it is installed, otherwise `podman` (`make engine` shows the choice; force it with `ENGINE=podman`).
+
+| | Docker | Podman (no Docker / Docker Desktop needed) |
+|---|---|---|
+| Install | Docker Engine or Desktop | Podman 5+, plus `uv tool install podman-compose` (>= 1.3) |
+| Windows / macOS | — | `podman machine init` then `podman machine start` |
+| Compose | `docker compose` | `podman-compose` (same `compose.yaml`) |
+| Image build | `docker build -f Containerfile` | `podman build -f Containerfile --format docker` (keeps the HEALTHCHECK) |
+
+`compose.yaml` uses fully-qualified image names and **named volumes** (`chroma-data`, `redis-data`, `pg-data`, `api-logs`), so rootless Podman has no UID or SELinux permission issues. The previous `docker-compose.yml` (bind mounts) is in `archives/`. When you switch, the vector DB starts empty: remove the old containers (`docker rm -f netcore-chroma netcore-redis`), then run `make bootstrap`.
 
 ## Pre-RAG Pipeline ([scripts/populate_vector_dbs.py](scripts/populate_vector_dbs.py))
 
@@ -136,7 +204,6 @@ All settings live in `.env` (see [.env.example](.env.example)).
 
 ```
 data/raw/<domain>/              generated articles + manifest.json
-chroma-data/                    Chroma server data (git-ignored)
 docs/plans/                     planning notes
 scripts/generate_kb.py          KB generator
 scripts/verify_kb.py            loader smoke test
@@ -147,8 +214,12 @@ notebooks/naive-rag.ipynb       Naive RAG walkthrough
 scripts/agentic_rag/            Enterprise Agentic RAG agent (package)
 scripts/assign_access_levels.py RBAC access_level metadata patch
 notebooks/agentic-rag.ipynb     Agentic RAG test scenarios
-redis-data/                     Redis cache data (git-ignored)
-docker-compose.yml              Chroma server
+api/app/                        REST API (FastAPI): controllers, services, repositories, schemas
+api/alembic/                    database migrations (audit tables)
+api/tests/                      API unit tests
+compose.yaml                    chroma, redis, postgres, api (Docker or Podman)
+Containerfile                   API image (multi-stage, slim, non-root)
+archives/                       previous docker-compose.yml
 Makefile                        command entry points
 ```
 

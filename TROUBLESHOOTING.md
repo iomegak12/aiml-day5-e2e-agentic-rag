@@ -17,7 +17,7 @@
 | `port is already allocated` on `make chroma-up` | Another service is using the port | Change `CHROMA_PORT` in `.env` (compose reads it), then `make chroma-up` |
 | `KeyError: 'OPENAI_EMBEDDING_MODEL'` | Variable missing from `.env` | Add `OPENAI_EMBEDDING_MODEL=text-embedding-3-small` |
 | `KB folder not found` | `KB_DATA_DIR` is wrong, or there are no articles yet | Fix the path, or run `make generate` |
-| Client/server version errors from Chroma | The `chromadb` client and the image tag differ | Keep the `docker-compose.yml` image tag equal to the `chromadb` version in `uv.lock` |
+| Client/server version errors from Chroma | The `chromadb-client` version and the image tag differ | Keep the `compose.yaml` image tag equal to the `chromadb-client` version in `uv.lock` |
 | First `make populate` is slow or downloads data | `unstructured` initialises (and may fetch NLTK data) on first use | Wait for it once. Later runs are faster |
 | A table split into two table chunks | The PDF table continues onto the next page | Expected. Each part carries its own page reference |
 | `[warn] description failed …` | LLM error for one table/code item | A template description is used instead. Re-run `make populate` (it upserts) |
@@ -31,16 +31,35 @@
 | Notebook: connection refused | The Chroma server isn't running | `make chroma-up`, then re-run the setup cell |
 | Answers vary between runs | LLM output is non-deterministic | Expected. Citations and grounded values should stay the same |
 | The LLM-only demo happens to answer correctly | Generic values can be guessed by luck | Ask about product-specific facts (codes, timers), as demo 6a does |
-| `ModuleNotFoundError: langchain_community.chat_models.vertexai` (RAGAS) | RAGAS still imports a module removed in langchain-community 0.4 | The project pins `langchain-community==0.3.31`. Don't upgrade it until RAGAS drops that import |
-| RAGAS: `'max_tokens' is not supported ... use 'max_completion_tokens'` | RAGAS doesn't recognise model names like `gpt-6.1-sol` as reasoning models | Handled in `agentic_rag/judge.py` (parameters set explicitly) |
-| RAGAS: `IncompleteOutputException ... max_tokens length limit` | The reasoning tokens used up the output limit | `judge.py` uses `max_completion_tokens=16000` with `reasoning_effort="low"` |
+| Judge: `Unsupported parameter: 'reasoning_effort'` | `JUDGE_OPENAI_MODEL` is not a reasoning model | Set `JUDGE_REASONING_EFFORT=` (empty) in `.env` |
+| Judge scores differ between runs | LLM-as-a-judge is non-deterministic | Expected. Compare pass/fail against the thresholds, not exact scores |
 | Agent: Redis `ConnectionError` | Redis isn't running | `make redis-up` |
 | Guest gets "no information" for internal topics | RBAC: guests only see `public` chunks | Expected. Ask as `U=bob` or `U=carol` |
 | `access_level` missing (no results with an RBAC filter) | Metadata wasn't patched | `make assign-access-levels` (new `make populate` runs include it) |
 | Status `timeout` | The request exceeded `AGENT_TIMEOUT_SECONDS` | Raise the budget in `.env`. The judge takes ~20–40 s per round |
 | `GraphRecursionError` | Too many graph steps | The agent uses `recursion_limit=300`; real loops are capped by `ModelCallLimitMiddleware` and `MAX_REWRITES` |
 | Answers differ between runs | LLM routing, rewriting and judging are non-deterministic | Expected. The path (trace) is what to compare |
-| `Task exception was never retrieved ... Event loop is closed` | The judge's async OpenAI client was closed after its event loop | Fixed in `judge.py` (the client is closed inside the loop). Restart the notebook kernel to load the fix |
+| `Task exception was never retrieved ... Event loop is closed` (older versions) | The former RAGAS judge closed its async client after the event loop | Gone since 0.7.0 (the judge is synchronous). Restart the kernel after updating |
 | Plan mode takes longer than `AGENT_TIMEOUT_SECONDS` | The budget is only checked between steps; a running LLM call (synthesis, judge) isn't interrupted | Expected for multi-step plans. Raise `AGENT_TIMEOUT_SECONDS` or use `override_settings(timeout_seconds=...)` |
 | Plan has more steps than expected | The planner decomposes multi-part questions | Cap it with `MAX_PLAN_STEPS` in `.env` |
 | Plan step `no_results` but the answer is still given | Other steps found evidence ("partial evidence") | Expected: the answer says which goal found nothing |
+| API: `401 unauthorized` | Missing or wrong `X-API-Key` | Use a key from `API_KEYS` in `.env` (format `key:user,...`) |
+| API: `429` with `Retry-After: 30` | The IP sent more than `RATE_LIMIT_PER_MINUTE` requests in a minute and is blocked | Wait `Retry-After` seconds. Tune the `RATE_LIMIT_*` settings. Behind a proxy, set `TRUST_PROXY_HEADERS=true` |
+| API: `422` for `timeout_seconds` | Outside `API_TIMEOUT_MIN`..`API_TIMEOUT_MAX` | Use a value in range, or change the bounds in `.env` |
+| API: `504 agent-timeout` | No result within budget + `API_TIMEOUT_GRACE` | The run may still finish: `GET /api/v1/agent/requests/{id}`. Raise `timeout_seconds` |
+| API: `503 not-ready` on `/ready` | Chroma, Redis or Postgres is down | The `checks` field names it. `make stack-up` or start that service |
+| API: `ConnectionRefusedError` / Postgres errors on start | Postgres not running or not migrated | `make db-up db-migrate` |
+| SSE stream stops after a network drop | Client disconnected; the run continues on the server | Resume: `GET /api/v1/agent/requests/{id}/events` with `Last-Event-ID: <last id>` |
+| Resume returns only `result` + `done` | The 1 h event buffer expired | Expected: the stored result is replayed from Postgres |
+| `404` for a request id you know | It belongs to another user (only the owner and the admin can see it) | Use the owner's key, or the admin key |
+| `/metrics` counts look low with several workers | Prometheus client is per process | Run one worker (default), or configure `prometheus_client` multiprocess mode |
+| API logs not in the file | `LOG_FILE` empty or the directory isn't writable | Set `LOG_FILE` (default `logs/api.log`; in the container `/app/logs/api.log`, volume `api-logs`) |
+| `make` uses the wrong engine | Both Docker and Podman installed | `make <target> ENGINE=podman` (or `ENGINE=docker`) |
+| `podman-compose: command not found` | Not installed | `uv tool install podman-compose` (>= 1.3) |
+| Podman: `Cannot connect to Podman` (Windows/macOS) | The Podman machine isn't running | `podman machine init` (once), then `podman machine start` |
+| Podman asks which registry to use | Short image names | `compose.yaml` and `Containerfile` use fully-qualified `docker.io/...` names; keep it that way |
+| Podman image has no health status | OCI image format drops `HEALTHCHECK` | `make api-build` passes `--format docker`; `compose.yaml` also defines the healthcheck |
+| `container name "netcore-chroma" is already in use` | Containers from the archived `docker-compose.yml` are still there | `docker rm -f netcore-chroma netcore-redis` (or `podman rm -f ...`), then `make bootstrap` |
+| Vector DB empty after switching to `compose.yaml` | Named volumes replaced the `./chroma-data` bind mount | `make populate assign-access-levels` (or `make bootstrap`). The old `./chroma-data` folder can be deleted |
+| API image size (~650 MB, ~140 MB compressed) | Runtime dependencies (LangChain, OpenAI, numpy, SQLAlchemy, ...) | Already slimmed: thin Chroma client, no RAGAS, no KB-only packages, stripped test suites and debug symbols |
+| `ImportError` for an embedded-Chroma feature | The project uses `chromadb-client` (HTTP only), not the full `chromadb` package | Expected: always talk to the Chroma server (`make chroma-up`) |

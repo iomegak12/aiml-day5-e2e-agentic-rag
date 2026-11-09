@@ -84,18 +84,27 @@ class AgentResult:
     trace: list[TraceEvent] = field(default_factory=list)
     mode: str = "plan"
     plan: list[dict] = field(default_factory=list)  # every plan version's steps with their outcome
+    plan_rationales: dict[int, str] = field(default_factory=dict)  # plan version -> planner rationale
+    tool_calls: list[dict] = field(default_factory=list)  # unified: LLM tool calls (react) + executor steps (plan)
+    judge: dict = field(default_factory=dict)  # model, passed, scores, thresholds, attempts[]
+    cache_similarity: float | None = None
 
 
 def ask(question: str, user_id: str = "bob", verbose: bool = True, mode: Mode = "plan",
-        show_plan: bool = True) -> AgentResult:
+        show_plan: bool = True, *, timeout_seconds: float | None = None, bypass_cache: bool = False,
+        on_event=None) -> AgentResult:
     """Run one request through the full Enterprise RAG workflow as a demo user (alice | bob | carol).
 
     mode='plan'  : create a plan, show it (show_plan=True), execute it, re-plan on failure, then answer.
     mode='react' : the agent routes and rewrites by itself with tools (no explicit plan).
+    timeout_seconds : per-request time budget (default AGENT_TIMEOUT_SECONDS).
+    bypass_cache    : skip the semantic-cache lookup.
+    on_event        : callback(event_type, data) for live progress (plan, step, tool_call, judge, trace).
     """
     s = get_settings()
     user = get_user(user_id)
-    ctx = RequestContext(user=user, question=question, timeout_seconds=s.timeout_seconds, verbose=verbose)
+    ctx = RequestContext(user=user, question=question, timeout_seconds=timeout_seconds or s.timeout_seconds,
+                         verbose=verbose, on_event=on_event, bypass_cache=bypass_cache)
     if show_plan:
         from .display import show_plan as _show_plan
         ctx.on_plan = _show_plan
@@ -122,7 +131,14 @@ def ask(question: str, user_id: str = "bob", verbose: bool = True, mode: Mode = 
                     "access_level": d["metadata"].get("access_level", ""), "status": d["metadata"].get("status", "")}
                    for d in state.get("relevant_docs", [])]
     ctx.log("Response", status, f"{len(answer)} chars in {ctx.elapsed:.1f}s")
+    judge_info = {"model": s.judge_model, "passed": bool(state.get("judge_passed")) if ctx.judge_attempts else None,
+                  "scores": state.get("judge_scores", {}),
+                  "thresholds": {"faithfulness": s.faithfulness_threshold, "groundedness": s.groundedness_threshold,
+                                 "context_precision": s.context_precision_threshold},
+                  "attempts": list(ctx.judge_attempts)}
     return AgentResult(question=question, user=user, answer=answer, status=status, routes=state.get("routes", []),
                        rewrites=state.get("rewrite_count", 0), judge_scores=state.get("judge_scores", {}),
                        sources=sources, cached_question=ctx.cache_hit.question if ctx.cache_hit else None,
-                       elapsed=round(ctx.elapsed, 1), trace=ctx.trace, mode=mode, plan=state.get("plan", []))
+                       elapsed=round(ctx.elapsed, 1), trace=ctx.trace, mode=mode, plan=state.get("plan", []),
+                       plan_rationales=dict(ctx.plan_rationales), tool_calls=list(ctx.tool_calls), judge=judge_info,
+                       cache_similarity=ctx.cache_hit.similarity if ctx.cache_hit else None)

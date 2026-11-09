@@ -69,6 +69,7 @@ class AgentSettings:
     chat_model: str
     reranker_model: str
     judge_model: str
+    judge_reasoning_effort: str  # '' for non-reasoning judge models
     embedding_model: str
     serper_api_key: str
     redis_url: str
@@ -124,6 +125,7 @@ def _base_settings() -> AgentSettings:
         chat_model=kb.chat_model,
         reranker_model=env("RERANKER_OPENAI_MODEL", kb.chat_model),
         judge_model=env("JUDGE_OPENAI_MODEL", kb.chat_model),
+        judge_reasoning_effort=env("JUDGE_REASONING_EFFORT", "low"),
         embedding_model=kb.embedding_model,
         serper_api_key=env("SERPER_API_KEY", ""),
         redis_url=env("REDIS_URL", "redis://localhost:6379"),

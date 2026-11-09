@@ -3,6 +3,55 @@
 All notable changes to this project are documented here.
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) · Versioning: [SemVer](https://semver.org/).
 
+## [0.7.0] - 2026-11-09
+
+### Added
+- REST API in `api/` (FastAPI + Uvicorn), organised as controllers, services, repositories, schemas, core and middleware:
+  - **Endpoints:** `POST /api/v1/agent/ask` and `/ask/stream` (SSE), `GET /health`, `/ready`, `/metrics`.
+  - **Docs:** OpenAPI with Swagger UI and ReDoc.
+  - **Response:** plan, executed plan, sources, judge details and attempts, unified tool calls, trace, cache info and timings.
+  - **Reconnect:** `GET /api/v1/agent/requests` (list), `/{request_id}` (status + result) and `/{request_id}/events` (resume with `Last-Event-ID`). Runs are decoupled from the HTTP connection; events are buffered in Redis Streams for 1 h.
+  - **Auth:** `X-API-Key` → demo user (RBAC). Owners see their own requests, the admin sees all, and anyone else gets 404.
+  - **Rate limit:** 100 requests/minute per IP; exceeding it blocks the IP for 30 s (429 + `Retry-After`). Redis-backed and fail-open.
+  - **Timeouts and retries:** per-request timeout with a hard cap (504); Postgres audit writes retried with backoff.
+  - **Errors:** RFC 9457 problem details everywhere.
+  - **Logging:** structlog JSON to the console and a rotating file.
+  - **Metrics:** Prometheus.
+  - **Audit:** Postgres audit of every request plus agent runs (PII-redacted), with Alembic migrations.
+  - **Tests:** 48 unit tests (fake agent, fake repositories, fakeredis).
+- `scripts/test_agent_api.py` + `make agent-api-test`:
+  - Planning smoke test of the running API (blocking `/ask`, URL and key from `.env`), based on `notebooks/agentic-rag-plan.ipynb`.
+  - Scenarios: a 1-step plan, a cross-domain multi-step plan (both domains, judge passed, result stored), and a cache repeat.
+  - Exit code 1 on failure.
+- `Containerfile` (multi-stage uv build, `python:3.12-slim`, non-root, healthcheck; migrations run at start).
+- `compose.yaml` with `postgres` and `api` services.
+- Docker **or Podman** support: the Makefile auto-detects the engine (`ENGINE=podman` to force) and uses podman-compose.
+- Make targets: `db-up`, `db-down`, `db-migrate`, `api-run`, `api-test`, `api-build`, `api-up`, `api-down`, `api-logs`, `stack-up`, `stack-down`, `bootstrap`, `engine`.
+- `.env` settings: `API_KEYS`, `API_PORT`, `POSTGRES_*`, `DATABASE_URL`, `RATE_LIMIT_*`, `API_TIMEOUT_*`, `AGENT_MAX_CONCURRENCY`, `EVENT_BUFFER_TTL_SECONDS`, `LOG_LEVEL`, `LOG_FILE`.
+- Agent (additive, backward compatible):
+  - `ask(..., timeout_seconds=, bypass_cache=, on_event=)`.
+  - `AgentResult` gains `tool_calls`, `judge` (attempts with actions), `plan_rationales` and `cache_similarity`.
+  - Live `plan`, `step`, `tool_call`, `judge` and `trace` events.
+
+### Changed
+- `docker-compose.yml` → `compose.yaml`:
+  - Fully-qualified images and named volumes instead of bind mounts.
+  - The old file is in `archives/`.
+  - `make chroma-reset` now removes the volume.
+- **Judge:** RAGAS is replaced by a built-in LLM-as-a-judge in `judge.py`:
+  - Same metrics (faithfulness, groundedness, context precision), 0–1 scale, thresholds and `evaluate()` API.
+  - Three parallel structured-output calls on `JUDGE_OPENAI_MODEL`.
+  - Citation markers are ignored.
+  - New setting: `JUDGE_REASONING_EFFORT` (default `low`).
+  - `ragas` was removed.
+- **Chroma:** the thin HTTP client `chromadb-client` replaces the full `chromadb` package project-wide (uv override). Everything talks to the Chroma server anyway.
+- **KB-only packages:** `unstructured` and `reportlab` moved to a `kb` dependency group, and `ipykernel` is dev-only. `uv sync` still installs everything.
+- **API image:** the builder strips bundled test suites, type stubs and native debug symbols. Size went from 2.5 GB to **~650 MB** (about **140 MB** compressed).
+- `.dockerignore` updated for both engines.
+
+### Fixed
+- `langchain-classic` (needed by `rag_search`) is now a declared dependency; it was previously only installed by hand.
+
 ## [0.6.0] - 2026-11-07
 
 ### Added

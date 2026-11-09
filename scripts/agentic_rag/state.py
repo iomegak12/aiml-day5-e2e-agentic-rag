@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import operator
+import threading
 import time
 from dataclasses import dataclass, field
 from typing import Annotated, Any
@@ -65,6 +66,12 @@ class RequestContext:
     context_blocks: list[str] = field(default_factory=list)  # last optimized context (for the judge)
     cache_hit: Any = None  # CacheHit served for this request, if any
     on_plan: Any = None  # callback(steps, version, rationale) - shows a plan as soon as it is created
+    on_event: Any = None  # callback(event_type, data) - live progress for API clients (SSE); must be thread-safe
+    bypass_cache: bool = False  # skip the semantic-cache lookup for this request
+    tool_calls: list[dict] = field(default_factory=list)  # every tool call (react: LLM; plan: executor steps)
+    judge_attempts: list[dict] = field(default_factory=list)  # every judge evaluation with the action taken
+    plan_rationales: dict[int, str] = field(default_factory=dict)  # plan version -> planner rationale
+    _lock: Any = field(default_factory=threading.Lock, repr=False)  # parallel tool calls append concurrently
     web_seq: int = 0  # running number for WEB-n citations (unique across searches in one request)
     _web_ids: dict[str, str] = field(default_factory=dict)  # url -> WEB-n
 
@@ -94,3 +101,23 @@ class RequestContext:
         self.trace.append(event)
         if self.verbose:
             print(f"[{event.t:6.2f}s] {step:<20} {decision:<16} {detail[:150]}", flush=True)
+        self.emit("trace", {"t": event.t, "step": step, "decision": decision, "detail": detail})
+
+    def emit(self, event_type: str, data: dict) -> None:
+        """Forward a progress event to the on_event callback (API streaming). Never breaks the agent."""
+        if self.on_event is None:
+            return
+        try:
+            self.on_event(event_type, data)
+        except Exception:  # noqa: BLE001 - a broken listener must not fail the request
+            pass
+
+    def record_tool_call(self, name: str, args: dict, origin: str, result: str, seconds: float,
+                         status: str = "ok") -> None:
+        """Unified tool-call log. origin: 'agent' (LLM tool call, react) or 'planner' (plan executor step)."""
+        with self._lock:
+            call = {"seq": len(self.tool_calls) + 1, "name": name, "args": args, "origin": origin,
+                    "status": status, "result": result[:500], "seconds": round(seconds, 2),
+                    "t": round(self.elapsed, 2)}
+            self.tool_calls.append(call)
+        self.emit("tool_call", call)

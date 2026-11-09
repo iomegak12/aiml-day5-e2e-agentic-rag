@@ -24,8 +24,10 @@ def execute_steps(steps: list[dict], ctx: RequestContext) -> list[dict]:
         if ctx.timed_out:
             st["status"] = "skipped"
             ctx.log("Plan executor", f"step {st['id']} skipped", "time budget exhausted")
+            ctx.emit("step", dict(st))
             continue
         st["status"] = "running"
+        ctx.emit("step", dict(st))
         ctx.log("Plan executor", f"step {st['id']} running", f"({n}/{len(pending)}) {st['tool']} "
                                                              f"{st['domains'] or ''} '{st['query']}'")
         started = time.monotonic()
@@ -33,5 +35,10 @@ def execute_steps(steps: list[dict], ctx: RequestContext) -> list[dict]:
         st.update(relevant=len(relevant), best=best, seconds=round(time.monotonic() - started, 1),
                   status="done" if relevant else "no_results")
         ctx.log("Plan executor", f"step {st['id']} {st['status']}", f"{len(relevant)} relevant, best {best}")
+        ctx.emit("step", dict(st))
+        ctx.record_tool_call(st["tool"], {"query": st["query"], "domains": st["domains"], "step": st["id"],
+                                          "plan_version": st["version"]}, origin="planner",
+                             result=f"{len(relevant)} relevant chunks, best relevance {best}",
+                             seconds=st["seconds"], status=st["status"])
         found += relevant
     return found

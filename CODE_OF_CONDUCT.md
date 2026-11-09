@@ -18,6 +18,10 @@ We pledge to make participation in this project and its learning community a har
 - Publishing others' private information without permission.
 - Any conduct that would be inappropriate in a professional setting.
 
+## Scope
+
+This code applies to every project space: issues, pull requests, reviews, discussions about the course material, the agent and the REST API, and anywhere you represent the project.
+
 ## Enforcement
 
 Report incidents to **jd.ramkumar@gmail.com**. Every report is reviewed promptly and kept confidential. The maintainer may remove, edit or reject contributions, or temporarily or permanently ban participants, for behaviour that violates this code.

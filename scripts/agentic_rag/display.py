@@ -70,7 +70,7 @@ def show_result(result, show_trace: bool = True) -> None:
         cfg = get_settings()
         thresholds = {"faithfulness": cfg.faithfulness_threshold, "groundedness": cfg.groundedness_threshold,
                       "context_precision": cfg.context_precision_threshold}
-        t = Table(title=f"Judge (RAGAS, {cfg.judge_model})", title_justify="left", header_style="bold cyan")
+        t = Table(title=f"Judge LLM ({cfg.judge_model})", title_justify="left", header_style="bold cyan")
         for col in ("Metric", "Score", "Threshold", "Result"):
             t.add_column(col)
         for metric, score in result.judge_scores.items():
@@ -112,7 +112,7 @@ def show_settings() -> None:
     s = get_settings()
     t = Table(title="Agent settings (.env)", title_justify="left", header_style="bold cyan", show_header=False)
     rows = [("Orchestrator model", s.chat_model), ("Reranker / guardrail model", s.reranker_model),
-            ("Judge model (RAGAS)", s.judge_model), ("Embedding model", s.embedding_model),
+            ("Judge model", s.judge_model), ("Embedding model", s.embedding_model),
             ("Chroma", f"{s.kb.chroma_host}:{s.kb.chroma_port} {s.kb.databases}"), ("Redis cache", s.redis_url),
             ("Cache similarity", s.cache_similarity), ("Relevance threshold", s.relevance_threshold),
             ("Faithfulness / groundedness / precision",

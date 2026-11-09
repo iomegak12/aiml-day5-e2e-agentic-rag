@@ -5,30 +5,60 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "alembic>=1.20.1",
+    "asyncpg>=0.32.0",
     "beautifulsoup4>=4.15.0",
-    "chromadb>=1.5.9",
-    "ipykernel>=7.4.0",
+    "chromadb-client==1.5.9",
+    "fastapi>=0.162.2",
     "langchain>=1.4.9",
     "langchain-chroma>=1.1.0",
+    "langchain-classic>=1.0.8",
     "langchain-community==0.3.31",
     "langchain-core>=1.7.6",
     "langchain-openai>=1.7.4",
     "langchain-text-splitters>=1.1.3",
     "lxml>=6.1.3",
     "pdfplumber>=0.11.10",
+    "prometheus-client>=0.26.0",
     "pydantic>=2.14.3",
+    "pydantic-settings>=2.16.2",
     "pypdf>=7.0.0",
     "python-dotenv>=1.2.4",
-    "ragas>=0.4",
     "rank-bm25>=0.2.2",
+    "redis>=8.1.0",
     "redisvl>=0.31.0",
-    "reportlab>=5.1.0",
     "rich>=13.7,<15",
+    "sqlalchemy[asyncio]>=2.1.8",
+    "sse-starlette>=3.7.0",
+    "structlog>=26.1.0",
+    "tenacity>=9.2.1",
     "tiktoken>=0.14.0",
-    "unstructured[md]>=0.27.36",
+    "uvicorn[standard]>=0.54.0",
 ]
 
 [dependency-groups]
 dev = [
+    "fakeredis>=2.40.0",
+    "httpx>=0.28.1",
     "ipykernel>=7.4.0",
+    "pytest>=9.2.0",
+    "pytest-asyncio>=1.4.1.post1",
 ]
+kb = [
+    "reportlab>=5.1.0",
+    "unstructured[md]>=0.27.36",
+]
+
+[tool.uv]
+# `uv sync` installs everything locally; the API image skips dev + kb (KB generation / population / notebooks)
+default-groups = ["dev", "kb"]
+# Everything talks to the Chroma *server* over HTTP, so the thin client replaces the full package that
+# langchain-chroma depends on (embedded DB, onnxruntime, kubernetes, ...). Both provide the `chromadb` module.
+override-dependencies = ["chromadb; sys_platform == 'never'"]
+
+[tool.pytest.ini_options]
+testpaths = ["api/tests"]
+pythonpath = ["api", "scripts"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+filterwarnings = ["ignore::DeprecationWarning"]
